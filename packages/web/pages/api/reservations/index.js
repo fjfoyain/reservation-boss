@@ -1,8 +1,8 @@
 // GET /api/reservations - Get all reservations (admin only)
 // DELETE /api/reservations - Clear all reservations (admin only)
-import { withCors } from '../../../lib/middleware/cors';
-import { withAuth } from '../../../lib/middleware/auth';
-import { db } from '../../../lib/config/firebaseAdmin';
+import { withCors } from '@/lib/middleware/cors';
+import { withAuth } from '@/lib/middleware/auth';
+import { db } from '@/lib/config/firebaseAdmin';
 import { clearCache } from '../../../lib/utils/cache';
 
 async function handler(req, res) {

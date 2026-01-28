@@ -1,9 +1,9 @@
 // GET /api/summary/week - Get compact weekly summary for grid view
-import { withCors } from '../../../lib/middleware/cors';
-import { db } from '../../../lib/config/firebaseAdmin';
-import { PARKING_SPOTS } from '../../../lib/config/constants';
-import { getVisibleWeekRange } from '../../../lib/utils/weekHelpers';
-import { getCached, setCached } from '../../../lib/utils/cache';
+import { withCors } from '@/lib/middleware/cors';
+import { db } from '@/lib/config/firebaseAdmin';
+import { PARKING_SPOTS } from '@/lib/config/constants';
+import { getVisibleWeekRange } from '@/lib/utils/weekHelpers';
+import { getCached, setCached } from '@/lib/utils/cache';
 
 async function handler(req, res) {
   if (req.method !== 'GET') {

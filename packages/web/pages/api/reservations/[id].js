@@ -1,9 +1,9 @@
 // DELETE /api/reservations/[id] - Release a specific reservation (admin only)
-import { withCors } from '../../../lib/middleware/cors';
-import { withAuth } from '../../../lib/middleware/auth';
-import { db } from '../../../lib/config/firebaseAdmin';
-import { getVisibleWeekRange } from '../../../lib/utils/weekHelpers';
-import { clearCache } from '../../../lib/utils/cache';
+import { withCors } from '@/lib/middleware/cors';
+import { withAuth } from '@/lib/middleware/auth';
+import { db } from '@/lib/config/firebaseAdmin';
+import { getVisibleWeekRange } from '@/lib/utils/weekHelpers';
+import { clearCache } from '@/lib/utils/cache';
 
 async function handler(req, res) {
   if (req.method !== 'DELETE') {

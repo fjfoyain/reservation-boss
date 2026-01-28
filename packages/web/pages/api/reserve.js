@@ -1,11 +1,11 @@
 // POST /api/reserve - Create a new reservation
-import { withCors } from '../../lib/middleware/cors';
-import { db } from '../../lib/config/firebaseAdmin';
-import { sendReservationEmail } from '../../lib/config/email';
-import { PARKING_SPOTS, MAX_WEEKLY_RESERVATIONS } from '../../lib/config/constants';
-import { getVisibleWeekRange } from '../../lib/utils/weekHelpers';
-import { validateEmail } from '../../lib/utils/validation';
-import { clearCache } from '../../lib/utils/cache';
+import { withCors } from '@/lib/middleware/cors';
+import { db } from '@/lib/config/firebaseAdmin';
+import { sendReservationEmail } from '@/lib/config/email';
+import { PARKING_SPOTS, MAX_WEEKLY_RESERVATIONS } from '@/lib/config/constants';
+import { getVisibleWeekRange } from '@/lib/utils/weekHelpers';
+import { validateEmail } from '@/lib/utils/validation';
+import { clearCache } from '@/lib/utils/cache';
 
 async function handler(req, res) {
   if (req.method !== 'POST') {

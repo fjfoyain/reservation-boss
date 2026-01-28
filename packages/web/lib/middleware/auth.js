@@ -1,5 +1,5 @@
 // Authentication middleware for Next.js API routes
-import { auth } from '../config/firebaseAdmin';
+import { auth } from '@/lib/config/firebaseAdmin';
 
 /**
  * Verify Firebase authentication token from Authorization header

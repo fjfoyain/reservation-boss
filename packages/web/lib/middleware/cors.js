@@ -1,5 +1,5 @@
 // CORS middleware for Next.js API routes
-import { ALLOWED_ORIGINS } from '../config/constants';
+import { ALLOWED_ORIGINS } from '@/lib/config/constants';
 
 /**
  * Set CORS headers based on allowed origins

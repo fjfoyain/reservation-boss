@@ -1,8 +1,8 @@
 // GET /api/reservations/week - Get reservations for a specific week
-import { withCors } from '../../../lib/middleware/cors';
-import { db } from '../../../lib/config/firebaseAdmin';
-import { getVisibleWeekRange } from '../../../lib/utils/weekHelpers';
-import { getCached, setCached } from '../../../lib/utils/cache';
+import { withCors } from '@/lib/middleware/cors';
+import { db } from '@/lib/config/firebaseAdmin';
+import { getVisibleWeekRange } from '@/lib/utils/weekHelpers';
+import { getCached, setCached } from '@/lib/utils/cache';
 
 async function handler(req, res) {
   if (req.method !== 'GET') {

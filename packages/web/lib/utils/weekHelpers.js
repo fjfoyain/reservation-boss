@@ -1,5 +1,5 @@
 // Week calculation utilities for Ecuador timezone
-import { TIMEZONE } from '../config/constants';
+import { TIMEZONE } from '@/lib/config/constants';
 
 /**
  * Convert date to Guayaquil (Ecuador) timezone

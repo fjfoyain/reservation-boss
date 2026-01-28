@@ -1,5 +1,5 @@
 // GET /api/health - Health check endpoint
-import { withCors } from '../../lib/middleware/cors';
+import { withCors } from '@/lib/middleware/cors';
 
 async function handler(req, res) {
   if (req.method !== 'GET') {

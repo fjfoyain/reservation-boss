@@ -1,7 +1,7 @@
 // GET /api/config - Get app configuration
-import { withCors } from '../../lib/middleware/cors';
-import { PARKING_SPOTS } from '../../lib/config/constants';
-import { getVisibleDates } from '../../lib/utils/weekHelpers';
+import { withCors } from '@/lib/middleware/cors';
+import { PARKING_SPOTS } from '@/lib/config/constants';
+import { getVisibleDates } from '@/lib/utils/weekHelpers';
 
 async function handler(req, res) {
   if (req.method !== 'GET') {

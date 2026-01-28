@@ -1,5 +1,5 @@
 // Email validation utilities
-import { ALLOWED_DOMAIN } from '../config/constants';
+import { ALLOWED_DOMAIN } from '@/lib/config/constants';
 
 /**
  * Validate email format and domain restriction

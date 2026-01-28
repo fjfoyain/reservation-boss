@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-export default function Bot() {
+export default function Booths() {
   const router = useRouter();
 
   return (
     <>
       <Head>
-        <title>Office Bot - Reservation Boss</title>
+        <title>Booth Reservations - Reservation Boss</title>
       </Head>
 
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -24,8 +24,8 @@ export default function Bot() {
                   </svg>
                 </button>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Office Bot</h1>
-                  <p className="text-sm text-gray-600 mt-1">Request office assistance and services</p>
+                  <h1 className="text-3xl font-bold text-gray-900">Booth Reservations</h1>
+                  <p className="text-sm text-gray-600 mt-1">Reserve a booth for focused work</p>
                 </div>
               </div>
             </div>
@@ -34,12 +34,12 @@ export default function Bot() {
 
         <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-            <div className="text-8xl mb-6">🤖</div>
+            <div className="text-8xl mb-6">📞</div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Coming Soon
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              Office bot service is under development.
+              Booth reservation system is under development.
             </p>
             <button
               onClick={() => router.push('/')}

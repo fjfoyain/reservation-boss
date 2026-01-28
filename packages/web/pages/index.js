@@ -22,11 +22,11 @@ export default function Home() {
       available: true
     },
     {
-      id: 'bot',
-      title: 'Office Bot',
-      description: 'Request office assistance and services',
-      icon: '🤖',
-      path: '/bot',
+      id: 'booths',
+      title: 'Booths',
+      description: 'Reserve a booth for focused work',
+      icon: '📞',
+      path: '/booths',
       available: true
     }
   ];

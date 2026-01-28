@@ -1,0 +1,12 @@
+# Environment variables
+.env
+.env.local
+
+# Service account credentials
+*.json
+!package.json
+!package-lock.json
+
+# Email data
+allEmails.json
+reservations.json

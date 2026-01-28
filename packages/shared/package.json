@@ -1,0 +1,13 @@
+{
+  "name": "@parking/shared",
+  "version": "1.0.0",
+  "description": "Shared code between backend, web, and mobile",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["parking", "shared"],
+  "author": "",
+  "license": "ISC"
+}

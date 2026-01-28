@@ -5,7 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://parking-backend-xou4.onrender.com";
+// Use Next.js API routes
+const API_URL = '/api';
 
 const AdminPanel = ({ reservations, fetchReservations, token }) => {
   const [isAdminVisible, setIsAdminVisible] = useState(false);
@@ -13,7 +14,7 @@ const AdminPanel = ({ reservations, fetchReservations, token }) => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this reservation?")) return;
     try {
-      await axios.delete(`${API_URL}/release/${id}`, {
+      await axios.delete(`${API_URL}/reservations/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success("Reservation deleted!");
@@ -26,7 +27,7 @@ const AdminPanel = ({ reservations, fetchReservations, token }) => {
   const handleDeleteOldReservations = async () => {
     if (!window.confirm("Are you sure you want to delete all reservations older than the current visible week? This action cannot be undone.")) return;
     try {
-      const response = await axios.delete(`${API_URL}/delete-old-reservations`, {
+      const response = await axios.post(`${API_URL}/admin/cleanup`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success(response.data.message);

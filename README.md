@@ -1,14 +1,15 @@
-# 🚗 Parking Reservation System
+# 🚗 Reservation Boss
 
-Multi-platform parking reservation system for North Highland offices.
+**Live at:** [https://reservationboss.io](https://reservationboss.io)
+
+Multi-platform parking reservation system for North Highland offices. Modern Next.js full-stack application deployed on Vercel.
 
 ## 📦 Monorepo Structure
 
 ```
-parking-app/
+reservation-boss/
 ├── packages/
-│   ├── backend/       # Express.js API (Node.js)
-│   ├── web/           # Next.js web application
+│   ├── web/           # Next.js Full-Stack (Frontend + API Routes)
 │   └── shared/        # Shared utilities & constants
 ├── apps/              # Future mobile apps (React Native)
 └── docs/              # Documentation
@@ -17,42 +18,50 @@ parking-app/
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js >= 18.0.0
-- npm >= 9.0.0
+- Node.js >= 24.13.0 (LTS)
+- npm >= 10.0.0
 - Firebase account
 
 ### Installation
 
 ```bash
-# Install all dependencies
+# Install dependencies
+cd packages/web
 npm install
 
-# Copy environment files
-cp packages/backend/.env.example packages/backend/.env
-cp packages/web/.env.example packages/web/.env.local
+# Create environment file
+cp .env.example .env.local
+# Edit .env.local with your credentials
 ```
 
 ### Development
 
 ```bash
-# Run both backend and web in development mode
+# Run development server
+cd packages/web
 npm run dev
 
-# Or run individually
-npm run dev:backend    # Backend on port 4000
-npm run dev:web        # Web on port 3000
+# Open http://localhost:3000
 ```
 
 ### Build
 
 ```bash
-# Build all packages
+# Build for production
+cd packages/web
 npm run build
 
-# Build individually
-npm run build:backend
-npm run build:web
+# Start production server
+npm start
 ```
+
+## 🌐 Deployment
+
+**Platform:** Vercel  
+**Domain:** reservationboss.io  
+**Auto-Deploy:** Push to `main` branch
+
+Environment variables are configured in Vercel dashboard.
 
 ## 📱 Current Features
 
@@ -74,40 +83,42 @@ npm run build:web
 
 ## 🏗️ Tech Stack
 
-### Backend
-- **Runtime**: Node.js 18+
-- **Framework**: Express.js
+- **Framework**: Next.js 15.5.10 (Full-Stack)
+- **Runtime**: Node.js 24.13.0 LTS
+- **UI**: React 19.0.0
+- **Styling**: Tailwind CSS 4.0.14
 - **Database**: Firebase Firestore
 - **Auth**: Firebase Authentication
-- **Email**: Nodemailer
+- **Email**: Nodemailer (Gmail SMTP)
+- **Deployment**: Vercel
+- **Domain**: reservationboss.io
 
-### Web
-- **Framework**: Next.js 15.2
-- **UI Library**: React 19
-- **Styling**: Tailwind CSS 4
-- **State**: React hooks
-- **Deployment**: Hostinger (static export)
+### Architecture
+- **Frontend**: React pages with hooks
+- **Backend**: Next.js API Routes (Serverless)
+- **Middleware**: CORS + Firebase Auth
+- **Caching**: In-memory cache for optimization
+- **Timezone**: America/Guayaquil (Ecuador)
 
-### Shared
-- Utility functions
-- Constants
-- Validators
-- Date helpers
-
-## 📁 Package Details
-
-### `packages/backend`
-REST API for parking reservations
-- Port: 4000 (configurable)
-- Deployed on: Render
+## 📁 Project Structure
 
 ### `packages/web`
-Next.js web application
-- Port: 3000 (development)
-- Deployed on: Hostinger subdomain (parking.foysys.com)
+Next.js Full-Stack Application
+```
+web/
+├── pages/              # Frontend pages
+│   ├── index.js       # Main reservation UI
+│   ├── login.js       # Admin login
+│   └── api/           # Backend API routes
+├── lib/               # Server-side utilities
+│   ├── config/        # Firebase Admin, Email, Constants
+│   ├── middleware/    # CORS, Auth
+│   └── utils/         # Week helpers, Validation, Cache
+└── styles/            # Global CSS
+```
 
 ### `packages/shared`
-Shared code between all platforms
+Shared utilities for future mobile apps
 - Constants (parking spots, limits)
 - Utilities (email validation, date helpers)
 - Future: TypeScript types

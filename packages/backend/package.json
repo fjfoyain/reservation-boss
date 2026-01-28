@@ -1,0 +1,24 @@
+{
+  "name": "@reservation-boss/backend",
+  "version": "1.0.0",
+  "description": "Reservation Boss - Express.js backend (ARCHIVED - migrated to Next.js API routes)",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.4.0",
+    "next": "15.5.10",
+    "nodemailer": "^7.0.13"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "author": "Francisco Foyain <fjfoyain@gmail.com>",
+  "license": "ISC"
+}

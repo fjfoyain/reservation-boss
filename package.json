@@ -1,34 +1,34 @@
 {
-  "name": "parking-app",
+  "name": "reservation-boss",
   "version": "1.0.0",
-  "description": "Parking reservation system - Monorepo",
+  "description": "Reservation Boss - Multi-platform resource reservation system",
   "private": true,
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev:backend & npm run dev:web",
-    "dev:backend": "npm run dev --workspace=packages/backend",
+    "dev": "npm run dev --workspace=packages/web",
     "dev:web": "npm run dev --workspace=packages/web",
     "build": "npm run build --workspaces --if-present",
-    "build:backend": "npm run build --workspace=packages/backend",
     "build:web": "npm run build --workspace=packages/web",
-    "start:backend": "npm run start --workspace=packages/backend",
+    "start": "npm run start --workspace=packages/web",
     "start:web": "npm run start --workspace=packages/web",
     "test": "npm run test --workspaces --if-present",
     "clean": "rm -rf node_modules packages/*/node_modules apps/*/node_modules",
     "install:all": "npm install"
   },
   "keywords": [
-    "parking",
     "reservation",
-    "monorepo"
+    "parking",
+    "resource-management",
+    "monorepo",
+    "nextjs"
   ],
-  "author": "Francisco Foyain",
+  "author": "Francisco Foyain <fjfoyain@gmail.com>",
   "license": "ISC",
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "npm": ">=10.0.0"
   }
 }

@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+  }
+
+  /* Fix Titles in Dark Mode */
+  h1, h2 {
+    color: #ffffff !important;
+  }
+
+  /* Fix Input Fields in Dark Mode */
+  input, select {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+  }
+
+  /* Ensure Input Fields Are Visible on Mobile */
+  @media (max-width: 768px) {
+    input, select {
+      background-color: #222222 !important;
+      color: #ffffff !important;
+      border: 1px solid #ffffff !important;
+    }
+    
+    /* Fix Placeholder Text */
+    input::placeholder, select::placeholder {
+      color: #bbbbbb !important;
+    }
+  }
+}
+
+/* Fix mobile text color */
+.text-black {
+  color: black !important;
+}
+
+.text-gray-600 {
+  color: #d1d5db !important;
+}
+
+/* 🌟 Responsive Fixes 🌟 */
+
+/* 🔹 Ensure smooth horizontal scrolling for the weekly schedule */
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+.overflow-x-auto {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 🔹 Center Content */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* 🔹 Adjust form inputs */
+input,
+select,
+button {
+  font-size: 1rem;
+}
+
+/* 🔹 Grid layout responsiveness */
+.weekly-schedule {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Center Days Above Dates */
+.weekly-schedule .weekday-header {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .weekly-schedule {
+    display: grid;
+    grid-template-columns: 1fr; /* 1 column per row */
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+  }
+
+  /* Ensure each date box takes full width */
+  .weekly-schedule .date-box {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+/* Ensure each date box has proper padding */
+.date-box {
+  padding: 1rem;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-width: 180px;
+}
+
+@media (max-width: 768px) {
+  .date-box {
+    min-width: 150px;
+  }
+}

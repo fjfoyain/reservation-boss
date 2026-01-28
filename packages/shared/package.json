@@ -1,13 +1,13 @@
 {
-  "name": "@parking/shared",
+  "name": "@reservation-boss/shared",
   "version": "1.0.0",
   "description": "Shared code between backend, web, and mobile",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["parking", "shared"],
-  "author": "",
+  "keywords": ["reservation-boss", "shared"],
+  "author": "Francisco Foyain",
   "license": "ISC"
 }

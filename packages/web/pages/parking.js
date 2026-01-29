@@ -204,7 +204,7 @@ const ScheduleView = ({ visibleWeekDates, reservations, parkingSpots, selectedDa
       <div className="flex border-b border-gray-200 space-x-4 mb-4 overflow-x-auto pb-2">
         {visibleWeekDates.map(({ date, day }) => (
           <button key={date} onClick={() => setSelectedDate(date)}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap ${selectedDate === date ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}>
+            className={`px-4 py-2 text-sm font-semibold rounded-t-lg whitespace-nowrap ${selectedDate === date ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-700 hover:text-gray-900'}`}>
             {day} ({date.substring(5)})
           </button>
         ))}
@@ -217,11 +217,11 @@ const ScheduleView = ({ visibleWeekDates, reservations, parkingSpots, selectedDa
           
           return (
             <div key={spot} className={`p-4 rounded-lg shadow relative ${isAvailable ? 'bg-green-100' : 'bg-red-100'}`}>
-              <p className="font-bold text-gray-800">{spot}</p>
-              {isAvailable ? <p className="text-sm text-green-800">Available</p> : (
+              <p className="font-bold text-gray-900 text-lg">{spot}</p>
+              {isAvailable ? <p className="text-sm text-green-900 font-semibold">Available</p> : (
                 <div>
-                  <p className="text-sm text-red-800">Reserved</p>
-                  <p className="text-xs text-gray-800 font-medium truncate">{reservation.email}</p>
+                  <p className="text-sm text-red-900 font-semibold">Reserved</p>
+                  <p className="text-xs text-gray-900 font-semibold truncate">{reservation.email}</p>
                   {isUserReservation && (
                     <button
                       onClick={() => onCancelReservation(reservation)}
@@ -375,15 +375,25 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-50">
       <ToastContainer position="top-right" autoClose={3000} />
-      <header className="w-full p-4 text-right bg-white shadow-sm sticky top-0 z-10">
-        {user ? (
+      <header className="w-full p-4 bg-white shadow-sm sticky top-0 z-10">
+        <div className="flex justify-between items-center max-w-7xl mx-auto">
+          <a href="/" className="text-blue-600 hover:text-blue-700 font-semibold flex items-center">
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Home
+          </a>
           <div>
-            <span className="text-sm mr-4">Welcome, {user.email}</span>
-            <button onClick={handleLogout} className="text-sm text-blue-500 hover:underline">Logout</button>
+            {user ? (
+              <div>
+                <span className="text-sm mr-4 text-gray-700 font-medium">Welcome, {user.email}</span>
+                <button onClick={handleLogout} className="text-sm text-blue-600 hover:underline font-medium">Logout</button>
+              </div>
+            ) : (
+              <a href="/login" className="text-sm text-blue-600 hover:underline font-medium">Admin Login</a>
+            )}
           </div>
-        ) : (
-          <a href="/login" className="text-sm text-blue-500 hover:underline">Admin Login</a>
-        )}
+        </div>
       </header>
 
       <main className="w-full p-4">

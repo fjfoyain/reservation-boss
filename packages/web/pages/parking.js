@@ -153,7 +153,7 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
 
       <button 
         onClick={handleConfirmClick}
-        className="bg-blue-600 text-white p-3 w-full rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+        className="bg-nh-teal text-white p-3 w-full rounded hover:bg-nh-navy disabled:bg-gray-400 transition-colors font-medium"
         disabled={loading || !email || !selectedDate || !selectedSpot || !isEmailValid || !canReserveMore}>
         {loading ? "Reserving..." : "Confirm Reservation"}
       </button>
@@ -186,7 +186,7 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
               </button>
               <button
                 onClick={handleProceedReservation}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium"
+                className="flex-1 px-4 py-2 bg-nh-teal text-white rounded hover:bg-nh-navy font-medium transition-colors"
               >
                 I Understand
               </button>
@@ -204,7 +204,7 @@ const ScheduleView = ({ visibleWeekDates, reservations, parkingSpots, selectedDa
       <div className="flex border-b border-gray-200 space-x-4 mb-4 overflow-x-auto pb-2">
         {visibleWeekDates.map(({ date, day }) => (
           <button key={date} onClick={() => setSelectedDate(date)}
-            className={`px-4 py-2 text-sm font-semibold rounded-t-lg whitespace-nowrap ${selectedDate === date ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-700 hover:text-gray-900'}`}>
+            className={`px-4 py-2 text-sm font-semibold rounded-t-lg whitespace-nowrap transition-colors ${selectedDate === date ? 'border-b-2 border-nh-teal text-nh-navy bg-blue-50' : 'text-gray-700 hover:text-nh-navy hover:bg-gray-50'}`}>
             {day} ({date.substring(5)})
           </button>
         ))}
@@ -375,9 +375,9 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-50">
       <ToastContainer position="top-right" autoClose={3000} />
-      <header className="w-full p-4 bg-white shadow-sm sticky top-0 z-10">
+      <header className="w-full p-4 bg-nh-navy shadow-sm sticky top-0 z-10">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <a href="/" className="text-blue-600 hover:text-blue-700 font-semibold flex items-center">
+          <a href="/" className="text-nh-teal hover:text-white font-semibold flex items-center transition-colors">
             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
@@ -386,18 +386,18 @@ export default function Home() {
           <div>
             {user ? (
               <div>
-                <span className="text-sm mr-4 text-gray-700 font-medium">Welcome, {user.email}</span>
-                <button onClick={handleLogout} className="text-sm text-blue-600 hover:underline font-medium">Logout</button>
+                <span className="text-sm mr-4 text-blue-100 font-medium">Welcome, {user.email}</span>
+                <button onClick={handleLogout} className="text-sm text-nh-teal hover:text-white font-medium transition-colors">Logout</button>
               </div>
             ) : (
-              <a href="/login" className="text-sm text-blue-600 hover:underline font-medium">Admin Login</a>
+              <a href="/login" className="text-sm text-nh-teal hover:text-white font-medium transition-colors">Admin Login</a>
             )}
           </div>
         </div>
       </header>
 
       <main className="w-full p-4">
-        <h1 className="text-4xl font-bold text-center my-6 text-gray-800">Parking Reservations</h1>
+        <h1 className="text-4xl font-bold text-center my-6 text-nh-navy">Parking Reservations</h1>
         <div className="w-full max-w-4xl mx-auto mb-8">
           <ScheduleView
             visibleWeekDates={config.visibleWeekDates}

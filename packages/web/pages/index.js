@@ -38,18 +38,18 @@ export default function Home() {
         <meta name="description" content="Resource reservation system for North Highland offices" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
         {/* Header */}
-        <header className="bg-white dark:bg-gray-800 shadow-sm">
+        <header className="bg-nh-navy shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Reservation Boss</h1>
-                <p className="text-sm text-gray-700 dark:text-gray-300 mt-1 font-medium">North Highland Office Resources</p>
+                <h1 className="text-3xl font-bold text-white">Reservation Boss</h1>
+                <p className="text-sm text-blue-100 mt-1 font-medium">North Highland Office Resources</p>
               </div>
               <button
                 onClick={() => router.push('/login')}
-                className="px-4 py-2 text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white hover:bg-nh-dark-navy rounded-md transition-colors border border-white/20"
               >
                 Admin Login
               </button>
@@ -60,10 +60,10 @@ export default function Home() {
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl">
+            <h2 className="text-4xl font-extrabold text-nh-navy sm:text-5xl">
               What would you like to reserve?
             </h2>
-            <p className="mt-4 text-xl text-gray-700 dark:text-gray-300 font-medium">
+            <p className="mt-4 text-xl text-gray-700 font-medium">
               Choose a resource to get started
             </p>
           </div>
@@ -84,24 +84,24 @@ export default function Home() {
                 {/* Card Content */}
                 <div className="p-8">
                   <div className="text-6xl mb-4">{resource.icon}</div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                  <h3 className="text-2xl font-bold text-nh-navy mb-2">
                     {resource.title}
                   </h3>
-                  <p className="text-gray-700 dark:text-gray-300 mb-6 font-medium">
+                  <p className="text-gray-700 mb-6 font-medium">
                     {resource.description}
                   </p>
                   <div className="flex items-center justify-between">
                     <span className={`
                       px-3 py-1 rounded-full text-xs font-bold
                       ${resource.available 
-                        ? 'bg-green-100 text-green-900 dark:bg-green-900 dark:text-green-100' 
-                        : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'}
+                        ? 'bg-green-100 text-green-900' 
+                        : 'bg-gray-200 text-gray-900'}
                     `}>
                       {resource.available ? 'Available' : 'Coming Soon'}
                     </span>
                     {resource.available && (
                       <svg 
-                        className="w-6 h-6 text-indigo-600 dark:text-indigo-400" 
+                        className="w-6 h-6 text-nh-teal" 
                         fill="none" 
                         stroke="currentColor" 
                         viewBox="0 0 24 24"
@@ -118,16 +118,16 @@ export default function Home() {
                 </div>
 
                 {/* Hover Effect Border */}
-                <div className="absolute inset-0 border-4 border-transparent hover:border-indigo-500 rounded-2xl pointer-events-none transition-colors duration-300" />
+                <div className="absolute inset-0 border-4 border-transparent hover:border-nh-teal rounded-2xl pointer-events-none transition-colors duration-300" />
               </div>
             ))}
           </div>
 
           {/* Footer Info */}
           <div className="mt-16 text-center">
-            <p className="text-gray-700 dark:text-gray-300 font-medium">
+            <p className="text-gray-700 font-medium">
               Need help? Contact{' '}
-              <a href="mailto:support@northhighland.com" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold">
+              <a href="mailto:support@northhighland.com" className="text-nh-teal hover:text-nh-navy font-semibold">
                 support@northhighland.com
               </a>
             </p>

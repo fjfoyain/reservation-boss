@@ -114,8 +114,8 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
 
   return (
     <div className="bg-white p-6 shadow-md rounded-md w-full max-w-md">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">Reserve a Spot</h2>
-      <p className="text-sm text-gray-700 mb-4">Selected Date: <span className="font-semibold text-gray-900">{selectedDate || 'Please select a day above'}</span></p>
+      <h2 className="text-2xl font-bold mb-4 text-gray-900">Reserve a Spot</h2>
+      <p className="text-sm text-gray-800 mb-4 font-medium">Selected Date: <span className="font-bold text-gray-900">{selectedDate || 'Please select a day above'}</span></p>
       
       <div className="mb-4">
         <input 
@@ -126,7 +126,7 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
           onChange={(e) => setEmail(e.target.value)} 
         />
         {!isEmailValid && email && (
-          <p className="text-red-500 text-xs mt-1">Only North Highland Email accepted.</p>
+          <p className="text-red-600 text-xs mt-1 font-medium">Only North Highland Email accepted.</p>
         )}
       </div>
 
@@ -140,13 +140,13 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
       </select>
 
       {!canReserveMore && (
-        <p className="text-amber-600 text-sm mb-3 p-2 bg-amber-50 rounded">
+        <p className="text-amber-700 text-sm mb-3 p-2 bg-amber-50 rounded font-medium">
           You have reached the maximum of 3 reservations for this week.
         </p>
       )}
 
       <div className="mb-3">
-        <p className="text-xs text-gray-500">
+        <p className="text-sm text-gray-800 font-medium">
           Weekly reservations: {userReservationCount}/3
         </p>
       </div>

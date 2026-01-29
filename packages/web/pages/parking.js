@@ -153,7 +153,7 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
 
       <button 
         onClick={handleConfirmClick}
-        className="bg-nh-teal text-white p-3 w-full rounded-lg hover:bg-nh-navy disabled:bg-gray-400 transition-colors font-bold text-base shadow-md"
+        className="bg-nh-teal text-white p-3 w-full rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition-colors font-bold text-base shadow-lg border-2 border-nh-teal"
         disabled={loading || !email || !selectedDate || !selectedSpot || !isEmailValid || !canReserveMore}>
         {loading ? "Reserving..." : "Confirm Reservation"}
       </button>
@@ -180,13 +180,13 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={() => setShowWarning(false)}
-                className="flex-1 px-4 py-3 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 font-bold border-2 border-gray-400"
+                className="flex-1 px-4 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 font-bold border-2 border-gray-400 shadow-md"
               >
                 Cancel
               </button>
               <button
                 onClick={handleProceedReservation}
-                className="flex-1 px-4 py-3 bg-nh-teal text-white rounded-lg hover:bg-nh-navy font-bold transition-colors shadow-md"
+                className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition-colors shadow-lg border-2 border-blue-600"
               >
                 I Understand
               </button>

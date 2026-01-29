@@ -395,6 +395,8 @@ export default function Home() {
             parkingSpots={config.parkingSpots}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
+            userEmail={email}
+            onCancelReservation={handleCancelReservation}
           />
         </div>
         <div className="flex justify-center">
@@ -417,6 +419,76 @@ export default function Home() {
           />
         )}
       </main>
+
+      {/* Cancellation Modal */}
+      {cancellationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            {cancellationModal.step === 'confirm' ? (
+              <>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Cancel Reservation</h3>
+                <div className="mb-4 p-4 bg-gray-50 rounded">
+                  <p className="text-sm text-gray-700"><strong>Spot:</strong> {cancellationModal.reservation.spot}</p>
+                  <p className="text-sm text-gray-700"><strong>Date:</strong> {cancellationModal.reservation.date}</p>
+                  <p className="text-sm text-gray-700"><strong>Email:</strong> {cancellationModal.reservation.email}</p>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">
+                  A 6-digit cancellation code will be sent to your email. You'll need to enter this code to confirm the cancellation.
+                </p>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={closeCancellationModal}
+                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 font-medium"
+                    disabled={cancelLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleRequestCancellationCode}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-medium disabled:bg-gray-400"
+                    disabled={cancelLoading}
+                  >
+                    {cancelLoading ? 'Sending...' : 'Send Code'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Enter Cancellation Code</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  A 6-digit code has been sent to <strong>{cancellationModal.reservation.email}</strong>. 
+                  Please check your email and enter the code below. It will expire in 10 minutes.
+                </p>
+                <input
+                  type="text"
+                  value={cancellationCode}
+                  onChange={(e) => setCancellationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="Enter 6-digit code"
+                  className="w-full px-4 py-3 border border-gray-300 rounded text-center text-2xl tracking-widest mb-4"
+                  maxLength={6}
+                  autoFocus
+                />
+                <div className="flex space-x-3">
+                  <button
+                    onClick={closeCancellationModal}
+                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 font-medium"
+                    disabled={cancelLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleVerifyAndCancel}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-medium disabled:bg-gray-400"
+                    disabled={cancelLoading || cancellationCode.length !== 6}
+                  >
+                    {cancelLoading ? 'Verifying...' : 'Confirm Cancellation'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

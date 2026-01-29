@@ -92,6 +92,8 @@ const AdminPanel = ({ reservations, fetchReservations, token }) => {
 };
 
 const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelectedSpot, availableSpots, handleReserve, loading, userReservationCount }) => {
+  const [showWarning, setShowWarning] = useState(false);
+
   // Email domain validation
   const validateEmail = (email) => {
     const emailLower = email.toLowerCase().trim();
@@ -100,6 +102,15 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
 
   const isEmailValid = validateEmail(email);
   const canReserveMore = userReservationCount < 3;
+
+  const handleConfirmClick = () => {
+    setShowWarning(true);
+  };
+
+  const handleProceedReservation = () => {
+    setShowWarning(false);
+    handleReserve();
+  };
 
   return (
     <div className="bg-white p-6 shadow-md rounded-md w-full max-w-md">
@@ -141,11 +152,48 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
       </div>
 
       <button 
-        onClick={handleReserve}
+        onClick={handleConfirmClick}
         className="bg-blue-600 text-white p-3 w-full rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
         disabled={loading || !email || !selectedDate || !selectedSpot || !isEmailValid || !canReserveMore}>
         {loading ? "Reserving..." : "Confirm Reservation"}
       </button>
+
+      {/* Warning Modal */}
+      {showWarning && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex items-start mb-4">
+              <div className="flex-shrink-0">
+                <svg className="h-6 w-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div className="ml-3 flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Important Reminder</h3>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Remember, the use of parking lots is a benefit and should be used responsibly. 
+                  If you plan to not come one day, it will be tolerated only to be changed until <strong>8:00 AM</strong> so someone else can reserve your spot. 
+                  The spot should be removed as we will be taking monthly reports to compare with UrbaPark.
+                </p>
+              </div>
+            </div>
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={() => setShowWarning(false)}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleProceedReservation}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium"
+              >
+                I Understand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

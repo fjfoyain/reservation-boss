@@ -198,7 +198,7 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
   );
 };
 
-const ScheduleView = ({ visibleWeekDates, reservations, parkingSpots, selectedDate, setSelectedDate }) => {
+const ScheduleView = ({ visibleWeekDates, reservations, parkingSpots, selectedDate, setSelectedDate, userEmail, onCancelReservation }) => {
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="flex border-b border-gray-200 space-x-4 mb-4 overflow-x-auto pb-2">
@@ -213,13 +213,24 @@ const ScheduleView = ({ visibleWeekDates, reservations, parkingSpots, selectedDa
         {parkingSpots.map((spot) => {
           const reservation = reservations.find(r => r.date === selectedDate && r.spot === spot);
           const isAvailable = !reservation;
+          const isUserReservation = reservation && userEmail && reservation.email.toLowerCase() === userEmail.toLowerCase();
+          
           return (
-            <div key={spot} className={`p-4 rounded-lg shadow ${isAvailable ? 'bg-green-100' : 'bg-red-100'}`}>
+            <div key={spot} className={`p-4 rounded-lg shadow relative ${isAvailable ? 'bg-green-100' : 'bg-red-100'}`}>
               <p className="font-bold text-gray-800">{spot}</p>
               {isAvailable ? <p className="text-sm text-green-800">Available</p> : (
                 <div>
                   <p className="text-sm text-red-800">Reserved</p>
                   <p className="text-xs text-gray-800 font-medium truncate">{reservation.email}</p>
+                  {isUserReservation && (
+                    <button
+                      onClick={() => onCancelReservation(reservation)}
+                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors"
+                      title="Cancel reservation"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -239,6 +250,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [idToken, setIdToken] = useState('');
+  const [cancellationModal, setCancellationModal] = useState(null); // { reservation, step: 'confirm' | 'code' }
+  const [cancellationCode, setCancellationCode] = useState('');
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   const fetchInitialData = async () => {
     try {
@@ -300,6 +314,52 @@ export default function Home() {
       toast.error(error.response?.data?.error || "Reservation failed.");
     }
     setLoading(false);
+  };
+
+  const handleCancelReservation = (reservation) => {
+    setCancellationModal({ reservation, step: 'confirm' });
+  };
+
+  const handleRequestCancellationCode = async () => {
+    setCancelLoading(true);
+    try {
+      await axios.post(`${API_URL}/cancellation/request-code`, {
+        reservationId: cancellationModal.reservation.id,
+        email
+      });
+      toast.success('Cancellation code sent to your email! Check your inbox.');
+      setCancellationModal({ ...cancellationModal, step: 'code' });
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to send cancellation code');
+    }
+    setCancelLoading(false);
+  };
+
+  const handleVerifyAndCancel = async () => {
+    if (!cancellationCode.trim()) {
+      toast.error('Please enter the cancellation code');
+      return;
+    }
+
+    setCancelLoading(true);
+    try {
+      await axios.post(`${API_URL}/cancellation/verify-and-cancel`, {
+        reservationId: cancellationModal.reservation.id,
+        code: cancellationCode
+      });
+      toast.success('Reservation cancelled successfully!');
+      setCancellationModal(null);
+      setCancellationCode('');
+      fetchReservations();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to cancel reservation');
+    }
+    setCancelLoading(false);
+  };
+
+  const closeCancellationModal = () => {
+    setCancellationModal(null);
+    setCancellationCode('');
   };
 
   const handleLogout = () => signOut(auth);

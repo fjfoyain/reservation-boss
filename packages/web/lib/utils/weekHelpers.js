@@ -31,7 +31,7 @@ export function getVisibleWeekRange() {
     d.setDate(monday.getDate() + i);
     dates.push(d.toISOString().split('T')[0]); // YYYY-MM-DD
   }
-  return { start: dates[0], end: dates[4], dates };
+  return { startDate: dates[0], endDate: dates[4], start: dates[0], end: dates[4], dates };
 }
 
 /**

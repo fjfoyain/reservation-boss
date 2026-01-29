@@ -153,7 +153,7 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
 
       <button 
         onClick={handleConfirmClick}
-        className="bg-nh-teal text-white p-3 w-full rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition-colors font-bold text-base shadow-lg border-2 border-nh-teal"
+        className="bg-blue-600 text-white p-3 w-full rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors font-bold text-base shadow-lg"
         disabled={loading || !email || !selectedDate || !selectedSpot || !isEmailValid || !canReserveMore}>
         {loading ? "Reserving..." : "Confirm Reservation"}
       </button>

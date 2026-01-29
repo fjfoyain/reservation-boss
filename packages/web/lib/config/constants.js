@@ -1,15 +1,10 @@
 // Application constants
 export const PARKING_SPOTS = [
-  'Parqueadero 57',
-  'Parqueadero 61',
-  'Parqueadero 343',
-  'Parqueadero 344',
-  'Parqueadero 345',
-  'Parqueadero 346',
-  'Parqueadero 347',
-  'Parqueadero 348',
-  'Parqueadero 349',
-  'Parqueadero 350',
+  'Parking 1',
+  'Parking 2',
+  'Parking 3',
+  'Parking 4',
+  'Parking 5',
 ];
 
 export const ALLOWED_DOMAIN = '@northhighland.com';

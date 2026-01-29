@@ -44,8 +44,8 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-white">Reservation Boss</h1>
-                <p className="text-sm text-white mt-1 font-semibold">North Highland Office Resources</p>
+                <h1 className="text-3xl font-bold text-gray-300">Reservation Boss</h1>
+                <p className="text-sm text-nh-teal mt-1 font-semibold">North Highland Office Resources</p>
               </div>
               <button
                 onClick={() => router.push('/login')}

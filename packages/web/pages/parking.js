@@ -46,12 +46,20 @@ const AdminPanel = ({ reservations, fetchReservations, token }) => {
         <div className="bg-white p-4 rounded-lg shadow-md">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold text-gray-800">Admin - Week Reservations</h3>
-            <button
-              onClick={handleDeleteOldReservations}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm font-medium"
-            >
-              Delete Old Reservations
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => window.location.href = '/admin/reports'}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-medium"
+              >
+                📊 Reports
+              </button>
+              <button
+                onClick={handleDeleteOldReservations}
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm font-medium"
+              >
+                Delete Old Reservations
+              </button>
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">

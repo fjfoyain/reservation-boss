@@ -10,13 +10,17 @@ async function handler(req, res) {
   }
 
   try {
+    console.log('[Weekly Report] Starting fetch...');
     const { startDate, endDate } = getVisibleWeekRange();
+    console.log('[Weekly Report] Week range:', { startDate, endDate });
     
     // Get all reservations for the current week
     const snapshot = await db.collection('reservations')
       .where('date', '>=', startDate)
       .where('date', '<=', endDate)
       .get();
+
+    console.log('[Weekly Report] Found reservations:', snapshot.size);
 
     // Group by email and count unique days
     const userStats = {};
@@ -48,14 +52,16 @@ async function handler(req, res) {
       reservations: user.reservations.sort((a, b) => a.date.localeCompare(b.date))
     })).sort((a, b) => b.daysCount - a.daysCount || a.email.localeCompare(b.email));
 
+    console.log('[Weekly Report] Returning report with', report.length, 'users');
     res.status(200).json({
       weekStart: startDate,
       weekEnd: endDate,
       report
     });
   } catch (error) {
-    console.error('Error fetching weekly report:', error);
-    res.status(500).json({ error: 'Failed to fetch weekly report' });
+    console.error('[Weekly Report] Error:', error);
+    console.error('[Weekly Report] Error stack:', error.stack);
+    res.status(500).json({ error: 'Failed to fetch weekly report', details: error.message });
   }
 }
 

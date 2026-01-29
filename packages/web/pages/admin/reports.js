@@ -105,28 +105,28 @@ export default function Reports() {
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <header className="bg-white shadow-sm">
+        <header className="bg-nh-navy shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => router.push('/parking')}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="text-nh-teal hover:text-white transition-colors"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
                 </button>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Parking Reports</h1>
-                  <p className="text-sm text-gray-600 mt-1">Admin Dashboard</p>
+                  <h1 className="text-3xl font-bold text-white">Parking Reports</h1>
+                  <p className="text-sm text-nh-teal mt-1 font-semibold">Admin Dashboard</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600">{user?.email}</span>
+                <span className="text-sm text-white font-medium">{user?.email}</span>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                  className="px-4 py-2 text-sm font-semibold text-white hover:bg-nh-dark-navy rounded-md transition-colors border border-white/40"
                 >
                   Logout
                 </button>
@@ -236,7 +236,7 @@ export default function Reports() {
               <button
                 onClick={handleDownloadCSV}
                 disabled={downloading}
-                className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {downloading ? 'Downloading...' : 'Download CSV'}
               </button>

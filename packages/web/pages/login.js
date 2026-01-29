@@ -22,9 +22,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <form onSubmit={handleLogin} className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Admin Login</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center text-nh-navy">Admin Login</h1>
         <input
           type="email"
           value={email}
@@ -41,8 +41,8 @@ export default function LoginPage() {
           className="border p-2 w-full mb-4 rounded"
           required
         />
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <button type="submit" className="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700">
+        {error && <p className="text-red-600 text-sm mb-4 font-medium">{error}</p>}
+        <button type="submit" className="bg-blue-600 text-white p-3 w-full rounded-lg hover:bg-blue-700 font-bold shadow-lg transition-colors">
           Login
         </button>
       </form>

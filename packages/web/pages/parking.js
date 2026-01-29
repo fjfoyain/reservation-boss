@@ -39,7 +39,7 @@ const AdminPanel = ({ reservations, fetchReservations, token }) => {
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-8">
-      <button onClick={() => setIsAdminVisible(!isAdminVisible)} className="text-sm text-blue-500 hover:underline mb-4">
+      <button onClick={() => setIsAdminVisible(!isAdminVisible)} className="text-sm text-nh-teal hover:text-nh-navy font-semibold mb-4 transition-colors">
         {isAdminVisible ? 'Hide Admin Panel' : 'Show Admin Panel'}
       </button>
       {isAdminVisible && (
@@ -386,11 +386,11 @@ export default function Home() {
           <div>
             {user ? (
               <div>
-                <span className="text-sm mr-4 text-blue-100 font-medium">Welcome, {user.email}</span>
-                <button onClick={handleLogout} className="text-sm text-nh-teal hover:text-white font-medium transition-colors">Logout</button>
+                <span className="text-sm mr-4 text-white font-medium">Welcome, {user.email}</span>
+                <button onClick={handleLogout} className="text-sm text-nh-teal hover:text-white font-semibold transition-colors">Logout</button>
               </div>
             ) : (
-              <a href="/login" className="text-sm text-nh-teal hover:text-white font-medium transition-colors">Admin Login</a>
+              <a href="/login" className="text-sm text-nh-teal hover:text-white font-semibold transition-colors">Admin Login</a>
             )}
           </div>
         </div>

@@ -127,8 +127,8 @@ export default function Home() {
           <div className="mt-16 text-center">
             <p className="text-gray-800 font-semibold">
               Need help? Contact{' '}
-              <a href="mailto:support@northhighland.com" className="text-nh-teal hover:text-nh-navy font-bold underline">
-                support@northhighland.com
+              <a className="text-nh-teal hover:text-nh-navy font-bold underline">
+                Francisco Foyain on Teams
               </a>
             </p>
           </div>

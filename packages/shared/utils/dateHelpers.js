@@ -28,8 +28,8 @@ export function getVisibleWeekRange() {
   const monday = new Date(now);
   monday.setDate(now.getDate() - (effective - 1));
 
-  // After Fri 6pm, Sat, Sun -> show next week
-  if ((dow === 5 && hour >= 19) || dow === 6 || dow === 0) {
+  // After Fri 2pm, Sat, Sun -> show next week
+  if ((dow === 5 && hour >= 14) || dow === 6 || dow === 0) {
     monday.setDate(monday.getDate() + 7);
   }
 

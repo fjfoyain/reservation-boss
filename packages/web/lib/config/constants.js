@@ -5,6 +5,11 @@ export const PARKING_SPOTS = [
   'Parking 3',
   'Parking 4',
   'Parking 5',
+  'Parking 6',
+  'Parking 7',
+  'Parking 8',
+  'Parking 9',
+  'Parking 10',
 ];
 
 export const ALLOWED_DOMAIN = '@northhighland.com';

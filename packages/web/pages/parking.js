@@ -170,10 +170,13 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
               </div>
               <div className="ml-3 flex-1">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Important Reminder</h3>
-                <p className="text-sm text-gray-700 leading-relaxed">
+                <p className="text-sm text-gray-700 leading-relaxed mb-3">
                   Remember, the use of parking lots is a benefit and should be used responsibly. 
                   If you plan to not come one day, it will be tolerated only to be changed until <strong>8:00 AM</strong> so someone else can reserve your spot. 
                   The spot should be removed as we will be taking monthly reports to compare with UrbaPark.
+                </p>
+                <p className="text-sm text-red-700 leading-relaxed font-semibold bg-red-50 p-3 rounded border-l-4 border-red-600">
+                  <strong>Note:</strong> People who misuse the parking and leave others without spots because they didn't remove their reservation will be charged at the end of the month.
                 </p>
               </div>
             </div>

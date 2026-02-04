@@ -2,6 +2,12 @@
 import { withCors } from '@/lib/middleware/cors';
 import { db } from '@/lib/config/firebaseAdmin';
 import { sendCancellationCodeEmail } from '@/lib/config/email';
+import { TIMEZONE } from '@/lib/config/constants';
+
+// Convert to Ecuador timezone
+function toEcuadorTime(date = new Date()) {
+  return new Date(date.toLocaleString('en-US', { timeZone: TIMEZONE }));
+}
 
 // Generate 6-digit code
 function generateCode() {
@@ -10,9 +16,9 @@ function generateCode() {
 
 // Check if cancellation is allowed (future days or before 8 AM on same day)
 function canCancelReservation(dateStr) {
-  const now = new Date();
+  const nowEcuador = toEcuadorTime(); // Get current time in Ecuador timezone
   const reservationDate = new Date(dateStr + 'T00:00:00-05:00'); // Ecuador timezone
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const today = new Date(nowEcuador.getFullYear(), nowEcuador.getMonth(), nowEcuador.getDate());
   const resDate = new Date(reservationDate.getFullYear(), reservationDate.getMonth(), reservationDate.getDate());
   
   // Future dates can always be cancelled
@@ -20,9 +26,9 @@ function canCancelReservation(dateStr) {
     return true;
   }
   
-  // Same day can be cancelled before 8 AM
+  // Same day can be cancelled before 8 AM Ecuador time
   if (resDate.getTime() === today.getTime()) {
-    const hour = now.getHours();
+    const hour = nowEcuador.getHours();
     return hour < 8;
   }
   

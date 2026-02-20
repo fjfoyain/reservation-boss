@@ -4,6 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { MAX_WEEKLY_RESERVATIONS } from '../lib/config/constants';
 
 // Use Next.js API routes
 const API_URL = '/api';
@@ -141,13 +142,13 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
 
       {!canReserveMore && (
         <p className="text-amber-700 text-sm mb-3 p-2 bg-amber-50 rounded font-medium">
-          You have reached the maximum of 3 reservations for this week.
+          You have reached the maximum of {MAX_WEEKLY_RESERVATIONS} reservations for this week.
         </p>
       )}
 
       <div className="mb-3">
         <p className="text-sm text-gray-800 font-medium">
-          Weekly reservations: {userReservationCount}/3
+          Weekly reservations: {userReservationCount}/{MAX_WEEKLY_RESERVATIONS}
         </p>
       </div>
 

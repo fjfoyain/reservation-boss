@@ -77,7 +77,7 @@ async function handler(req, res) {
         throw new Error(`Parking spot ${spot} is already reserved for this date.`);
       }
 
-      // Check weekly limit (3 reservations per week)
+      // Check weekly limit
       if (userWeeklySnap.size >= MAX_WEEKLY_RESERVATIONS) {
         throw new Error(
           `You can only make ${MAX_WEEKLY_RESERVATIONS} reservations per week. You currently have ${userWeeklySnap.size} reservations.`

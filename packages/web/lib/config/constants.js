@@ -13,7 +13,7 @@ export const PARKING_SPOTS = [
 ];
 
 export const ALLOWED_DOMAIN = '@northhighland.com';
-export const MAX_WEEKLY_RESERVATIONS = 3;
+export const MAX_WEEKLY_RESERVATIONS = 4;
 export const TIMEZONE = 'America/Guayaquil';
 
 // CORS allowed origins

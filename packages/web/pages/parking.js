@@ -102,7 +102,7 @@ const ReservationForm = ({ email, setEmail, selectedDate, selectedSpot, setSelec
   };
 
   const isEmailValid = validateEmail(email);
-  const canReserveMore = userReservationCount < 3;
+  const canReserveMore = userReservationCount < MAX_WEEKLY_RESERVATIONS;
 
   const handleConfirmClick = () => {
     setShowWarning(true);

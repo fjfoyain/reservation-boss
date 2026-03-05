@@ -16,7 +16,7 @@ function Toggle({ checked, onChange }) {
   );
 }
 
-function SpotRow({ spot, index, isDisabled, onToggle, onRename, assigned }) {
+function SpotRow({ spot, index, isDisabled, onToggle, onRename, onRemove, assigned }) {
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(spot.name);
   const inputRef = useRef(null);
@@ -81,9 +81,16 @@ function SpotRow({ spot, index, isDisabled, onToggle, onRename, assigned }) {
           {isInternal && !assigned && <p className="text-xs text-amber-500">Unassigned</p>}
         </div>
       </div>
-      <div className="flex items-center gap-3 ml-3 shrink-0">
+      <div className="flex items-center gap-2 ml-3 shrink-0">
         <span className={`text-xs font-medium ${active ? 'text-emerald-600' : 'text-gray-400'}`}>{active ? 'Active' : 'Disabled'}</span>
         <Toggle checked={active} onChange={() => onToggle(spot.name)} />
+        <button
+          onClick={() => onRemove(index)}
+          className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-opacity p-0.5"
+          title="Remove spot"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 16 }}>delete</span>
+        </button>
       </div>
     </div>
   );
@@ -103,6 +110,9 @@ export default function AdminParkingPage() {
   const [weeklyLimit, setWeeklyLimit] = useState(4);
   const [cutoffTime, setCutoffTime] = useState('08:00');
   const [savingRules, setSavingRules] = useState(false);
+
+  // Add spot form
+  const [newSpotName, setNewSpotName] = useState({ internal: '', external: '' });
 
   // Blackout dates
   const [blackouts, setBlackouts] = useState([]);
@@ -170,6 +180,23 @@ export default function AdminParkingPage() {
       });
       return next;
     });
+  }
+
+  function addSpot(type) {
+    const name = newSpotName[type].trim();
+    if (!name) return;
+    if (spots.some((s) => s.name.toLowerCase() === name.toLowerCase())) {
+      showToast('A spot with that name already exists');
+      return;
+    }
+    setSpots((prev) => [...prev, { name, type }]);
+    setNewSpotName((prev) => ({ ...prev, [type]: '' }));
+  }
+
+  function removeSpot(index) {
+    const spot = spots[index];
+    setSpots((prev) => prev.filter((_, i) => i !== index));
+    setDisabledSpots((prev) => { const n = new Set(prev); n.delete(spot.name); return n; });
   }
 
   async function saveSpotChanges() {
@@ -285,10 +312,30 @@ export default function AdminParkingPage() {
                       isDisabled={disabledSpots.has(spot.name)}
                       onToggle={toggleSpot}
                       onRename={renameSpot}
+                      onRemove={removeSpot}
                       assigned={spotAssignments[spot.name]}
                     />
                   );
                 })}
+                {/* Add internal spot */}
+                <div className="flex items-center gap-2 px-5 py-2 bg-gray-50">
+                  <input
+                    type="text"
+                    placeholder="New internal spot name…"
+                    value={newSpotName.internal}
+                    onChange={(e) => setNewSpotName((p) => ({ ...p, internal: e.target.value }))}
+                    onKeyDown={(e) => e.key === 'Enter' && addSpot('internal')}
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                  <button
+                    onClick={() => addSpot('internal')}
+                    disabled={!newSpotName.internal.trim()}
+                    className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white rounded-lg disabled:opacity-40"
+                    style={{ backgroundColor: '#1183d4' }}
+                  >
+                    <span className="material-symbols-outlined text-sm">add</span>Add
+                  </button>
+                </div>
               </div>
 
               {/* External Spots */}
@@ -306,10 +353,30 @@ export default function AdminParkingPage() {
                       isDisabled={disabledSpots.has(spot.name)}
                       onToggle={toggleSpot}
                       onRename={renameSpot}
+                      onRemove={removeSpot}
                       assigned={null}
                     />
                   );
                 })}
+                {/* Add external spot */}
+                <div className="flex items-center gap-2 px-5 py-2 bg-gray-50">
+                  <input
+                    type="text"
+                    placeholder="New external spot name…"
+                    value={newSpotName.external}
+                    onChange={(e) => setNewSpotName((p) => ({ ...p, external: e.target.value }))}
+                    onKeyDown={(e) => e.key === 'Enter' && addSpot('external')}
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  />
+                  <button
+                    onClick={() => addSpot('external')}
+                    disabled={!newSpotName.external.trim()}
+                    className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white rounded-lg disabled:opacity-40"
+                    style={{ backgroundColor: '#1183d4' }}
+                  >
+                    <span className="material-symbols-outlined text-sm">add</span>Add
+                  </button>
+                </div>
               </div>
             </div>
             <div className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex justify-end">

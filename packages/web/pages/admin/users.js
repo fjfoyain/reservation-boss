@@ -9,11 +9,6 @@ const ROLE_LABELS = {
   none: { label: 'No Parking', bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200' },
 };
 
-const ALL_SPOTS = [
-  'Parking 1', 'Parking 2', 'Parking 3', 'Parking 4', 'Parking 5',
-  'Parking 6', 'Parking 7', 'Parking 8', 'Parking 9', 'Parking 10',
-];
-
 const ROLE_FILTERS = ['all', 'admin', 'internal', 'external', 'none'];
 
 export default function AdminUsersPage() {
@@ -29,6 +24,7 @@ export default function AdminUsersPage() {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
   const [takenSpots, setTakenSpots] = useState(new Set());
+  const [internalSpots, setInternalSpots] = useState([]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
@@ -36,6 +32,14 @@ export default function AdminUsersPage() {
       const idToken = await firebaseUser.getIdToken();
       setToken(idToken);
       fetchUsers(idToken);
+      // Load dynamic parking spots from config
+      fetch('/api/v3/admin/parking-config', { headers: { Authorization: `Bearer ${idToken}` } })
+        .then((r) => r.json())
+        .then((d) => {
+          const spots = (d.config?.spots || []).filter((s) => s.type === 'internal').map((s) => s.name);
+          setInternalSpots(spots);
+        })
+        .catch(() => {});
     });
     return () => unsubscribe();
   }, []);
@@ -275,7 +279,7 @@ export default function AdminUsersPage() {
                     className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2"
                   >
                     <option value="">— Select spot —</option>
-                    {ALL_SPOTS.map((s) => {
+                    {internalSpots.map((s) => {
                       const isTaken = takenSpots.has(s) && s !== editUser.internalSpot;
                       return (
                         <option key={s} value={s} disabled={isTaken}>

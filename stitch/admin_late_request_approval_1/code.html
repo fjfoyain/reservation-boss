@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Late Request Approval</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13daec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col md:flex-row group/design-root overflow-x-hidden">
+<!-- Sidebar -->
+<div class="flex h-full min-h-[700px] flex-col justify-between bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 p-4 w-full md:w-64 shrink-0">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center px-3 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-slate-200 dark:bg-slate-700" data-alt="North Highland Company Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBZKnQlp-B1VEd3A7kvwzO9R16AwbY47329zhrjfMFwLH3OyhdQoACpT7YrE_9smoMyJ4RGXXEQpS970XS9oCfXCb_x6Z-kICuv2FLBP-CtELij5Zno_2zDVlLzFKjeaOBSLYCIOqlD8s3n-pOfrH1L1rxUa2gza40mGVfiOm60y05fvYlYHJf1eaIi-ZvzE4T5LBH5VXMZ3tOa58YiERo6ahCXkhlFAc8c9iYz6rO4DIixEMdfxzEruMwlPxe9rhucbUo192JJeA0");'></div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-slate-100 text-base font-bold leading-normal">North Highland</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Admin Portal</p>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">dashboard</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<p class="text-primary text-sm font-medium leading-normal">Pending Requests</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">group</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">settings</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">logout</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Log Out</p>
+</a>
+</div>
+</div>
+<!-- Main Content -->
+<div class="flex flex-col flex-1 max-w-[1200px] mx-auto w-full">
+<div class="flex flex-wrap items-center justify-between gap-3 p-6 md:p-8">
+<div class="flex min-w-72 flex-col gap-1">
+<h2 class="text-slate-900 dark:text-slate-100 text-[28px] md:text-[32px] font-bold leading-tight">Pending Requests</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm md:text-base font-normal leading-normal">Review and manage late cancellation and change requests.</p>
+</div>
+</div>
+<div class="px-6 md:px-8 pb-8 @container">
+<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+<table class="w-full min-w-[800px] text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+<tr>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[20%]">Employee Name</th>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[20%]">Reservation Date</th>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[35%]">Reason for Change</th>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[25%] text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-xs">JD</div>
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">John Doe</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Oct 25, 2023</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Medical Emergency</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="px-3 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50">Approve</button>
+<button class="px-3 py-1.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500/50">Deny</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-xs">JS</div>
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Jane Smith</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Oct 26, 2023</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Car broke down</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="px-3 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50">Approve</button>
+<button class="px-3 py-1.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500/50">Deny</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-xs">RJ</div>
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Robert Jones</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Oct 26, 2023</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Traffic accident</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="px-3 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50">Approve</button>
+<button class="px-3 py-1.5 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500/50">Deny</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-center pt-6 gap-1">
+<a class="flex size-10 items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</a>
+<a class="text-sm font-bold leading-normal flex size-10 items-center justify-center text-primary bg-primary/10 rounded-full" href="#">1</a>
+<a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" href="#">2</a>
+<a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" href="#">3</a>
+<a class="flex size-10 items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,249 +1,179 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { auth } from '@/lib/firebase';
+import AdminLayout from '@/components/AdminLayout';
 
-const API_URL = '/api';
+const TABS = ['attendance', 'parking', 'rooms', 'late-requests'];
+const TAB_LABELS = { attendance: 'Attendance', parking: 'Parking', rooms: 'Rooms', 'late-requests': 'Late Requests' };
 
-export default function Reports() {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [weeklyReport, setWeeklyReport] = useState(null);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [downloading, setDownloading] = useState(false);
+function getCurrentMonday() {
+  const d = new Date();
+  const dow = d.getDay();
+  const diff = dow === 0 ? -6 : 1 - dow;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().split('T')[0];
+}
+
+export default function AdminReportsPage() {
+  const [token, setToken] = useState('');
+  const [tab, setTab] = useState('attendance');
+  const [reportType, setReportType] = useState('weekly');
+  const [date, setDate] = useState(getCurrentMonday());
+  const [reportData, setReportData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const idToken = await currentUser.getIdToken();
-        setToken(idToken);
-        fetchWeeklyReport(idToken);
-      } else {
-        router.push('/login');
-      }
-      setLoading(false);
+    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+      if (!firebaseUser) return;
+      const idToken = await firebaseUser.getIdToken();
+      setToken(idToken);
     });
-
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
-  const fetchWeeklyReport = async (idToken) => {
+  useEffect(() => {
+    if (!token) return;
+    loadReport();
+  }, [token, tab, reportType, date]);
+
+  async function loadReport() {
+    setLoading(true);
+    const endpoint =
+      tab === 'late-requests'
+        ? `/api/v3/admin/reports/late-requests?period=${reportType}&date=${date}`
+        : `/api/v3/admin/reports/${tab}?type=${reportType}&date=${date}`;
     try {
-      const response = await axios.get(`${API_URL}/reports/weekly`, {
-        headers: { Authorization: `Bearer ${idToken}` }
-      });
-      setWeeklyReport(response.data);
-    } catch (error) {
-      toast.error('Failed to fetch weekly report');
-      console.error(error);
+      const res = await fetch(endpoint, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      setReportData(data);
+    } catch {
+      setReportData(null);
     }
-  };
-
-  const handleDownloadCSV = async () => {
-    setDownloading(true);
-    try {
-      const response = await axios.get(
-        `${API_URL}/reports/monthly-csv?year=${selectedYear}&month=${selectedMonth}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          responseType: 'blob'
-        }
-      );
-      
-      // Create download link
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      const monthName = new Date(selectedYear, selectedMonth - 1).toLocaleString('en-US', { month: 'long' });
-      link.setAttribute('download', `parking-report-${monthName}-${selectedYear}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      
-      toast.success('CSV downloaded successfully!');
-    } catch (error) {
-      toast.error('Failed to download CSV');
-      console.error(error);
-    }
-    setDownloading(false);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await auth.signOut();
-      router.push('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
-      </div>
-    );
+    setLoading(false);
   }
 
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  async function downloadCSV() {
+    const endpoint =
+      tab === 'late-requests'
+        ? `/api/v3/admin/reports/late-requests?period=${reportType}&date=${date}&format=csv`
+        : `/api/v3/admin/reports/${tab}?type=${reportType}&date=${date}&format=csv`;
+    const res = await fetch(endpoint, { headers: { Authorization: `Bearer ${token}` } });
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nh-${tab}-${reportType}-${date}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 3 }, (_, i) => currentYear - i);
+  const rows = reportData?.rows || [];
 
   return (
-    <>
-      <ToastContainer position="top-right" autoClose={3000} />
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="bg-nh-navy shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => router.push('/parking')}
-                  className="text-nh-teal hover:text-white transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                  </svg>
-                </button>
-                <div>
-                  <h1 className="text-3xl font-bold text-white">Parking Reports</h1>
-                  <p className="text-sm text-nh-teal mt-1 font-semibold">Admin Dashboard</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-white font-medium">{user?.email}</span>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 text-sm font-semibold text-white hover:bg-nh-dark-navy rounded-md transition-colors border border-white/40"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
+    <AdminLayout title="Reports">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-end mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
+            <p className="text-sm text-gray-500 mt-1">Attendance, parking, room usage, and late request analytics.</p>
           </div>
-        </header>
+          <button
+            onClick={downloadCSV}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
+          >
+            <span className="material-symbols-outlined text-sm">download</span>
+            Export CSV
+          </button>
+        </div>
 
-        <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          {/* Weekly Report Section */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Current Week Report</h2>
-            {weeklyReport && (
-              <>
-                <p className="text-sm text-gray-600 mb-4">
-                  Week: {weeklyReport.weekStart} to {weeklyReport.weekEnd}
-                </p>
-                
-                {weeklyReport.report.length === 0 ? (
-                  <p className="text-gray-500 italic">No reservations this week</p>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Email
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Days
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Details
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {weeklyReport.report.map((user, idx) => (
-                          <tr key={idx} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {user.email}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
-                                {user.daysCount} {user.daysCount === 1 ? 'day' : 'days'}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 text-sm text-gray-500">
-                              {user.reservations.map((res, i) => (
-                                <div key={i}>
-                                  {res.date}: {res.spot}
-                                </div>
-                              ))}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+        {/* Tab bar */}
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+          {TABS.map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium border whitespace-nowrap transition-colors ${
+                tab === t ? 'text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+              }`}
+              style={tab === t ? { backgroundColor: '#1183d4' } : {}}
+            >
+              {TAB_LABELS[t]}
+            </button>
+          ))}
+        </div>
 
-          {/* Monthly CSV Download Section */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Download Monthly Report</h2>
-            <p className="text-sm text-gray-600 mb-6">
-              Download a CSV file showing the number of days each user attended per week for the selected month.
-            </p>
-            
-            <div className="flex items-end space-x-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Month
-                </label>
-                <select
-                  value={selectedMonth}
-                  onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                >
-                  {months.map((month, idx) => (
-                    <option key={idx} value={idx + 1}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Year
-                </label>
-                <select
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                >
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
+        {/* Controls */}
+        <div className="flex flex-wrap gap-3 mb-4">
+          <div className="flex gap-2">
+            {['weekly', 'monthly'].map((type) => (
               <button
-                onClick={handleDownloadCSV}
-                disabled={downloading}
-                className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                key={type}
+                onClick={() => setReportType(type)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize transition-colors ${
+                  reportType === type ? 'text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                }`}
+                style={reportType === type ? { backgroundColor: '#00A3E0' } : {}}
               >
-                {downloading ? 'Downloading...' : 'Download CSV'}
+                {type}
               </button>
-            </div>
+            ))}
           </div>
-        </main>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="border border-gray-200 rounded-lg text-sm px-3 py-1.5 bg-white focus:outline-none focus:ring-2"
+          />
+        </div>
+
+        {/* Report table */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
+            </div>
+          ) : rows.length === 0 ? (
+            <div className="text-center py-20 text-gray-400">
+              <span className="material-symbols-outlined text-5xl">bar_chart</span>
+              <p className="mt-3 text-sm">No data for this period.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    {reportData?.columns?.map((col) => (
+                      <th key={col} className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                        {col}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {rows.map((row, i) => (
+                    <tr key={i} className="hover:bg-gray-50 transition-colors">
+                      {row.map((cell, j) => (
+                        <td key={j} className="px-4 py-3 text-gray-700">
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {reportData?.summary && (
+            <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
+              {reportData.summary}
+            </div>
+          )}
+        </div>
       </div>
-    </>
+
+      <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        rel="stylesheet"
+      />
+    </AdminLayout>
   );
 }

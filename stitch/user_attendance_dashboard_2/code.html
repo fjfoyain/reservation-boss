@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland - Attendance &amp; Parking Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#112A46",
+                        secondary: "#00A3E0",
+                        "background-light": "#F8F9FA",
+                        "background-dark": "#121212",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E1E1E",
+                        "border-light": "#E5E7EB",
+                        "border-dark": "#374151",
+                        "text-light": "#1F2937",
+                        "text-dark": "#F9FAFB",
+                        "text-muted-light": "#6B7280",
+                        "text-muted-dark": "#9CA3AF",
+                        "success-light": "#DEF7EC",
+                        "success-dark": "#03543F",
+                        "success-text-light": "#03543F",
+                        "success-text-dark": "#DEF7EC",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark min-h-screen flex flex-col">
+<header class="bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark sticky top-0 z-10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-16">
+<div class="flex items-center">
+<span class="text-xl font-bold tracking-tight text-primary dark:text-white flex items-center gap-2">
+<span class="material-icons">domain</span>
+                        NORTH HIGHLAND
+                    </span>
+</div>
+<nav class="hidden md:flex space-x-8">
+<a class="text-secondary dark:text-secondary border-b-2 border-secondary px-1 pt-1 text-sm font-medium" href="#">Dashboard</a>
+<a class="text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-light dark:hover:border-border-dark px-1 pt-1 text-sm font-medium transition-colors" href="#">Profile</a>
+<a class="text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-light dark:hover:border-border-dark px-1 pt-1 text-sm font-medium transition-colors" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="text-sm hidden sm:block">
+<span class="text-text-muted-light dark:text-text-muted-dark">Welcome,</span>
+<span class="font-medium">Alex Johnson</span>
+</div>
+<button aria-label="User menu" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-icons text-text-muted-light dark:text-text-muted-dark">account_circle</span>
+</button>
+<a class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-white transition-colors flex items-center gap-1" href="#">
+<span class="material-icons text-[18px]">logout</span>
+<span class="hidden sm:inline">Logout</span>
+</a>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Weekly Attendance</h1>
+<p class="mt-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+                    Plan your office presence and manage parking reservations.
+                </p>
+</div>
+<div class="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 flex items-start gap-3 max-w-md">
+<span class="material-icons text-amber-500 mt-0.5">schedule</span>
+<div>
+<h3 class="text-sm font-medium text-amber-800 dark:text-amber-300">Update Deadline</h3>
+<p class="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                        Please finalize your schedule by <strong class="font-semibold">Monday at 11:00 PM</strong> for the upcoming week.
+                    </p>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark shadow-sm rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
+<div class="flex items-center justify-between px-6 py-4 border-b border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-800/50">
+<button class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-text-muted-light dark:text-text-muted-dark transition-colors flex items-center justify-center">
+<span class="material-icons">chevron_left</span>
+</button>
+<div class="text-center flex items-center gap-3">
+<span class="material-icons text-text-muted-light dark:text-text-muted-dark hidden sm:block">calendar_month</span>
+<h2 class="text-lg font-semibold text-gray-900 dark:text-white">Week of March 10 - March 14, 2025</h2>
+</div>
+<button class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-text-muted-light dark:text-text-muted-dark transition-colors flex items-center justify-center">
+<span class="material-icons">chevron_right</span>
+</button>
+</div>
+<div class="bg-secondary/10 border-l-4 border-secondary p-4 m-4 rounded-r-lg flex items-start gap-3">
+<span class="material-icons text-secondary mt-0.5">info</span>
+<div>
+<h3 class="text-sm font-medium text-gray-900 dark:text-white">Weekly Limit Reached</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">You have reached the maximum 4-day office attendance policy for this week. Additional days cannot be selected.</p>
+</div>
+</div>
+<div class="divide-y divide-border-light dark:divide-border-dark">
+<div class="p-6 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-gray-100 dark:bg-gray-800 border border-border-light dark:border-border-dark">
+<span class="text-xs font-semibold text-text-muted-light dark:text-text-muted-dark uppercase">Mon</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">10</span>
+</div>
+<div>
+<h3 class="text-base font-medium text-gray-900 dark:text-white">In Office</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Atlanta HQ</p>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-18 sm:ml-0">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-secondary/30 dark:peer-focus:ring-secondary/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-secondary"></div>
+<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 min-w-[80px]">Attending</span>
+</label>
+</div>
+</div>
+<div class="mt-4 ml-18 sm:ml-18 bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-border-light dark:border-border-dark">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="material-icons text-secondary mt-0.5">local_parking</span>
+<div>
+<h4 class="text-sm font-medium text-gray-900 dark:text-white">Parking Required?</h4>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1">You are eligible for external parking reservations.</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light dark:bg-success-dark text-success-text-light dark:text-success-text-dark border border-green-200 dark:border-green-800">
+<span class="material-icons text-[14px] mr-1">check_circle</span>
+                                    Reserved: Spot #42
+                                </span>
+<button class="text-sm text-text-muted-light hover:text-red-600 dark:text-text-muted-dark dark:hover:text-red-400 font-medium transition-colors px-3 py-1.5 border border-transparent rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                                    Cancel
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-gray-100 dark:bg-gray-800 border border-border-light dark:border-border-dark">
+<span class="text-xs font-semibold text-text-muted-light dark:text-text-muted-dark uppercase">Tue</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">11</span>
+</div>
+<div>
+<h3 class="text-base font-medium text-gray-900 dark:text-white">In Office</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Atlanta HQ</p>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-18 sm:ml-0">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-secondary/30 dark:peer-focus:ring-secondary/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-secondary"></div>
+<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 min-w-[80px]">Attending</span>
+</label>
+</div>
+</div>
+<div class="mt-4 ml-18 sm:ml-18 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-100 dark:border-blue-800">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="material-icons text-secondary mt-0.5">local_parking</span>
+<div>
+<h4 class="text-sm font-medium text-gray-900 dark:text-white">Parking Required?</h4>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1">Reserve a spot for this day.</p>
+</div>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto">
+<select class="form-select block w-full sm:w-48 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm shadow-sm focus:border-secondary focus:ring-secondary dark:text-white">
+<option disabled="" selected="" value="">Select location...</option>
+<option value="deck_a">Main Deck (Available)</option>
+<option value="deck_b">North Lot (Available)</option>
+</select>
+<button class="bg-secondary hover:bg-secondary/90 text-white text-sm font-medium py-2 px-4 rounded-md shadow-sm transition-colors whitespace-nowrap">
+                                    Reserve
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-gray-100 dark:bg-gray-800 border border-border-light dark:border-border-dark">
+<span class="text-xs font-semibold text-text-muted-light dark:text-text-muted-dark uppercase">Wed</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">12</span>
+</div>
+<div>
+<h3 class="text-base font-medium text-gray-900 dark:text-white">In Office</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Atlanta HQ</p>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-18 sm:ml-0">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-secondary/30 dark:peer-focus:ring-secondary/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-secondary"></div>
+<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 min-w-[80px]">Attending</span>
+</label>
+</div>
+</div>
+</div>
+<div class="p-6 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-gray-100 dark:bg-gray-800 border border-border-light dark:border-border-dark">
+<span class="text-xs font-semibold text-text-muted-light dark:text-text-muted-dark uppercase">Thu</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">13</span>
+</div>
+<div>
+<h3 class="text-base font-medium text-gray-900 dark:text-white">In Office</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Atlanta HQ</p>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-18 sm:ml-0">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-secondary/30 dark:peer-focus:ring-secondary/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-secondary"></div>
+<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 min-w-[80px]">Attending</span>
+</label>
+</div>
+</div>
+</div>
+<div class="p-6 transition-colors opacity-50 bg-gray-50/50 dark:bg-gray-800/30 cursor-not-allowed" title="4-day maximum policy reached">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pointer-events-none">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-gray-100 dark:bg-gray-800/50 border border-border-light dark:border-border-dark">
+<span class="text-xs font-semibold text-text-muted-light dark:text-text-muted-dark uppercase">Fri</span>
+<span class="text-lg font-bold text-gray-500 dark:text-gray-400">14</span>
+</div>
+<div>
+<h3 class="text-base font-medium text-gray-500 dark:text-gray-400">Remote</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Working from home</p>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-18 sm:ml-0">
+<label class="relative inline-flex items-center cursor-not-allowed">
+<input class="sr-only peer" disabled="" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-100 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600"></div>
+<span class="ml-3 text-sm font-medium text-gray-500 dark:text-gray-400 min-w-[80px]">Remote</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-gray-800 border-t border-border-light dark:border-border-dark p-4 flex justify-end">
+<button class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-md shadow-sm transition-colors flex items-center gap-2">
+<span class="material-icons text-[20px]">save</span>
+                    Save Weekly Schedule
+                </button>
+</div>
+</div>
+</main>
+<footer class="bg-primary text-white mt-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-icons">domain</span>
+<span class="font-bold tracking-tight">NORTH HIGHLAND</span>
+</div>
+<div class="text-sm text-gray-300">
+                    © 2025 North Highland. Internal use only.
+                </div>
+</div>
+</div>
+</footer>
+</body></html>

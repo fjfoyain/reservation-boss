@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Approval for Internal User Attendance Changes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#14b8a6",
+                        "background-light": "#f0fdfa",
+                        "background-dark": "#0a192f",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col md:flex-row group/design-root overflow-x-hidden">
+<div class="flex h-full min-h-[700px] flex-col justify-between bg-white dark:bg-[#112240] border-r border-slate-200 dark:border-[#233554] p-4 w-full md:w-64 shrink-0 shadow-lg z-10">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center px-3 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-slate-200 dark:bg-slate-700" data-alt="North Highland Company Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBZKnQlp-B1VEd3A7kvwzO9R16AwbY47329zhrjfMFwLH3OyhdQoACpT7YrE_9smoMyJ4RGXXEQpS970XS9oCfXCb_x6Z-kICuv2FLBP-CtELij5Zno_2zDVlLzFKjeaOBSLYCIOqlD8s3n-pOfrH1L1rxUa2gza40mGVfiOm60y05fvYlYHJf1eaIi-ZvzE4T5LBH5VXMZ3tOa58YiERo6ahCXkhlFAc8c9iYz6rO4DIixEMdfxzEruMwlPxe9rhucbUo192JJeA0");'></div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-slate-100 text-base font-bold leading-normal">North Highland</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Admin Portal</p>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#233554] transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">dashboard</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<p class="text-primary text-sm font-medium leading-normal">Pending Requests</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#233554] transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">group</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#233554] transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">settings</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#233554] transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">logout</span>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Log Out</p>
+</a>
+</div>
+</div>
+<div class="flex flex-col flex-1 max-w-[1200px] mx-auto w-full relative">
+<div class="flex flex-wrap items-center justify-between gap-3 p-6 md:p-8">
+<div class="flex min-w-72 flex-col gap-1">
+<h2 class="text-slate-900 dark:text-slate-100 text-[28px] md:text-[32px] font-bold leading-tight">Pending Requests</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm md:text-base font-normal leading-normal">Review and manage late cancellation and change requests.</p>
+</div>
+</div>
+<div class="px-6 md:px-8 pb-8 @container">
+<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233554] bg-white dark:bg-[#112240] shadow-sm">
+<table class="w-full min-w-[900px] text-left">
+<thead class="bg-slate-50 dark:bg-[#0a192f] border-b border-slate-200 dark:border-[#233554]">
+<tr>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[20%]">Employee Name</th>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[15%]">Reservation Date</th>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[15%]">Type</th>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[25%]">Reason for Change</th>
+<th class="px-6 py-4 text-slate-900 dark:text-slate-100 text-sm font-semibold leading-normal w-[25%] text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-[#233554]">
+<tr class="hover:bg-slate-50 dark:hover:bg-[#1a2f52] transition-colors group align-top">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-xs">JD</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">John Doe</span>
+<span class="text-slate-500 dark:text-slate-400 text-xs">Type 1 User</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Oct 25, 2023</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5 items-start">
+<span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-400 ring-1 ring-inset ring-blue-700/10 dark:ring-blue-400/20">Attendance</span>
+<span class="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-500/10 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-400 ring-1 ring-inset ring-purple-700/10 dark:ring-purple-400/20">Parking</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Medical Emergency</td>
+<td class="px-6 py-4 text-right">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-end gap-3">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Attendance:</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs font-medium text-primary dark:text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">Approve</button>
+<button class="px-3 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500/50">Deny</button>
+</div>
+</div>
+<div class="flex items-center justify-end gap-3">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Parking:</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs font-medium text-primary dark:text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">Approve</button>
+<button class="px-3 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500/50">Deny</button>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-[#1a2f52] transition-colors group align-top bg-primary/5 dark:bg-primary/5 border-l-4 border-l-primary">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-xs">JS</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Jane Smith</span>
+<button class="text-primary hover:text-primary/80 text-xs text-left underline underline-offset-2 flex items-center gap-1 mt-0.5">
+                                        View Profile
+                                    </button>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Oct 26, 2023</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5 items-start">
+<span class="inline-flex items-center rounded-md bg-teal-50 dark:bg-teal-500/10 px-2 py-1 text-xs font-medium text-teal-700 dark:text-teal-400 ring-1 ring-inset ring-teal-700/10 dark:ring-teal-400/20">Attendance Only</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Car broke down</td>
+<td class="px-6 py-4 text-right">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-end gap-3">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Attendance:</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs font-medium text-primary dark:text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">Approve</button>
+<button class="px-3 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500/50">Deny</button>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-[#1a2f52] transition-colors group align-top">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-xs">RJ</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Robert Jones</span>
+<span class="text-slate-500 dark:text-slate-400 text-xs">Type 1 User</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Oct 26, 2023</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5 items-start">
+<span class="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-500/10 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-400 ring-1 ring-inset ring-purple-700/10 dark:ring-purple-400/20">Parking</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-normal">Traffic accident</td>
+<td class="px-6 py-4 text-right">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-end gap-3">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Parking:</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs font-medium text-primary dark:text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">Approve</button>
+<button class="px-3 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500/50">Deny</button>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex items-center justify-center pt-6 gap-1">
+<a class="flex size-10 items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-[#233554]" href="#">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</a>
+<a class="text-sm font-bold leading-normal flex size-10 items-center justify-center text-primary bg-primary/10 rounded-full" href="#">1</a>
+<a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#233554] rounded-full transition-colors" href="#">2</a>
+<a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#233554] rounded-full transition-colors" href="#">3</a>
+<a class="flex size-10 items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-[#233554]" href="#">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden pointer-events-none">
+<div class="bg-white dark:bg-[#112240] rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-200 dark:border-[#233554] pointer-events-auto">
+<div class="flex justify-between items-center p-5 border-b border-slate-200 dark:border-[#233554] bg-slate-50 dark:bg-[#0a192f]">
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">User Profile</h3>
+<button class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-6 flex flex-col gap-6">
+<div class="flex items-center gap-4">
+<div class="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl ring-2 ring-primary/30">JS</div>
+<div>
+<h4 class="text-xl font-bold text-slate-900 dark:text-slate-100">Jane Smith</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">badge</span>
+                            Internal Employee
+                        </p>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-[#0a192f] rounded-lg p-4 flex flex-col gap-3 border border-slate-200 dark:border-[#233554]">
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">User Type</span>
+<span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-400 ring-1 ring-inset ring-blue-700/10 dark:ring-blue-400/20">Type 2</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-[#233554]">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">Assigned Parking Spot</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">directions_car</span>
+<span class="text-sm font-semibold text-slate-900 dark:text-slate-100">Permanent Spot #42</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

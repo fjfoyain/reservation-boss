@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Room Usage Analytics Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-10 py-4 bg-white dark:bg-slate-900 sticky top-0 z-10">
+<div class="flex items-center gap-4 text-slate-900 dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight">North Highland Analytics</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary text-sm font-semibold leading-normal border-b-2 border-primary py-1" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Rooms</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Settings</a>
+</nav>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200 dark:border-slate-700" data-alt="User profile picture placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAlE7x7fR7ovLrs90-GF-AtLCrWF7WsCnZGPR6zVWlxmINKceuEgvQfCwgkruPvFmSFLOucPMEBgNIE7bE0l0SmNppMfJQZVXtuZSgzinebh4d5tBeGIp5zCePkAOtRGeHx7ah4RCR9Vp7duE1rHDruZj5abO3JW6VPTVti_Ug59OyoOQfJoshePHzmhMeCV0MF0yVOZq4Dd2Uk-xPyug_9Q0DhV6Qnzuhei9xayxv72W2jZ7-0X2Er5fNDKlutyI1u9PoMBTSanXA");'></div>
+</div>
+</header>
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+<!-- Filters & Controls -->
+<section class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex gap-3 flex-wrap">
+<button class="flex h-9 items-center justify-center gap-2 rounded-lg bg-primary text-white px-5 text-sm font-medium transition-colors hover:bg-primary/90">
+<span class="material-symbols-outlined text-[20px]">meeting_room</span>
+                            Meeting Rooms
+                        </button>
+<button class="flex h-9 items-center justify-center gap-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-5 text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-[20px]">call</span>
+                            Calling Rooms
+                        </button>
+</div>
+<div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+<button class="px-4 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 rounded-md hover:bg-white dark:hover:bg-slate-700 transition-colors">Today</button>
+<button class="px-4 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 rounded-md hover:bg-white dark:hover:bg-slate-700 transition-colors">Week</button>
+<button class="px-4 py-1.5 text-sm font-medium bg-white dark:bg-slate-700 text-primary rounded-md shadow-sm">Month</button>
+</div>
+</section>
+<!-- Key Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Most Popular Rooms -->
+<div class="flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-600 dark:text-slate-400 text-sm font-medium">Total Bookings</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">event_available</span>
+</div>
+<div>
+<p class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">1,248</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center"><span class="material-symbols-outlined text-[16px]">arrow_upward</span> 12%</span>
+<span class="text-slate-500 text-xs">vs last month</span>
+</div>
+</div>
+</div>
+<!-- Average Utilization -->
+<div class="flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-600 dark:text-slate-400 text-sm font-medium">Average Utilization</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">pie_chart</span>
+</div>
+<div>
+<p class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">68%</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center"><span class="material-symbols-outlined text-[16px]">arrow_upward</span> 5%</span>
+<span class="text-slate-500 text-xs">vs last month</span>
+</div>
+</div>
+</div>
+<!-- Average Duration -->
+<div class="flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-600 dark:text-slate-400 text-sm font-medium">Avg. Meeting Duration</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">timer</span>
+</div>
+<div>
+<p class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">45m</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-rose-600 dark:text-rose-400 text-sm font-medium flex items-center"><span class="material-symbols-outlined text-[16px]">arrow_downward</span> 2m</span>
+<span class="text-slate-500 text-xs">vs last month</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Charts Section -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Popular Rooms Chart -->
+<div class="flex flex-col rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+<h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-6">Most Popular Rooms</h3>
+<div class="flex-1 flex flex-col justify-end gap-4 h-64">
+<!-- Placeholder for Bar Chart -->
+<div class="flex justify-around items-end h-full px-2">
+<div class="w-12 bg-primary/80 hover:bg-primary transition-colors rounded-t-md relative group" style="height: 90%;">
+<span class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-medium bg-slate-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">145</span>
+</div>
+<div class="w-12 bg-primary/60 hover:bg-primary transition-colors rounded-t-md relative group" style="height: 75%;">
+<span class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-medium bg-slate-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">120</span>
+</div>
+<div class="w-12 bg-primary/50 hover:bg-primary transition-colors rounded-t-md relative group" style="height: 60%;">
+<span class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-medium bg-slate-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">95</span>
+</div>
+<div class="w-12 bg-primary/40 hover:bg-primary transition-colors rounded-t-md relative group" style="height: 45%;">
+<span class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-medium bg-slate-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">70</span>
+</div>
+<div class="w-12 bg-primary/30 hover:bg-primary transition-colors rounded-t-md relative group" style="height: 30%;">
+<span class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-medium bg-slate-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">45</span>
+</div>
+</div>
+<div class="flex justify-around text-xs text-slate-500 font-medium border-t border-slate-100 dark:border-slate-800 pt-2">
+<span>Boardroom A</span>
+<span>Huddle 1</span>
+<span>Huddle 2</span>
+<span>Project Rm</span>
+<span>Quiet Rm</span>
+</div>
+</div>
+</div>
+<!-- Peak Times Chart -->
+<div class="flex flex-col rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+<h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-6">Peak Booking Times</h3>
+<div class="flex-1 relative h-64">
+<!-- Placeholder for Area/Line Chart -->
+<div class="absolute inset-0 flex items-end">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0,100 L0,80 Q10,70 20,85 T40,40 T60,20 T80,50 T100,70 L100,100 Z" fill="rgba(17, 131, 212, 0.2)"></path>
+<path d="M0,80 Q10,70 20,85 T40,40 T60,20 T80,50 T100,70" fill="none" stroke="#1183d4" stroke-width="2"></path>
+</svg>
+</div>
+<div class="absolute inset-x-0 bottom-0 flex justify-between text-xs text-slate-500 font-medium border-t border-slate-100 dark:border-slate-800 pt-2 translate-y-6">
+<span>8 AM</span>
+<span>10 AM</span>
+<span>12 PM</span>
+<span>2 PM</span>
+<span>4 PM</span>
+<span>6 PM</span>
+</div>
+</div>
+</div>
+</section>
+<!-- User Activity List -->
+<section class="flex flex-col rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+<div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+<h3 class="text-lg font-semibold text-slate-900 dark:text-white">Top Users</h3>
+<button class="text-sm text-primary hover:text-primary/80 font-medium">View All</button>
+</div>
+<ul class="divide-y divide-slate-100 dark:divide-slate-800">
+<li class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">John Doe</p>
+<p class="text-xs text-slate-500">Marketing Dept</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-slate-900 dark:text-white">24</p>
+<p class="text-xs text-slate-500">bookings this month</p>
+</div>
+</li>
+<li class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 flex items-center justify-center font-bold">AS</div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Alice Smith</p>
+<p class="text-xs text-slate-500">Engineering</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-slate-900 dark:text-white">18</p>
+<p class="text-xs text-slate-500">bookings this month</p>
+</div>
+</li>
+<li class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 flex items-center justify-center font-bold">RJ</div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Robert Johnson</p>
+<p class="text-xs text-slate-500">HR</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-slate-900 dark:text-white">15</p>
+<p class="text-xs text-slate-500">bookings this month</p>
+</div>
+</li>
+</ul>
+</section>
+</main>
+</div>
+</div>
+</body></html>

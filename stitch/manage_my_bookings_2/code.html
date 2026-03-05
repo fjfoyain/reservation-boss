@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manage My Bookings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                        "neutral-50": "#f0f5f9",
+                        "neutral-100": "#e1ebf2",
+                        "neutral-200": "#c3d6e5",
+                        "neutral-300": "#a6c2d8",
+                        "neutral-400": "#88adcb",
+                        "neutral-500": "#6a99be",
+                        "neutral-600": "#4c799a",
+                        "neutral-700": "#3a5d77",
+                        "neutral-800": "#284153",
+                        "neutral-900": "#0d161b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-neutral-900 dark:text-neutral-100 font-display min-h-screen antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-neutral-200 dark:border-neutral-800 px-10 py-3 bg-white dark:bg-neutral-900 shadow-sm sticky top-0 z-50">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">business</span>
+</div>
+<h2 class="text-neutral-900 dark:text-neutral-100 text-lg font-bold leading-tight tracking-[-0.015em]">NH Reservations</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold leading-normal border-b-2 border-primary pb-1" href="#">My Bookings</a>
+<a class="text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">New Booking</a>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-neutral-200 dark:border-neutral-700" data-alt="User profile avatar image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBAdxCBph0pkgRMqaaV2Puv-HhvaJZ5baDf31ocXp-o3Uq3Zf3kkHJrlbwaq7Nq5dVSVrqAAK0TZYHG9duWwZngi5f25Dw_lnvdBe1HocyRhPfqQanjaO95DNvUWFwq0Y9cxgkVRWxHy0TW1TI_qVIR8YqiKBAq_5ifk5Eh6yfCQEFJP7DBiP_IWlvoTTIxxQwZxk_bR7LCoc7psOWaycB4b6ukZYCh8zjpRhEeogS-B_nC8Hvqxj3Nd_Q5ZrobIVh8i_yahDxXcoU");'></div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-8 px-4 sm:px-10">
+<div class="layout-content-container flex flex-col max-w-[1024px] flex-1">
+<div class="flex flex-wrap justify-between gap-3 p-4 mb-4">
+<div class="flex min-w-72 flex-col gap-3">
+<h1 class="text-neutral-900 dark:text-neutral-100 tracking-tight text-[32px] font-bold leading-tight">Manage My Bookings</h1>
+<p class="text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal">View, edit, or cancel your upcoming attendance, parking, and meeting reservations.</p>
+</div>
+</div>
+<div class="pb-6">
+<div class="flex border-b border-neutral-200 dark:border-neutral-700 px-4 gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">All Bookings</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 pb-[13px] pt-4 transition-colors" href="#">
+<p class="text-sm font-semibold leading-normal tracking-[0.015em]">Office Attendance</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 pb-[13px] pt-4 transition-colors" href="#">
+<p class="text-sm font-semibold leading-normal tracking-[0.015em]">Parking</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 pb-[13px] pt-4 transition-colors" href="#">
+<p class="text-sm font-semibold leading-normal tracking-[0.015em]">Meeting Rooms</p>
+</a>
+</div>
+</div>
+<div class="px-4 py-3 @container">
+<div class="flex overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-sm">
+<table class="flex-1 w-full text-left border-collapse">
+<thead>
+<tr class="bg-neutral-50 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700">
+<th class="px-6 py-4 text-neutral-900 dark:text-neutral-100 text-sm font-semibold leading-normal">Date</th>
+<th class="px-6 py-4 text-neutral-900 dark:text-neutral-100 text-sm font-semibold leading-normal">Booking Type</th>
+<th class="px-6 py-4 text-neutral-900 dark:text-neutral-100 text-sm font-semibold leading-normal">Location / Details</th>
+<th class="px-6 py-4 text-neutral-900 dark:text-neutral-100 text-sm font-semibold leading-normal">Status</th>
+<th class="px-6 py-4 text-neutral-900 dark:text-neutral-100 text-sm font-semibold leading-normal text-right">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors group">
+<td class="px-6 py-4 text-neutral-800 dark:text-neutral-200 text-sm font-medium leading-normal">
+                                            Today, Oct 24
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">desk</span> Office Attendance
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal">
+                                            Floor 3, Desk 12
+                                        </td>
+<td class="px-6 py-4 text-sm font-normal leading-normal">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                                                Awaiting Admin Approval
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="inline-flex items-center justify-center rounded-lg h-8 px-4 bg-neutral-100 dark:bg-neutral-700 text-neutral-400 dark:text-neutral-500 text-sm font-medium leading-normal cursor-not-allowed" disabled="">
+                                                Cancel Requested
+                                            </button>
+</td>
+</tr>
+<tr class="border-b border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors group">
+<td class="px-6 py-4 text-neutral-800 dark:text-neutral-200 text-sm font-medium leading-normal">
+                                            Today, Oct 24
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">local_parking</span> Parking
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal">
+                                            Level 2, Spot 42
+                                        </td>
+<td class="px-6 py-4 text-sm font-normal leading-normal">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-neutral-100 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-300">
+                                                Past Deadline
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="inline-flex items-center justify-center rounded-lg h-8 px-4 bg-primary text-white text-sm font-medium leading-normal hover:bg-[#0e70b5] transition-colors shadow-sm">
+                                                Request Late Cancellation
+                                            </button>
+</td>
+</tr>
+<tr class="border-b border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors group">
+<td class="px-6 py-4 text-neutral-800 dark:text-neutral-200 text-sm font-medium leading-normal">
+                                            Tomorrow, Oct 25
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">desk</span> Office Attendance
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal">
+                                            Floor 3, Desk 12
+                                        </td>
+<td class="px-6 py-4 text-sm font-normal leading-normal">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                                Upcoming
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="inline-flex items-center justify-center rounded-lg h-8 px-4 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-200 dark:hover:border-red-800 text-sm font-medium leading-normal transition-colors">
+                                                Cancel
+                                            </button>
+</td>
+</tr>
+<tr class="border-b border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors group">
+<td class="px-6 py-4 text-neutral-800 dark:text-neutral-200 text-sm font-medium leading-normal">
+                                            Tomorrow, Oct 25
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">meeting_room</span> Meeting Room
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal">
+                                            Conference Room A
+                                        </td>
+<td class="px-6 py-4 text-sm font-normal leading-normal">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                                Upcoming
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="inline-flex items-center justify-center rounded-lg h-8 px-4 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 text-sm font-medium leading-normal transition-colors">
+                                                    Edit
+                                                </button>
+<button class="inline-flex items-center justify-center rounded-lg h-8 px-4 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-200 dark:hover:border-red-800 text-sm font-medium leading-normal transition-colors">
+                                                    Cancel
+                                                </button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-transparent hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors group">
+<td class="px-6 py-4 text-neutral-800 dark:text-neutral-200 text-sm font-medium leading-normal">
+                                            Oct 28
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">local_parking</span> Parking
+                                        </td>
+<td class="px-6 py-4 text-neutral-600 dark:text-neutral-400 text-sm font-normal leading-normal">
+                                            Level 1, Spot 15
+                                        </td>
+<td class="px-6 py-4 text-sm font-normal leading-normal">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                                Upcoming
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="inline-flex items-center justify-center rounded-lg h-8 px-4 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-200 dark:hover:border-red-800 text-sm font-medium leading-normal transition-colors">
+                                                Cancel
+                                            </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="flex items-center justify-center p-6 gap-2">
+<a class="flex size-10 items-center justify-center text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800" href="#">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</a>
+<a class="text-sm font-bold leading-normal flex size-10 items-center justify-center text-primary rounded-full bg-primary/10 dark:bg-primary/20" href="#">1</a>
+<a class="text-sm font-medium leading-normal flex size-10 items-center justify-center text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors" href="#">2</a>
+<a class="text-sm font-medium leading-normal flex size-10 items-center justify-center text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors" href="#">3</a>
+<span class="text-sm font-medium leading-normal flex size-10 items-center justify-center text-neutral-400">...</span>
+<a class="flex size-10 items-center justify-center text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800" href="#">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</a>
+</div>
+</div>
+</main>
+</div>
+</div>
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-neutral-900/50 p-4">
+<div class="w-full max-w-md bg-white dark:bg-neutral-900 rounded-xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-800">
+<div class="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center bg-white dark:bg-neutral-900">
+<h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">Request Late Cancellation</h3>
+<button class="text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-6 bg-white dark:bg-neutral-900">
+<p class="text-sm text-neutral-600 dark:text-neutral-400 mb-5 leading-relaxed">
+                    Cancellations after the 8:00 AM deadline require administrator approval. Please provide a reason for your late cancellation request.
+                </p>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-neutral-900 dark:text-neutral-100">Reason for late cancellation</label>
+<textarea class="w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3 text-sm text-neutral-900 dark:text-neutral-100 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none placeholder-neutral-400 dark:placeholder-neutral-500" placeholder="Enter your reason here..." rows="4"></textarea>
+</div>
+</div>
+<div class="px-6 py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-200 dark:border-neutral-800 flex justify-end gap-3">
+<button class="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800">Cancel</button>
+<button class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-[#0e70b5] rounded-lg transition-colors shadow-sm">Submit Request</button>
+</div>
+</div>
+</div>
+
+</body></html>

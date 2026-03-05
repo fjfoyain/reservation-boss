@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Portal - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "primary-dark": "#0a558c",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                        "neutral-50": "#f0f6fa",
+                        "neutral-100": "#e0edf5",
+                        "neutral-200": "#c2dbee",
+                        "neutral-300": "#93c1e4",
+                        "neutral-400": "#5fa1d7",
+                        "neutral-500": "#3b86c6",
+                        "neutral-600": "#2a6aa8",
+                        "neutral-700": "#235588",
+                        "neutral-800": "#204872",
+                        "neutral-900": "#1e3d5e",
+                        "neutral-950": "#13273f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .custom-checkbox {
+            --checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27white%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-neutral-900 dark:text-neutral-100 antialiased min-h-screen flex flex-col custom-checkbox">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-neutral-200 dark:border-neutral-800 px-10 py-3 bg-white dark:bg-neutral-900 shadow-sm z-10">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-neutral-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">North Highland</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Need an account?</a>
+<a class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg text-sm font-medium leading-normal transition-colors shadow-sm" href="#">Register</a>
+</div>
+</div>
+</header>
+<div class="flex flex-1 items-center justify-center p-6 relative">
+<!-- Abstract Background Elements -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+<div class="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-3xl dark:bg-primary/10"></div>
+<div class="absolute bottom-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-3xl dark:bg-primary/5"></div>
+</div>
+<div class="w-full max-w-[480px] bg-white dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-100 dark:border-neutral-800 p-8 z-10">
+<div class="flex flex-col items-center mb-8">
+<div class="size-12 text-primary mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">login</span>
+</div>
+<h1 class="text-neutral-900 dark:text-white tracking-tight text-3xl font-bold leading-tight text-center">Welcome Back</h1>
+<p class="text-neutral-500 dark:text-neutral-400 text-sm mt-2 text-center">Sign in to access attendance and parking reservations.</p>
+</div>
+<form class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-neutral-700 dark:text-neutral-300 text-sm font-medium leading-normal" for="email">Email Address</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-neutral-400 pointer-events-none">mail</span>
+<input class="form-input flex w-full resize-none overflow-hidden rounded-lg text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-950 focus:border-primary h-12 pl-12 pr-4 text-base font-normal leading-normal transition-colors placeholder:text-neutral-400" id="email" placeholder="yourname@northhighland.com" required="" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-neutral-700 dark:text-neutral-300 text-sm font-medium leading-normal" for="password">Password</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-neutral-400 pointer-events-none">lock</span>
+<input class="form-input flex w-full resize-none overflow-hidden rounded-lg text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-950 focus:border-primary h-12 pl-12 pr-4 text-base font-normal leading-normal transition-colors placeholder:text-neutral-400" id="password" placeholder="Enter your password" required="" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-between py-1">
+<label class="flex items-center gap-x-3 cursor-pointer group">
+<input class="h-5 w-5 rounded border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-primary checked:bg-primary checked:border-primary focus:ring-primary focus:ring-offset-0 transition-colors" type="checkbox"/>
+<span class="text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-200 text-sm font-medium leading-normal transition-colors">Remember me</span>
+</label>
+<a class="text-sm font-medium text-primary hover:text-primary-dark transition-colors" href="#">Forgot Password?</a>
+</div>
+<button class="mt-2 w-full h-12 bg-primary hover:bg-primary-dark text-white rounded-lg text-base font-semibold transition-colors shadow-md flex items-center justify-center gap-2" type="submit">
+                            Sign In
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800 pt-6">
+                        Don't have an account? <a class="text-primary hover:underline font-medium" href="#">Register here</a>
+</div>
+</div>
+</div>
+<footer class="py-4 text-center text-xs text-neutral-500 dark:text-neutral-400 z-10">
+                © 2024 North Highland. All rights reserved.
+            </footer>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registration and Sign Up - North Highland Parking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#00a9ce",
+                        "primary-hover": "#008ba8",
+                        "background-light": "#f8f9fa",
+                        "background-dark": "#121212",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e1e1e",
+                        "text-light": "#1f2937",
+                        "text-dark": "#f3f4f6",
+                        "text-muted-light": "#6b7280",
+                        "text-muted-dark": "#9ca3af",
+                        "border-light": "#e5e7eb",
+                        "border-dark": "#374151",
+                        "brand-navy": "#1a2b4c"
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-display min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-200">
+<main class="w-full max-w-md bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg border border-border-light dark:border-border-dark overflow-hidden">
+<div class="bg-brand-navy p-8 text-center border-b-4 border-primary">
+<h1 class="text-3xl font-bold text-white tracking-tight">NORTH HIGHLAND</h1>
+<p class="text-primary mt-2 text-sm font-medium uppercase tracking-wider">Parking Reservations</p>
+</div>
+<div class="p-8">
+<h2 class="text-2xl font-bold mb-2 text-center text-text-light dark:text-text-dark">Create your account</h2>
+<p class="text-text-muted-light dark:text-text-muted-dark text-center mb-8 text-sm">Join the North Highland reservation system to manage your parking spots.</p>
+<form action="#" class="space-y-5" method="POST">
+<div>
+<label class="block text-sm font-medium text-text-light dark:text-text-dark mb-1" for="fullName">Full Name</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-icons text-text-muted-light dark:text-text-muted-dark text-xl">person</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border border-border-light dark:border-border-dark rounded bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" id="fullName" name="fullName" placeholder="Jane Doe" required="" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-light dark:text-text-dark mb-1" for="email">Company Email</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-icons text-text-muted-light dark:text-text-muted-dark text-xl">email</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border border-border-light dark:border-border-dark rounded bg-gray-50 dark:bg-gray-800 text-text-muted-light dark:text-text-muted-dark sm:text-sm cursor-not-allowed" id="email" name="email" readonly="" type="email" value="jane.doe@northhighland.com"/>
+</div>
+<p class="mt-1 text-xs text-text-muted-light dark:text-text-muted-dark">Email is linked to your invitation.</p>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-light dark:text-text-dark mb-1" for="password">Password</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-icons text-text-muted-light dark:text-text-muted-dark text-xl">lock</span>
+</div>
+<input class="block w-full pl-10 pr-10 py-2.5 border border-border-light dark:border-border-dark rounded bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted-light dark:text-text-muted-dark hover:text-primary focus:outline-none" type="button">
+<span class="material-icons text-xl">visibility_off</span>
+</button>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light dark:focus:ring-offset-surface-dark transition-colors" type="submit">
+                        Create Account
+                    </button>
+</div>
+</form>
+<div class="mt-8 text-center">
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">
+                    Already have an account? 
+                    <a class="font-medium text-primary hover:text-primary-hover transition-colors" href="#">Log In</a>
+</p>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-gray-800/50 p-4 text-center text-xs text-text-muted-light dark:text-text-muted-dark border-t border-border-light dark:border-border-dark">
+            Secure employee portal • North Highland Internal Use Only
+        </div>
+</main>
+
+</body></html>

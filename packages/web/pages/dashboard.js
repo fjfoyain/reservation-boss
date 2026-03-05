@@ -255,11 +255,17 @@ export default function DashboardPage() {
             <span className="material-symbols-outlined" style={{ color: '#112A46' }}>domain</span>
             <span className="text-lg font-bold tracking-tight" style={{ color: '#112A46' }}>NORTH HIGHLAND</span>
           </div>
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex space-x-6 items-center">
             <span className="text-sm font-medium border-b-2 pb-1" style={{ color: '#00A3E0', borderColor: '#00A3E0' }}>Dashboard</span>
             <Link href="/rooms" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Rooms</Link>
             <Link href="/my-bookings" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Bookings</Link>
             <Link href="/my-requests" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Requests</Link>
+            {user?.role === 'admin' && (
+              <Link href="/admin" className="flex items-center gap-1 text-sm font-medium px-3 py-1 rounded-md text-white transition-colors" style={{ backgroundColor: '#112A46' }}>
+                <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                Admin
+              </Link>
+            )}
           </nav>
           <div className="flex items-center gap-4">
             <span className="text-sm hidden sm:block">

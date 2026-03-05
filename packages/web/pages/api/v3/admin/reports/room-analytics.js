@@ -43,9 +43,11 @@ async function handler(req, res) {
   const dateStr = date || new Date().toISOString().split('T')[0];
   const range = period === 'month' ? getMonthRange(dateStr) : getWeekRange(dateStr);
 
-  // Fetch rooms of this type
-  const roomsSnap = await db.collection('v3_rooms').where('type', '==', roomType).where('active', '==', true).get();
-  const rooms = roomsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  // Fetch rooms (single-field query, filter type in JS)
+  const roomsSnap = await db.collection('v3_rooms').where('active', '==', true).get();
+  const rooms = roomsSnap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .filter((r) => r.type === roomType);
   const roomIds = new Set(rooms.map((r) => r.id));
 
   // Fetch reservations in date range

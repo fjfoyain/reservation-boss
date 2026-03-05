@@ -13,14 +13,16 @@ async function handler(req, res) {
     db.collection('v3_users').where('active', '==', true).get(),
     db.collection('v3_late_requests').where('status', '==', 'pending').get(),
     db.collection('v3_room_reservations').where('date', '==', today).get(),
-    db.collection('v3_attendance').where('date', '==', today).where('status', '==', 'office').get(),
+    db.collection('v3_attendance').where('date', '==', today).get(),
   ]);
+
+  const officeToday = attendanceSnap.docs.filter((d) => d.data().status === 'office').length;
 
   return res.status(200).json({
     totalUsers: usersSnap.size,
     pendingRequests: pendingSnap.size,
     roomBookingsToday: roomsSnap.size,
-    officeToday: attendanceSnap.size,
+    officeToday,
   });
 }
 

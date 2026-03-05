@@ -42,31 +42,36 @@ async function handler(req, res) {
     }
   }
 
-  const { uid, email } = req.user;
+  const { uid } = req.user;
   const now = new Date();
 
-  // Upsert using query (userId + date is the unique key)
-  const snapshot = await db
-    .collection('v3_attendance')
-    .where('userId', '==', uid)
-    .where('date', '==', date)
-    .limit(1)
-    .get();
+  try {
+    // Upsert: query by userId only (auto-indexed), filter date in JS
+    const snapshot = await db
+      .collection('v3_attendance')
+      .where('userId', '==', uid)
+      .get();
 
-  if (snapshot.empty) {
-    await db.collection('v3_attendance').add({
-      userId: uid,
-      email: req.userProfile.email,
-      date,
-      status,
-      createdAt: now,
-      updatedAt: now,
-    });
-  } else {
-    await snapshot.docs[0].ref.update({ status, updatedAt: now });
+    const existing = snapshot.docs.find((d) => d.data().date === date);
+
+    if (!existing) {
+      await db.collection('v3_attendance').add({
+        userId: uid,
+        email: req.userProfile.email,
+        date,
+        status,
+        createdAt: now,
+        updatedAt: now,
+      });
+    } else {
+      await existing.ref.update({ status, updatedAt: now });
+    }
+
+    return res.status(200).json({ success: true, date, status });
+  } catch (err) {
+    console.error('attendance POST error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
   }
-
-  return res.status(200).json({ success: true, date, status });
 }
 
 export default withCors(withAuthV3(handler));

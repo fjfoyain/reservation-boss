@@ -65,48 +65,39 @@ async function handler(req, res) {
   const weekStart = monday.toISOString().split('T')[0];
   const weekEnd = friday.toISOString().split('T')[0];
 
-  // Use Firestore transaction for atomicity
   const parkingRef = db.collection('v3_parking');
 
-  const result = await db.runTransaction(async (t) => {
-    // Check weekly limit for this user
-    const userWeekQuery = parkingRef
-      .where('userId', '==', uid)
-      .where('date', '>=', weekStart)
-      .where('date', '<=', weekEnd);
-    const userWeekSnap = await t.get(userWeekQuery);
-    if (userWeekSnap.size >= MAX_WEEKLY_RESERVATIONS) {
-      return { error: `Maximum ${MAX_WEEKLY_RESERVATIONS} reservations per week reached` };
-    }
+  // Single-field queries only (auto-indexed — no composite index needed)
+  const [userParkingSnap, spotParkingSnap] = await Promise.all([
+    parkingRef.where('userId', '==', uid).get(),
+    parkingRef.where('spot', '==', spot).get(),
+  ]);
 
-    // Check if user already has a reservation for this date
-    const userDayQuery = parkingRef.where('userId', '==', uid).where('date', '==', date);
-    const userDaySnap = await t.get(userDayQuery);
-    if (!userDaySnap.empty) {
-      return { error: 'You already have a parking reservation for this date' };
-    }
+  const userParking = userParkingSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
-    // Check if spot is already taken for this date
-    const spotQuery = parkingRef.where('spot', '==', spot).where('date', '==', date);
-    const spotSnap = await t.get(spotQuery);
-    if (!spotSnap.empty) {
-      return { error: `${spot} is already reserved for this date` };
-    }
-
-    const newRef = parkingRef.doc();
-    t.set(newRef, {
-      userId: uid,
-      email,
-      date,
-      spot,
-      createdAt: new Date(),
-    });
-    return { id: newRef.id };
-  });
-
-  if (result.error) {
-    return res.status(409).json({ error: result.error });
+  // Check weekly limit (filter in JS)
+  const weeklyCount = userParking.filter((p) => p.date >= weekStart && p.date <= weekEnd).length;
+  if (weeklyCount >= MAX_WEEKLY_RESERVATIONS) {
+    return res.status(409).json({ error: `Maximum ${MAX_WEEKLY_RESERVATIONS} reservations per week reached` });
   }
+
+  // Check duplicate for this date
+  if (userParking.some((p) => p.date === date)) {
+    return res.status(409).json({ error: 'You already have a parking reservation for this date' });
+  }
+
+  // Check if spot is already taken for this date
+  if (spotParkingSnap.docs.some((d) => d.data().date === date)) {
+    return res.status(409).json({ error: `${spot} is already reserved for this date` });
+  }
+
+  const docRef = await parkingRef.add({
+    userId: uid,
+    email,
+    date,
+    spot,
+    createdAt: new Date(),
+  });
 
   // Send confirmation email (non-blocking)
   sendV3ParkingConfirmation({
@@ -116,7 +107,7 @@ async function handler(req, res) {
     date,
   }).catch(() => {});
 
-  return res.status(201).json({ success: true, id: result.id, date, spot });
+  return res.status(201).json({ success: true, id: docRef.id, date, spot });
 }
 
 export default withCors(withAuthV3(handler));

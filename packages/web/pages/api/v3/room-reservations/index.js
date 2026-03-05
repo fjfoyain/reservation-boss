@@ -11,12 +11,15 @@ async function handler(req, res) {
     const { date, roomType } = req.query;
     if (!date) return res.status(400).json({ error: 'date is required' });
 
-    let query = db.collection('v3_room_reservations').where('date', '==', date);
-    if (roomType) query = query.where('roomType', '==', roomType);
-
-    const snapshot = await query.get();
-    const reservations = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    return res.status(200).json({ reservations });
+    try {
+      const snapshot = await db.collection('v3_room_reservations').where('date', '==', date).get();
+      let reservations = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      if (roomType) reservations = reservations.filter((r) => r.roomType === roomType);
+      return res.status(200).json({ reservations });
+    } catch (err) {
+      console.error('room-reservations GET error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
   if (req.method === 'POST') {
@@ -37,61 +40,64 @@ async function handler(req, res) {
     const today = new Date().toISOString().split('T')[0];
     if (date < today) return res.status(400).json({ error: 'Cannot book rooms for past dates' });
 
-    // Fetch room to confirm it exists and is active
-    const roomDoc = await db.collection('v3_rooms').doc(roomId).get();
-    if (!roomDoc.exists || !roomDoc.data().active) {
-      return res.status(404).json({ error: 'Room not found or inactive' });
+    try {
+      // Fetch room to confirm it exists and is active
+      const roomDoc = await db.collection('v3_rooms').doc(roomId).get();
+      if (!roomDoc.exists || !roomDoc.data().active) {
+        return res.status(404).json({ error: 'Room not found or inactive' });
+      }
+      const room = roomDoc.data();
+
+      // Check for conflicts (same room, overlapping times) — query by roomId only, filter date in JS
+      const existingSnap = await db
+        .collection('v3_room_reservations')
+        .where('roomId', '==', roomId)
+        .get();
+
+      const existing = existingSnap.docs.map((d) => d.data()).filter((r) => r.date === date);
+      if (hasOverlap(existing, roomId, date, startTime, endTime)) {
+        return res.status(409).json({ error: 'This time slot is already booked' });
+      }
+
+      // Check user doesn't already have a booking that overlaps — query by userId only, filter date in JS
+      const userConflictSnap = await db
+        .collection('v3_room_reservations')
+        .where('userId', '==', uid)
+        .get();
+      const userExisting = userConflictSnap.docs.map((d) => d.data()).filter((r) => r.date === date);
+      if (hasOverlap(userExisting, roomId, date, startTime, endTime)) {
+        return res.status(409).json({ error: 'You already have a booking that overlaps with this time' });
+      }
+
+      const docRef = await db.collection('v3_room_reservations').add({
+        userId: uid,
+        email,
+        userName: name,
+        roomId,
+        roomName: room.name,
+        roomType: room.type,
+        date,
+        startTime,
+        endTime,
+        createdAt: new Date(),
+      });
+
+      // Send confirmation email (non-blocking)
+      sendV3RoomConfirmation({
+        email,
+        name: name || email,
+        roomName: room.name,
+        roomType: room.type,
+        date,
+        startTime,
+        endTime,
+      }).catch(() => {});
+
+      return res.status(201).json({ success: true, id: docRef.id });
+    } catch (err) {
+      console.error('room-reservations POST error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-    const room = roomDoc.data();
-
-    // Check for conflicts (same room, same date, overlapping times)
-    const existingSnap = await db
-      .collection('v3_room_reservations')
-      .where('roomId', '==', roomId)
-      .where('date', '==', date)
-      .get();
-
-    const existing = existingSnap.docs.map((d) => d.data());
-    if (hasOverlap(existing, roomId, date, startTime, endTime)) {
-      return res.status(409).json({ error: 'This time slot is already booked' });
-    }
-
-    // Check user doesn't already have a booking for this room/date/time
-    const userConflictSnap = await db
-      .collection('v3_room_reservations')
-      .where('userId', '==', uid)
-      .where('date', '==', date)
-      .get();
-    const userExisting = userConflictSnap.docs.map((d) => d.data());
-    if (hasOverlap(userExisting, roomId, date, startTime, endTime)) {
-      return res.status(409).json({ error: 'You already have a booking that overlaps with this time' });
-    }
-
-    const docRef = await db.collection('v3_room_reservations').add({
-      userId: uid,
-      email,
-      userName: name,
-      roomId,
-      roomName: room.name,
-      roomType: room.type,
-      date,
-      startTime,
-      endTime,
-      createdAt: new Date(),
-    });
-
-    // Send confirmation email (non-blocking)
-    sendV3RoomConfirmation({
-      email,
-      name: name || email,
-      roomName: room.name,
-      roomType: room.type,
-      date,
-      startTime,
-      endTime,
-    }).catch(() => {});
-
-    return res.status(201).json({ success: true, id: docRef.id });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });

@@ -17,15 +17,21 @@ async function handler(req, res) {
   endDate.setUTCDate(endDate.getUTCDate() + 4);
   const end = endDate.toISOString().split('T')[0];
 
-  const snapshot = await db
-    .collection('v3_attendance')
-    .where('userId', '==', req.user.uid)
-    .where('date', '>=', start)
-    .where('date', '<=', end)
-    .get();
+  try {
+    const snapshot = await db
+      .collection('v3_attendance')
+      .where('userId', '==', req.user.uid)
+      .get();
 
-  const attendance = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  return res.status(200).json({ attendance });
+    const attendance = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((a) => a.date >= start && a.date <= end);
+
+    return res.status(200).json({ attendance });
+  } catch (err) {
+    console.error('attendance/week error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 export default withCors(withAuthV3(handler));

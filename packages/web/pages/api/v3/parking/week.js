@@ -15,15 +15,21 @@ async function handler(req, res) {
   endDate.setUTCDate(endDate.getUTCDate() + 4);
   const end = endDate.toISOString().split('T')[0];
 
-  const snapshot = await db
-    .collection('v3_parking')
-    .where('userId', '==', req.user.uid)
-    .where('date', '>=', start)
-    .where('date', '<=', end)
-    .get();
+  try {
+    const snapshot = await db
+      .collection('v3_parking')
+      .where('userId', '==', req.user.uid)
+      .get();
 
-  const parking = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  return res.status(200).json({ parking });
+    const parking = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((p) => p.date >= start && p.date <= end);
+
+    return res.status(200).json({ parking });
+  } catch (err) {
+    console.error('parking/week error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 export default withCors(withAuthV3(handler));

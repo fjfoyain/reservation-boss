@@ -14,11 +14,6 @@ import {
   toGye,
 } from '@/lib/utils/weekHelpersV3';
 
-const EXTERNAL_PARKING_SPOTS = [
-  'Parking 1', 'Parking 2', 'Parking 3', 'Parking 4', 'Parking 5',
-  'Parking 6', 'Parking 7', 'Parking 8', 'Parking 9', 'Parking 10',
-];
-
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -27,7 +22,7 @@ export default function DashboardPage() {
   const [weekDates, setWeekDates] = useState([]);
   const [attendance, setAttendance] = useState({}); // { 'YYYY-MM-DD': 'office' | 'remote' }
   const [parking, setParking] = useState({}); // { 'YYYY-MM-DD': { id, spot } }
-  const [availableSpots, setAvailableSpots] = useState(EXTERNAL_PARKING_SPOTS);
+  const [availableSpots, setAvailableSpots] = useState([]);
   const [spotSelections, setSpotSelections] = useState({}); // { date: spot }
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
@@ -57,6 +52,15 @@ export default function DashboardPage() {
       const profile = await res.json();
       // Admins can use the dashboard too (treated as internal parking)
       setUser(profile);
+
+      // Load parking spots (names may be customized by admin)
+      fetch('/api/v3/parking/spots', { headers: { Authorization: `Bearer ${idToken}` } })
+        .then((r) => r.json())
+        .then((d) => {
+          const external = (d.spots || []).filter((s) => s.type === 'external').map((s) => s.name);
+          setAvailableSpots(external);
+        })
+        .catch(() => {});
     });
     return () => unsubscribe();
   }, [router]);

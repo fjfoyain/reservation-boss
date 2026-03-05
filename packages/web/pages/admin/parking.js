@@ -1,46 +1,111 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { auth } from '@/lib/firebase';
 import AdminLayout from '@/components/AdminLayout';
+import { PARKING_SPOTS } from '@/lib/config/constants';
 
-const ALL_SPOTS = [
-  'Parking 1', 'Parking 2', 'Parking 3', 'Parking 4', 'Parking 5',
-  'Parking 6', 'Parking 7', 'Parking 8', 'Parking 9', 'Parking 10',
-];
+const DEFAULT_SPOTS = PARKING_SPOTS.map((name, i) => ({ name, type: i < 5 ? 'external' : 'internal' }));
 
-function Toggle({ checked, onChange, disabled: isDisabled }) {
+function Toggle({ checked, onChange }) {
   return (
     <label className={`relative flex h-6 w-11 cursor-pointer items-center rounded-full p-1 transition-colors ${checked ? '' : 'bg-gray-300'}`}
       style={checked ? { backgroundColor: '#1183d4' } : {}}
     >
       <div className={`h-4 w-4 rounded-full bg-white shadow-sm transform transition-transform ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
-      <input
-        type="checkbox"
-        className="sr-only"
-        checked={checked}
-        onChange={onChange}
-        disabled={isDisabled}
-      />
+      <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} />
     </label>
+  );
+}
+
+function SpotRow({ spot, index, isDisabled, onToggle, onRename, assigned }) {
+  const [editing, setEditing] = useState(false);
+  const [draftName, setDraftName] = useState(spot.name);
+  const inputRef = useRef(null);
+
+  function startEdit() {
+    setDraftName(spot.name);
+    setEditing(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  }
+
+  function commitEdit() {
+    const trimmed = draftName.trim();
+    if (trimmed && trimmed !== spot.name) onRename(index, trimmed);
+    setEditing(false);
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter') commitEdit();
+    if (e.key === 'Escape') { setDraftName(spot.name); setEditing(false); }
+  }
+
+  const active = !isDisabled;
+  const isInternal = spot.type === 'internal';
+
+  return (
+    <div className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors group">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <span className="material-symbols-outlined text-gray-400 shrink-0" style={{ fontSize: 20 }}>
+          {active ? (isInternal ? 'directions_car' : 'local_parking') : 'construction'}
+        </span>
+        <div className="min-w-0 flex-1">
+          {editing ? (
+            <div className="flex items-center gap-1">
+              <input
+                ref={inputRef}
+                value={draftName}
+                onChange={(e) => setDraftName(e.target.value)}
+                onBlur={commitEdit}
+                onKeyDown={handleKey}
+                className="text-sm font-medium border border-blue-400 rounded px-2 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-200 w-36"
+              />
+              <button onClick={commitEdit} className="text-emerald-600 hover:text-emerald-700 p-0.5">
+                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>check</span>
+              </button>
+              <button onClick={() => { setDraftName(spot.name); setEditing(false); }} className="text-gray-400 hover:text-gray-600 p-0.5">
+                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1">
+              <p className={`text-sm font-medium truncate ${!active ? 'text-gray-400' : 'text-gray-900'}`}>{spot.name}</p>
+              <button
+                onClick={startEdit}
+                className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 transition-opacity p-0.5 shrink-0"
+                title="Rename spot"
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: 14 }}>edit</span>
+              </button>
+            </div>
+          )}
+          {isInternal && assigned && <p className="text-xs text-gray-400 truncate">{assigned.name}</p>}
+          {isInternal && !assigned && <p className="text-xs text-amber-500">Unassigned</p>}
+        </div>
+      </div>
+      <div className="flex items-center gap-3 ml-3 shrink-0">
+        <span className={`text-xs font-medium ${active ? 'text-emerald-600' : 'text-gray-400'}`}>{active ? 'Active' : 'Disabled'}</span>
+        <Toggle checked={active} onChange={() => onToggle(spot.name)} />
+      </div>
+    </div>
   );
 }
 
 export default function AdminParkingPage() {
   const [token, setToken] = useState('');
   const [users, setUsers] = useState([]);
-  const [config, setConfig] = useState(null);       // { weeklyLimit, cutoffTime, disabledSpots }
-  const [blackouts, setBlackouts] = useState([]);   // [{ id, date, label }]
   const [loading, setLoading] = useState(true);
 
-  // Global rules local state
+  // Spot state
+  const [spots, setSpots] = useState(DEFAULT_SPOTS);
+  const [disabledSpots, setDisabledSpots] = useState(new Set());
+  const [savingSpots, setSavingSpots] = useState(false);
+
+  // Global rules
   const [weeklyLimit, setWeeklyLimit] = useState(4);
   const [cutoffTime, setCutoffTime] = useState('08:00');
   const [savingRules, setSavingRules] = useState(false);
 
-  // Spot toggles (local state — saved on "Save Spot Changes")
-  const [disabledSpots, setDisabledSpots] = useState(new Set());
-  const [savingSpots, setSavingSpots] = useState(false);
-
-  // Blackout date form
+  // Blackout dates
+  const [blackouts, setBlackouts] = useState([]);
   const [newBlackoutDate, setNewBlackoutDate] = useState('');
   const [newBlackoutLabel, setNewBlackoutLabel] = useState('');
   const [addingBlackout, setAddingBlackout] = useState(false);
@@ -68,10 +133,10 @@ export default function AdminParkingPage() {
     const res = await fetch('/api/v3/admin/parking-config', { headers: { Authorization: `Bearer ${t}` } });
     const data = await res.json();
     if (data.config) {
-      setConfig(data.config);
       setWeeklyLimit(data.config.weeklyLimit ?? 4);
       setCutoffTime(data.config.cutoffTime ?? '08:00');
       setDisabledSpots(new Set(data.config.disabledSpots ?? []));
+      setSpots(data.config.spots ?? DEFAULT_SPOTS);
     }
   }
 
@@ -81,11 +146,28 @@ export default function AdminParkingPage() {
     setBlackouts(data.dates || []);
   }
 
-  function toggleSpot(spot) {
+  function toggleSpot(spotName) {
     setDisabledSpots((prev) => {
       const next = new Set(prev);
-      if (next.has(spot)) next.delete(spot);
-      else next.add(spot);
+      if (next.has(spotName)) next.delete(spotName);
+      else next.add(spotName);
+      return next;
+    });
+  }
+
+  function renameSpot(index, newName) {
+    setSpots((prev) => {
+      const next = [...prev];
+      const oldName = next[index].name;
+      next[index] = { ...next[index], name: newName };
+      // If the old name was disabled, transfer to new name
+      setDisabledSpots((d) => {
+        if (!d.has(oldName)) return d;
+        const nd = new Set(d);
+        nd.delete(oldName);
+        nd.add(newName);
+        return nd;
+      });
       return next;
     });
   }
@@ -96,7 +178,7 @@ export default function AdminParkingPage() {
       const res = await fetch('/api/v3/admin/parking-config', {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ disabledSpots: [...disabledSpots] }),
+        body: JSON.stringify({ disabledSpots: [...disabledSpots], spots }),
       });
       if (res.ok) showToast('Spot configuration saved');
       else showToast('Failed to save');
@@ -128,7 +210,7 @@ export default function AdminParkingPage() {
         body: JSON.stringify({ date: newBlackoutDate, label: newBlackoutLabel.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) { showToast(data.error || 'Failed to add date'); }
+      if (!res.ok) showToast(data.error || 'Failed to add date');
       else {
         setBlackouts((prev) => [...prev, { id: data.id, date: data.date, label: data.label }].sort((a, b) => a.date.localeCompare(b.date)));
         setNewBlackoutDate('');
@@ -145,26 +227,19 @@ export default function AdminParkingPage() {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) {
-        setBlackouts((prev) => prev.filter((b) => b.id !== id));
-        showToast('Date removed');
-      }
+      if (res.ok) { setBlackouts((prev) => prev.filter((b) => b.id !== id)); showToast('Date removed'); }
     } catch { showToast('Failed to remove date'); }
   }
 
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 3000); }
 
-  // Build spot assignments map
   const spotAssignments = {};
-  users.filter((u) => u.role === 'internal' && u.internalSpot)
-    .forEach((u) => { spotAssignments[u.internalSpot] = u; });
-
-  const externalUsers = users.filter((u) => u.role === 'external' && u.active);
+  users.filter((u) => u.role === 'internal' && u.internalSpot).forEach((u) => { spotAssignments[u.internalSpot] = u; });
   const internalUsers = users.filter((u) => u.role === 'internal' && u.active);
+  const externalUsers = users.filter((u) => u.role === 'external' && u.active);
 
-  // Determine spot category (internal = has an assignment OR is Parking 6-10 by convention)
-  const internalSpots = ALL_SPOTS.filter((s) => spotAssignments[s] || parseInt(s.split(' ')[1], 10) > 5);
-  const externalSpots = ALL_SPOTS.filter((s) => !internalSpots.includes(s));
+  const internalSpots = spots.filter((s) => s.type === 'internal');
+  const externalSpots = spots.filter((s) => s.type === 'external');
 
   if (loading) {
     return (
@@ -190,7 +265,9 @@ export default function AdminParkingPage() {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
             <div className="px-6 py-4 border-b border-gray-100">
               <h3 className="text-base font-semibold text-gray-900">Spot Management</h3>
-              <p className="text-xs text-gray-500 mt-0.5">Toggle spots for maintenance or availability.</p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Hover a spot to rename it. Toggle to enable/disable for maintenance.
+              </p>
             </div>
             <div className="flex-1">
               {/* Internal Spots */}
@@ -198,26 +275,18 @@ export default function AdminParkingPage() {
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Internal Spots</span>
               </div>
               <div className="divide-y divide-gray-100">
-                {ALL_SPOTS.filter((s) => parseInt(s.split(' ')[1], 10) > 5).map((spot) => {
-                  const active = !disabledSpots.has(spot);
-                  const assigned = spotAssignments[spot];
+                {internalSpots.map((spot) => {
+                  const globalIndex = spots.indexOf(spot);
                   return (
-                    <div key={spot} className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className="material-symbols-outlined text-gray-400" style={{ fontSize: 20 }}>
-                          {active ? 'directions_car' : 'construction'}
-                        </span>
-                        <div className="min-w-0">
-                          <p className={`text-sm font-medium truncate ${!active ? 'text-gray-400' : 'text-gray-900'}`}>{spot}</p>
-                          {assigned && <p className="text-xs text-gray-400 truncate">{assigned.name}</p>}
-                          {!assigned && <p className="text-xs text-amber-500">Unassigned</p>}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 ml-3">
-                        <span className={`text-xs font-medium ${active ? 'text-emerald-600' : 'text-gray-400'}`}>{active ? 'Active' : 'Disabled'}</span>
-                        <Toggle checked={active} onChange={() => toggleSpot(spot)} />
-                      </div>
-                    </div>
+                    <SpotRow
+                      key={`int-${globalIndex}`}
+                      spot={spot}
+                      index={globalIndex}
+                      isDisabled={disabledSpots.has(spot.name)}
+                      onToggle={toggleSpot}
+                      onRename={renameSpot}
+                      assigned={spotAssignments[spot.name]}
+                    />
                   );
                 })}
               </div>
@@ -227,21 +296,18 @@ export default function AdminParkingPage() {
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">External Spots</span>
               </div>
               <div className="divide-y divide-gray-100">
-                {ALL_SPOTS.filter((s) => parseInt(s.split(' ')[1], 10) <= 5).map((spot) => {
-                  const active = !disabledSpots.has(spot);
+                {externalSpots.map((spot) => {
+                  const globalIndex = spots.indexOf(spot);
                   return (
-                    <div key={spot} className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-gray-400" style={{ fontSize: 20 }}>
-                          {active ? 'local_parking' : 'construction'}
-                        </span>
-                        <p className={`text-sm font-medium ${!active ? 'text-gray-400' : 'text-gray-900'}`}>{spot}</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className={`text-xs font-medium ${active ? 'text-emerald-600' : 'text-gray-400'}`}>{active ? 'Active' : 'Disabled'}</span>
-                        <Toggle checked={active} onChange={() => toggleSpot(spot)} />
-                      </div>
-                    </div>
+                    <SpotRow
+                      key={`ext-${globalIndex}`}
+                      spot={spot}
+                      index={globalIndex}
+                      isDisabled={disabledSpots.has(spot.name)}
+                      onToggle={toggleSpot}
+                      onRename={renameSpot}
+                      assigned={null}
+                    />
                   );
                 })}
               </div>
@@ -271,10 +337,7 @@ export default function AdminParkingPage() {
                   </label>
                   <div className="flex items-center gap-3">
                     <input
-                      type="number"
-                      min={1}
-                      max={7}
-                      value={weeklyLimit}
+                      type="number" min={1} max={7} value={weeklyLimit}
                       onChange={(e) => setWeeklyLimit(e.target.value)}
                       className="w-24 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                     />
@@ -289,8 +352,7 @@ export default function AdminParkingPage() {
                   </label>
                   <div className="flex items-center gap-3">
                     <input
-                      type="time"
-                      value={cutoffTime}
+                      type="time" value={cutoffTime}
                       onChange={(e) => setCutoffTime(e.target.value)}
                       className="w-32 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                     />
@@ -300,8 +362,7 @@ export default function AdminParkingPage() {
               </div>
               <div className="mt-5 flex justify-end">
                 <button
-                  onClick={saveRules}
-                  disabled={savingRules}
+                  onClick={saveRules} disabled={savingRules}
                   className="px-4 py-2 text-sm font-medium text-white rounded-lg disabled:opacity-60 transition-colors"
                   style={{ backgroundColor: '#1183d4' }}
                 >
@@ -312,30 +373,24 @@ export default function AdminParkingPage() {
 
             {/* Holiday / Blackout Dates */}
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col gap-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900">Holiday / Blackout Dates</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">Block reservations on office closure days.</p>
-                </div>
+              <div>
+                <h3 className="text-base font-semibold text-gray-900">Holiday / Blackout Dates</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Block reservations on office closure days.</p>
               </div>
-
-              {/* Add new blackout date */}
               <div className="flex flex-col gap-2 p-3 rounded-lg border border-dashed border-gray-300 bg-gray-50">
                 <p className="text-xs font-medium text-gray-600">Add a blackout date</p>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
-                    type="date"
-                    value={newBlackoutDate}
+                    type="date" value={newBlackoutDate}
                     onChange={(e) => setNewBlackoutDate(e.target.value)}
                     className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   />
                   <input
-                    type="text"
-                    placeholder="Label (e.g. Christmas Day)"
+                    type="text" placeholder="Label (e.g. Christmas Day)"
                     value={newBlackoutLabel}
                     onChange={(e) => setNewBlackoutLabel(e.target.value)}
-                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                     onKeyDown={(e) => e.key === 'Enter' && addBlackout()}
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   />
                   <button
                     onClick={addBlackout}
@@ -348,8 +403,6 @@ export default function AdminParkingPage() {
                   </button>
                 </div>
               </div>
-
-              {/* Blackout list */}
               {blackouts.length === 0 ? (
                 <div className="text-center py-6 text-gray-400 text-sm">No blackout dates configured</div>
               ) : (
@@ -364,11 +417,7 @@ export default function AdminParkingPage() {
                           })}
                         </p>
                       </div>
-                      <button
-                        onClick={() => removeBlackout(b.id)}
-                        className="text-red-500 hover:text-red-700 transition-colors p-1"
-                        aria-label="Remove date"
-                      >
+                      <button onClick={() => removeBlackout(b.id)} className="text-red-500 hover:text-red-700 transition-colors p-1">
                         <span className="material-symbols-outlined" style={{ fontSize: 20 }}>delete</span>
                       </button>
                     </div>
@@ -384,19 +433,20 @@ export default function AdminParkingPage() {
           <div className="px-5 py-4 border-b border-gray-100">
             <h3 className="font-semibold text-gray-900">Internal Spot Assignments</h3>
             <p className="text-xs text-gray-500 mt-0.5">Permanent assignments managed in{' '}
-              <a href="/admin/users" className="text-blue-600 hover:underline">User Management</a>.</p>
+              <a href="/admin/users" className="text-blue-600 hover:underline">User Management</a>.
+            </p>
           </div>
           <div className="divide-y divide-gray-100">
-            {ALL_SPOTS.filter((s) => parseInt(s.split(' ')[1], 10) > 5).map((spot) => {
-              const assignedUser = spotAssignments[spot];
-              const disabled = disabledSpots.has(spot);
+            {internalSpots.map((spot) => {
+              const assignedUser = spotAssignments[spot.name];
+              const disabled = disabledSpots.has(spot.name);
               return (
-                <div key={spot} className={`flex items-center justify-between px-5 py-3 ${disabled ? 'opacity-50' : ''}`}>
+                <div key={spot.name} className={`flex items-center justify-between px-5 py-3 ${disabled ? 'opacity-50' : ''}`}>
                   <div className="flex items-center gap-3">
                     <span className="material-symbols-outlined text-gray-400" style={{ fontSize: 18 }}>
                       {disabled ? 'construction' : 'local_parking'}
                     </span>
-                    <span className="text-sm font-medium text-gray-900">{spot}</span>
+                    <span className="text-sm font-medium text-gray-900">{spot.name}</span>
                     {disabled && <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Maintenance</span>}
                   </div>
                   {assignedUser ? (
@@ -417,7 +467,6 @@ export default function AdminParkingPage() {
         </div>
       </div>
 
-      {/* Toast */}
       {toast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-xl shadow-lg text-sm z-50">
           {toast}

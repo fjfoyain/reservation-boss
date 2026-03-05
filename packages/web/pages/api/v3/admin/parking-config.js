@@ -3,14 +3,22 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { PARKING_SPOTS } from '@/lib/config/constants';
 
 const CONFIG_DOC = db.collection('v3_config').doc('parking_rules');
+
+// Default spots derived from constants (first 5 = external, last 5 = internal)
+const DEFAULT_SPOTS = PARKING_SPOTS.map((name, i) => ({
+  name,
+  type: i < 5 ? 'external' : 'internal',
+}));
 
 // Defaults if doc doesn't exist yet
 const DEFAULTS = {
   weeklyLimit: 4,
   cutoffTime: '08:00',
-  disabledSpots: [], // spot names disabled for maintenance
+  disabledSpots: [],
+  spots: DEFAULT_SPOTS,
 };
 
 async function handler(req, res) {
@@ -21,7 +29,7 @@ async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    const { weeklyLimit, cutoffTime, disabledSpots } = req.body;
+    const { weeklyLimit, cutoffTime, disabledSpots, spots } = req.body;
 
     const update = {};
     if (weeklyLimit !== undefined) {
@@ -42,6 +50,12 @@ async function handler(req, res) {
         return res.status(400).json({ error: 'disabledSpots must be an array' });
       }
       update.disabledSpots = disabledSpots;
+    }
+    if (spots !== undefined) {
+      if (!Array.isArray(spots) || spots.some((s) => !s.name || !s.type)) {
+        return res.status(400).json({ error: 'spots must be an array of { name, type }' });
+      }
+      update.spots = spots;
     }
 
     if (Object.keys(update).length === 0) {

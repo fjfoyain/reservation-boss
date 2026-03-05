@@ -20,7 +20,9 @@ async function handler(req, res) {
 
   try {
     const token = await createInvitation(normalized);
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://reservationboss.io';
+    const proto = req.headers['x-forwarded-proto'] || 'https';
+    const host = req.headers['x-forwarded-host'] || req.headers.host;
+    const baseUrl = process.env.APP_URL || `${proto}://${host}`;
     const registerLink = `${baseUrl}/auth/register?token=${token}`;
 
     await transporter.sendMail({

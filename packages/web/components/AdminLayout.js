@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/admin/reports', label: 'Reports', icon: 'bar_chart' },
   { href: '/admin/parking', label: 'Parking Config', icon: 'local_parking' },
   { href: '/admin/rooms', label: 'Room Management', icon: 'meeting_room' },
+  { href: '/admin/room-analytics', label: 'Room Analytics', icon: 'analytics' },
   { divider: true },
   { href: '/dashboard', label: 'My Schedule', icon: 'calendar_month' },
   { href: '/rooms', label: 'Book a Room', icon: 'meeting_room' },

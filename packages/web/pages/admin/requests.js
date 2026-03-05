@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
 import AdminLayout from '@/components/AdminLayout';
 
-const TYPE_LABELS = { parking: 'Parking', attendance: 'Attendance', room: 'Room Booking' };
+const TYPE_CONFIG = {
+  parking: { label: 'Parking', bg: 'bg-blue-50', text: 'text-blue-700' },
+  attendance: { label: 'Attendance', bg: 'bg-gray-100', text: 'text-gray-700' },
+  room: { label: 'Room Booking', bg: 'bg-purple-50', text: 'text-purple-700' },
+};
 
 export default function AdminRequestsPage() {
   const [token, setToken] = useState('');
@@ -121,7 +125,16 @@ export default function AdminRequestsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">{dateLabel}</td>
-                        <td className="px-6 py-4 text-sm text-gray-600">{TYPE_LABELS[req.type] || req.type}</td>
+                        <td className="px-6 py-4">
+                          {(() => {
+                            const tc = TYPE_CONFIG[req.type] || { label: req.type, bg: 'bg-gray-100', text: 'text-gray-700' };
+                            return (
+                              <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${tc.bg} ${tc.text}`}>
+                                {tc.label}
+                              </span>
+                            );
+                          })()}
+                        </td>
                         <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">{req.reason}</td>
                         {statusFilter === 'pending' && (
                           <td className="px-6 py-4 text-right">

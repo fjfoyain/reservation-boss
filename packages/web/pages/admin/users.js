@@ -161,13 +161,14 @@ export default function AdminUsersPage() {
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Employee</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden sm:table-cell">Parking Type</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Internal Spot</th>
+                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden xl:table-cell">Last Login</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-center">Active</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.length === 0 && (
-                    <tr><td colSpan={5} className="text-center py-10 text-gray-400 text-sm">No users found</td></tr>
+                    <tr><td colSpan={6} className="text-center py-10 text-gray-400 text-sm">No users found</td></tr>
                   )}
                   {filtered.map((u) => {
                     const roleStyle = ROLE_LABELS[u.role] || ROLE_LABELS.none;
@@ -184,6 +185,11 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-600 hidden lg:table-cell">
                           {u.role === 'internal' ? (u.internalSpot || <span className="text-amber-600">Unassigned</span>) : '—'}
+                        </td>
+                        <td className="px-4 py-4 text-xs text-gray-500 hidden xl:table-cell">
+                          {u.lastLogin
+                            ? new Date(u.lastLogin._seconds ? u.lastLogin._seconds * 1000 : u.lastLogin).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                            : <span className="text-gray-300">Never</span>}
                         </td>
                         <td className="px-4 py-4 text-center">
                           <span className={`inline-block w-2.5 h-2.5 rounded-full ${u.active ? 'bg-green-400' : 'bg-gray-300'}`} />

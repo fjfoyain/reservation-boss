@@ -220,6 +220,9 @@ export default function DashboardPage() {
     router.push('/auth/login');
   }
 
+  const officeDaysCount = weekDates.filter(({ date }) => attendance[date] === 'office').length;
+  const weeklyLimitReached = officeDaysCount >= 4;
+
   const weekLabel = weekDates.length
     ? `Week of ${weekDates[0]?.date ? new Date(`${weekDates[0].date}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' }) : ''} – ${weekDates[4]?.date ? new Date(`${weekDates[4].date}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' }) : ''}`
     : '';
@@ -255,6 +258,7 @@ export default function DashboardPage() {
           <nav className="hidden md:flex space-x-6">
             <span className="text-sm font-medium border-b-2 pb-1" style={{ color: '#00A3E0', borderColor: '#00A3E0' }}>Dashboard</span>
             <Link href="/rooms" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Rooms</Link>
+            <Link href="/my-bookings" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Bookings</Link>
             <Link href="/my-requests" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Requests</Link>
           </nav>
           <div className="flex items-center gap-4">
@@ -280,8 +284,21 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Weekly Attendance</h1>
             <p className="mt-2 text-sm text-gray-500">Plan your office presence and manage reservations.</p>
           </div>
+          {/* Weekly limit alert */}
+          {weeklyLimitReached && editable && (
+            <div className="bg-amber-50 border border-amber-300 rounded-lg p-3 flex items-start gap-3 max-w-md">
+              <span className="material-symbols-outlined text-amber-500 mt-0.5 text-xl">warning</span>
+              <div>
+                <h3 className="text-sm font-semibold text-amber-800">Weekly Limit Reached</h3>
+                <p className="text-xs text-amber-700 mt-1">
+                  You&apos;ve scheduled <strong>4 office days</strong> this week — the maximum for parking reservations.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Deadline banner */}
-          {editable && (
+          {editable && !weeklyLimitReached && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-3 max-w-md">
               <span className="material-symbols-outlined text-amber-500 mt-0.5 text-xl">schedule</span>
               <div>

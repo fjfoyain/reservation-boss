@@ -185,6 +185,43 @@ All users: can book meeting rooms and calling booths
 }
 ```
 
+#### `v3_config` — Global configuration (singleton documents)
+```js
+// Document ID: "parking_rules"
+{
+  weeklyLimit: 4,            // max parking days/week per external user
+  cutoffTime: "08:00",       // same-day cancellation cutoff (HH:MM)
+  disabledSpots: []          // spot names blocked for maintenance
+}
+```
+
+#### `v3_blackout_dates` — Holiday/closure dates
+```js
+{
+  date: "2024-12-25",        // YYYY-MM-DD
+  label: "Christmas Day",
+  createdAt: Timestamp
+}
+// Blocks: office attendance (status='office') AND parking reservations on that date
+```
+
+---
+
+## Required Firestore Indexes
+
+Composite indexes must be created in Firebase Console → Firestore → Indexes.
+Firestore will also auto-generate a direct link at runtime when a query is first run without the index.
+
+| Collection | Field 1 | Field 2 | Purpose |
+|---|---|---|---|
+| `v3_attendance` | `userId` ASC | `date` ASC | Week attendance per user |
+| `v3_parking` | `userId` ASC | `date` ASC | Week parking per user |
+| `v3_late_requests` | `userId` ASC | `createdAt` DESC | User's request history |
+| `v3_late_requests` | `reservationId` ASC | `status` ASC | Duplicate pending check |
+| `v3_room_reservations` | `date` ASC | `roomId` ASC | Availability per date/room |
+
+> Single-field indexes (like `v3_blackout_dates.date`) are created automatically by Firestore.
+
 ---
 
 ## API Map
@@ -222,6 +259,12 @@ All users: can book meeting rooms and calling booths
 | GET | `/api/v3/admin/reports/late-requests` | Late request report |
 | GET/POST | `/api/v3/admin/rooms` | List/create rooms |
 | PUT/DELETE | `/api/v3/admin/rooms/[id]` | Update/deactivate room |
+| GET/PUT | `/api/v3/admin/parking-config` | Global rules + disabled spots |
+| GET/POST | `/api/v3/admin/parking-blackout` | List/add blackout dates |
+| DELETE | `/api/v3/admin/parking-blackout/[id]` | Remove blackout date |
+| GET | `/api/v3/admin/reports/stats` | KPI cards + chart data |
+| GET | `/api/v3/admin/reports/room-analytics` | Room usage analytics |
+| GET | `/api/v3/my-bookings` | User's unified bookings view |
 
 ---
 

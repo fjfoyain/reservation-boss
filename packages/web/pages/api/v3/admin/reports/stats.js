@@ -88,6 +88,8 @@ async function handler(req, res) {
   const lateRequests = lateSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
   const lateChanges = lateRequests.length;
   const approvedLate = lateRequests.filter((r) => r.status === 'approved');
+  // No-shows = approved attendance late changes (user was scheduled to come in but got approved to not come)
+  const noShows = approvedLate.filter((r) => r.type === 'attendance').length;
 
   // Weekly attendance trends (day-of-week breakdown)
   const attendanceTrend = dayOfWeekCounts(attSnap.docs);
@@ -124,6 +126,7 @@ async function handler(req, res) {
     kpis: {
       avgDailyAttendance,
       parkingUtilization,
+      noShows,
       lateChanges,
     },
     attendanceTrend,

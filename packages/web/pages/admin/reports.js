@@ -182,42 +182,52 @@ export default function AdminReportsPage() {
 
         {/* KPI Cards */}
         {statsLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[0, 1, 2].map((i) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[0, 1, 2, 3].map((i) => (
               <div key={i} className="bg-white rounded-xl border border-gray-200 p-5 h-24 animate-pulse" />
             ))}
           </div>
         ) : stats?.kpis ? (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-              <div className="flex items-center gap-3 mb-1">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: '#eaf4fd' }}>
+              <div className="flex justify-between items-start mb-3">
+                <p className="text-sm text-gray-500">Avg Daily In-Office</p>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#eaf4fd' }}>
                   <span className="material-symbols-outlined text-[18px]" style={{ color: '#1183d4' }}>groups</span>
                 </div>
-                <p className="text-sm text-gray-500">Avg Daily In-Office</p>
               </div>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{stats.kpis.avgDailyAttendance}</p>
+              <p className="text-3xl font-bold text-gray-900">{stats.kpis.avgDailyAttendance}</p>
               <p className="text-xs text-gray-400 mt-1">employees / day</p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-              <div className="flex items-center gap-3 mb-1">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6f9f1' }}>
+              <div className="flex justify-between items-start mb-3">
+                <p className="text-sm text-gray-500">Parking Utilization</p>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#e6f9f1' }}>
                   <span className="material-symbols-outlined text-[18px]" style={{ color: '#059669' }}>local_parking</span>
                 </div>
-                <p className="text-sm text-gray-500">Parking Utilization</p>
               </div>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{stats.kpis.parkingUtilization}%</p>
+              <p className="text-3xl font-bold text-gray-900">{stats.kpis.parkingUtilization}%</p>
               <p className="text-xs text-gray-400 mt-1">external spots used</p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-              <div className="flex items-center gap-3 mb-1">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fef3c7' }}>
-                  <span className="material-symbols-outlined text-[18px]" style={{ color: '#d97706' }}>schedule</span>
+              <div className="flex justify-between items-start mb-3">
+                <p className="text-sm text-gray-500">No-Shows</p>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-red-50">
+                  <span className="material-symbols-outlined text-[18px] text-red-500">event_busy</span>
                 </div>
-                <p className="text-sm text-gray-500">Late Requests</p>
               </div>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{stats.kpis.lateChanges}</p>
-              <p className="text-xs text-gray-400 mt-1">submitted this period</p>
+              <p className="text-3xl font-bold text-gray-900">{stats.kpis.noShows}</p>
+              <p className="text-xs text-gray-400 mt-1">approved attendance changes</p>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+              <div className="flex justify-between items-start mb-3">
+                <p className="text-sm text-gray-500">Late Changes</p>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#fef3c7' }}>
+                  <span className="material-symbols-outlined text-[18px]" style={{ color: '#d97706' }}>edit_calendar</span>
+                </div>
+              </div>
+              <p className="text-3xl font-bold text-gray-900">{stats.kpis.lateChanges}</p>
+              <p className="text-xs text-gray-400 mt-1">requests this period</p>
             </div>
           </div>
         ) : null}

@@ -25,6 +25,24 @@ async function handler(req, res) {
   const today = new Date().toISOString().split('T')[0];
   if (date < today) return res.status(400).json({ error: 'Cannot reserve parking for past dates' });
 
+  // Check blackout dates and disabled spots in parallel
+  const [blackoutSnap, configSnap] = await Promise.all([
+    db.collection('v3_blackout_dates').where('date', '==', date).limit(1).get(),
+    db.collection('v3_config').doc('parking_rules').get(),
+  ]);
+
+  if (!blackoutSnap.empty) {
+    const blackout = blackoutSnap.docs[0].data();
+    return res.status(409).json({ error: `Parking not available on this date: ${blackout.label}` });
+  }
+
+  if (configSnap.exists) {
+    const cfg = configSnap.data();
+    if (cfg.disabledSpots?.includes(spot)) {
+      return res.status(409).json({ error: `${spot} is currently disabled for maintenance` });
+    }
+  }
+
   // Validate spot is not an internal spot
   const internalSnapshot = await db
     .collection('v3_users')

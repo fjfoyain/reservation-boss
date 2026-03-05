@@ -33,6 +33,15 @@ async function handler(req, res) {
     });
   }
 
+  // Check if date is a blackout date
+  if (status === 'office') {
+    const blackoutSnap = await db.collection('v3_blackout_dates').where('date', '==', date).limit(1).get();
+    if (!blackoutSnap.empty) {
+      const blackout = blackoutSnap.docs[0].data();
+      return res.status(409).json({ error: `Office is closed on this date: ${blackout.label}` });
+    }
+  }
+
   const { uid, email } = req.user;
   const now = new Date();
 

@@ -55,10 +55,7 @@ export default function DashboardPage() {
         return;
       }
       const profile = await res.json();
-      if (profile.role === 'admin') {
-        router.replace('/admin');
-        return;
-      }
+      // Admins can use the dashboard too (treated as internal parking)
       setUser(profile);
     });
     return () => unsubscribe();
@@ -433,7 +430,7 @@ export default function DashboardPage() {
                   )}
 
                   {/* Internal parking label */}
-                  {isOffice && user.role === 'internal' && (
+                  {isOffice && (user.role === 'internal' || user.role === 'admin') && (
                     <div className="mt-4 rounded-lg p-4 border bg-gray-50 border-gray-200">
                       <div className="flex items-start gap-3">
                         <span className="material-symbols-outlined mt-0.5 text-xl text-gray-500">local_parking</span>

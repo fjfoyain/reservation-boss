@@ -11,6 +11,9 @@ const NAV_ITEMS = [
   { href: '/admin/reports', label: 'Reports', icon: 'bar_chart' },
   { href: '/admin/parking', label: 'Parking Config', icon: 'local_parking' },
   { href: '/admin/rooms', label: 'Room Management', icon: 'meeting_room' },
+  { divider: true },
+  { href: '/dashboard', label: 'My Schedule', icon: 'calendar_month' },
+  { href: '/rooms', label: 'Book a Room', icon: 'meeting_room' },
 ];
 
 export default function AdminLayout({ children, title = 'Admin' }) {
@@ -59,7 +62,9 @@ export default function AdminLayout({ children, title = 'Admin' }) {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1">
-          {NAV_ITEMS.map(({ href, label, icon }) => {
+          {NAV_ITEMS.map((item, i) => {
+            if (item.divider) return <hr key={`divider-${i}`} className="my-2 border-gray-100" />;
+            const { href, label, icon } = item;
             const isActive = currentPath === href;
             return (
               <Link

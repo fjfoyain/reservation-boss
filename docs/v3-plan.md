@@ -418,9 +418,25 @@ Admin
 
 ---
 
+## Implementation Status
+
+**All 8 phases complete as of 2026-03-05.**
+
+- Phase 0: `v3` branch created and deployed to Vercel staging ✅
+- Phase 1: Auth (invite, register, login, forgot-password) ✅
+- Phase 2: User profile API ✅
+- Phase 3: Attendance dashboard + week helpers (Fri 5pm threshold, Mon 11pm lock) ✅
+- Phase 4: External parking API (8am cutoff, 4/week limit, spot transactions) ✅
+- Phase 5: Room reservations (30-min slots, conflict check, calling/meeting) ✅
+- Phase 6: Late request workflow (user submit + mine page + admin notification email) ✅
+- Phase 7: Full admin suite (6 pages + 11 API routes + email on approve/deny) ✅
+- Phase 8: Email notifications (parking confirm, room confirm, late request emails) ✅
+
+**`/` now redirects** to `/auth/login` (unauthenticated) or `/dashboard` (logged in).
+
 ## Verification Checklist
 
-- [ ] `v3` branch deployed to Vercel staging
+- [x] `v3` branch deployed to Vercel staging
 - [ ] Admin invite → employee receives email → clicks link → pre-filled email → sets name+password → logs in → lands on dashboard
 - [ ] External user: mark Mon "Attending" → parking sub-row → reserve spot → save → shows "Reserved"
 - [ ] Attendance locked after Mon 11pm → late request modal appears → submits → admin sees in `/admin/requests`

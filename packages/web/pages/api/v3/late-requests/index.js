@@ -9,14 +9,19 @@ const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || process.env.EMAIL_US
 
 async function handler(req, res) {
   if (req.method === 'GET') {
-    // Return current user's requests
+    // Single-field query + JS sort to avoid composite index requirement
     const snapshot = await db
       .collection('v3_late_requests')
       .where('userId', '==', req.user.uid)
-      .orderBy('createdAt', 'desc')
-      .limit(50)
       .get();
-    const requests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const requests = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .sort((a, b) => {
+        const ta = a.createdAt?._seconds ?? 0;
+        const tb = b.createdAt?._seconds ?? 0;
+        return tb - ta;
+      })
+      .slice(0, 50);
     return res.status(200).json({ requests });
   }
 
@@ -37,14 +42,13 @@ async function handler(req, res) {
     const { email, name } = req.userProfile;
     const now = new Date();
 
-    // Check if a pending request already exists for this reservation
+    // Check if a pending request already exists for this reservation (JS filter to avoid composite index)
     const existing = await db
       .collection('v3_late_requests')
       .where('reservationId', '==', reservationId)
-      .where('status', '==', 'pending')
-      .limit(1)
       .get();
-    if (!existing.empty) {
+    const hasPending = existing.docs.some((d) => d.data().status === 'pending');
+    if (hasPending) {
       return res.status(409).json({ error: 'A pending request already exists for this reservation' });
     }
 

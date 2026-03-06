@@ -23,6 +23,12 @@ function getMonthRange(dateStr) {
   return { start, end };
 }
 
+function fmtDate(dateStr) {
+  return new Date(`${dateStr}T12:00:00Z`).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+  });
+}
+
 function toCSV(columns, rows) {
   const escape = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
   const lines = [columns.map(escape).join(','), ...rows.map((r) => r.map(escape).join(','))];
@@ -38,40 +44,75 @@ async function handler(req, res) {
 
   const range = type === 'monthly' ? getMonthRange(date) : getWeekRange(date);
 
-  const parkingSnap = await db
-    .collection('v3_parking')
-    .where('date', '>=', range.start)
-    .where('date', '<=', range.end)
-    .orderBy('date')
-    .get();
-
-  const reservations = parkingSnap.docs.map((doc) => doc.data());
-
-  // Group by user
-  const byUser = {};
-  reservations.forEach((r) => {
-    const key = r.userId;
-    if (!byUser[key]) byUser[key] = { email: r.email, dates: [] };
-    byUser[key].dates.push({ date: r.date, spot: r.spot });
-  });
-
-  const columns = ['Employee Email', 'Date', 'Spot'];
-  const rows = reservations.map((r) => [
-    r.email,
-    new Date(`${r.date}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }),
-    r.spot,
+  // Fetch external parking reservations and internal users + attendance in parallel
+  const [externalSnap, internalUsersSnap, attendanceSnap] = await Promise.all([
+    db.collection('v3_parking')
+      .where('date', '>=', range.start)
+      .where('date', '<=', range.end)
+      .orderBy('date')
+      .get(),
+    db.collection('v3_users').where('role', '==', 'internal').get(),
+    db.collection('v3_attendance')
+      .where('date', '>=', range.start)
+      .where('date', '<=', range.end)
+      .get(),
   ]);
 
-  const summary = `${reservations.length} parking reservation${reservations.length !== 1 ? 's' : ''} in this period`;
+  // --- External parking ---
+  const externalReservations = externalSnap.docs.map((doc) => doc.data());
+  const externalColumns = ['Employee Email', 'Date', 'Spot'];
+  const externalRows = externalReservations.map((r) => [r.email, fmtDate(r.date), r.spot]);
+
+  // --- Internal parking (derived from attendance) ---
+  // Build a map of internal users: userId → { name, email, internalSpot }
+  const internalUsers = {};
+  internalUsersSnap.docs.forEach((doc) => {
+    const u = doc.data();
+    internalUsers[doc.id] = { name: u.name || u.email, email: u.email, spot: u.internalSpot || '—' };
+  });
+
+  // Filter attendance: status === 'office' AND user is internal
+  const internalColumns = ['Employee', 'Email', 'Assigned Spot', 'Date'];
+  const internalRows = [];
+  attendanceSnap.docs.forEach((doc) => {
+    const a = doc.data();
+    if (a.status === 'office' && internalUsers[a.userId]) {
+      const u = internalUsers[a.userId];
+      internalRows.push([u.name, u.email, u.spot, fmtDate(a.date)]);
+    }
+  });
+  // Sort by date then name
+  internalRows.sort((a, b) => a[3].localeCompare(b[3]) || a[0].localeCompare(b[0]));
 
   if (format === 'csv') {
-    const csv = toCSV(columns, rows);
+    const extCSV = toCSV(externalColumns, externalRows);
+    const intCSV = toCSV(internalColumns, internalRows);
+    const csv = `EXTERNAL PARKING\n${extCSV}\n\nINTERNAL PARKING\n${intCSV}`;
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename="parking-${type}-${date}.csv"`);
     return res.send(csv);
   }
 
-  return res.status(200).json({ columns, rows, summary });
+  return res.status(200).json({
+    sections: [
+      {
+        title: 'External Parking',
+        icon: 'drive_eta',
+        color: '#059669',
+        columns: externalColumns,
+        rows: externalRows,
+        summary: `${externalRows.length} external reservation${externalRows.length !== 1 ? 's' : ''}`,
+      },
+      {
+        title: 'Internal Parking',
+        icon: 'directions_car',
+        color: '#1183d4',
+        columns: internalColumns,
+        rows: internalRows,
+        summary: `${internalRows.length} internal parking day${internalRows.length !== 1 ? 's' : ''} (auto-tracked from attendance)`,
+      },
+    ],
+  });
 }
 
 export default withCors(withAdminAuth(handler));

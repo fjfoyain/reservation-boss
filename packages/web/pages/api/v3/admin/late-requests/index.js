@@ -10,13 +10,19 @@ async function handler(req, res) {
   const validStatuses = ['pending', 'approved', 'denied'];
   if (!validStatuses.includes(status)) return res.status(400).json({ error: 'Invalid status' });
 
+  // Single-field query + JS sort to avoid composite index requirement
   const snap = await db
     .collection('v3_late_requests')
     .where('status', '==', status)
-    .orderBy('createdAt', 'desc')
     .get();
 
-  const requests = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  const requests = snap.docs
+    .map((doc) => ({ id: doc.id, ...doc.data() }))
+    .sort((a, b) => {
+      const ta = a.createdAt?._seconds ?? 0;
+      const tb = b.createdAt?._seconds ?? 0;
+      return tb - ta;
+    });
   return res.status(200).json({ requests });
 }
 

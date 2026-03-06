@@ -144,6 +144,7 @@ export default function AdminReportsPage() {
   }
 
   const rows = reportData?.rows || [];
+  const sections = reportData?.sections || null;
 
   return (
     <AdminLayout title="Reports">
@@ -317,46 +318,86 @@ export default function AdminReportsPage() {
             </button>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            {tableLoading ? (
-              <div className="flex justify-center py-16">
-                <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
-              </div>
-            ) : rows.length === 0 ? (
-              <div className="text-center py-16 text-gray-400">
-                <span className="material-symbols-outlined text-5xl">bar_chart</span>
-                <p className="mt-3 text-sm">No data for this period.</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      {reportData?.columns?.map((col) => (
-                        <th key={col} className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
-                          {col}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {rows.map((row, i) => (
-                      <tr key={i} className="hover:bg-gray-50 transition-colors">
-                        {row.map((cell, j) => (
-                          <td key={j} className="px-4 py-3 text-gray-700">{cell}</td>
+          {tableLoading ? (
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex justify-center py-16">
+              <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
+            </div>
+          ) : sections ? (
+            /* Sectioned layout (e.g. parking tab with external + internal) */
+            <div className="space-y-4">
+              {sections.map((section) => (
+                <div key={section.title} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg" style={{ color: section.color }}>{section.icon}</span>
+                    <h3 className="font-semibold text-gray-900">{section.title}</h3>
+                    <span className="ml-auto text-xs text-gray-400">{section.summary}</span>
+                  </div>
+                  {section.rows.length === 0 ? (
+                    <div className="text-center py-10 text-gray-400 text-sm">No data for this period.</div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-sm">
+                        <thead className="bg-gray-50 border-b border-gray-200">
+                          <tr>
+                            {section.columns.map((col) => (
+                              <th key={col} className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">{col}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {section.rows.map((row, i) => (
+                            <tr key={i} className="hover:bg-gray-50 transition-colors">
+                              {row.map((cell, j) => (
+                                <td key={j} className="px-4 py-3 text-gray-700">{cell}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            /* Generic single-table layout */
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              {rows.length === 0 ? (
+                <div className="text-center py-16 text-gray-400">
+                  <span className="material-symbols-outlined text-5xl">bar_chart</span>
+                  <p className="mt-3 text-sm">No data for this period.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        {reportData?.columns?.map((col) => (
+                          <th key={col} className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                            {col}
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            {reportData?.summary && (
-              <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
-                {reportData.summary}
-              </div>
-            )}
-          </div>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {rows.map((row, i) => (
+                        <tr key={i} className="hover:bg-gray-50 transition-colors">
+                          {row.map((cell, j) => (
+                            <td key={j} className="px-4 py-3 text-gray-700">{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {reportData?.summary && (
+                <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
+                  {reportData.summary}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

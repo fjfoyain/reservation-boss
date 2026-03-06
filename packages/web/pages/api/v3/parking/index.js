@@ -43,14 +43,12 @@ async function handler(req, res) {
     }
   }
 
-  // Validate spot is not an internal spot
+  // Validate spot is not an internal spot (single-field query + JS filter)
   const internalSnapshot = await db
     .collection('v3_users')
-    .where('role', '==', 'internal')
     .where('internalSpot', '==', spot)
-    .limit(1)
     .get();
-  if (!internalSnapshot.empty) {
+  if (internalSnapshot.docs.some((d) => d.data().role === 'internal')) {
     return res.status(409).json({ error: `${spot} is an assigned internal spot` });
   }
 

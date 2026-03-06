@@ -19,48 +19,31 @@ async function handler(req, res) {
   const pastStr = past.toISOString().split('T')[0];
   const futureStr = future.toISOString().split('T')[0];
 
+  // Single-field queries only — date filtering and sorting done in JS
   const [attSnap, parkSnap, roomSnap, lateSnap] = await Promise.all([
-    db.collection('v3_attendance')
-      .where('userId', '==', uid)
-      .where('date', '>=', pastStr)
-      .where('date', '<=', futureStr)
-      .orderBy('date', 'desc')
-      .get(),
-    db.collection('v3_parking')
-      .where('userId', '==', uid)
-      .where('date', '>=', pastStr)
-      .where('date', '<=', futureStr)
-      .orderBy('date', 'desc')
-      .get(),
-    db.collection('v3_room_reservations')
-      .where('userId', '==', uid)
-      .where('date', '>=', pastStr)
-      .where('date', '<=', futureStr)
-      .orderBy('date', 'desc')
-      .get(),
-    // Fetch pending late requests to mark bookings as "awaiting approval"
-    db.collection('v3_late_requests')
-      .where('userId', '==', uid)
-      .where('status', '==', 'pending')
-      .get(),
+    db.collection('v3_attendance').where('userId', '==', uid).get(),
+    db.collection('v3_parking').where('userId', '==', uid).get(),
+    db.collection('v3_room_reservations').where('userId', '==', uid).get(),
+    db.collection('v3_late_requests').where('userId', '==', uid).get(),
   ]);
 
-  // Build lookup of pending late requests by reservationId
+  // Build lookup of pending late requests by reservationId (filter in JS)
   const pendingByReservation = {};
   lateSnap.docs.forEach((doc) => {
     const d = doc.data();
-    pendingByReservation[d.reservationId] = doc.id;
+    if (d.status === 'pending') pendingByReservation[d.reservationId] = doc.id;
   });
 
   const bookings = [];
 
   attSnap.docs.forEach((doc) => {
     const d = doc.data();
+    if (!d.date || d.date < pastStr || d.date > futureStr) return;
     bookings.push({
       id: doc.id,
       type: 'attendance',
       date: d.date,
-      status: d.status, // 'office' | 'remote'
+      status: d.status,
       detail: d.status === 'office' ? 'Office' : 'Remote',
       lateRequestId: pendingByReservation[doc.id] || null,
     });
@@ -68,6 +51,7 @@ async function handler(req, res) {
 
   parkSnap.docs.forEach((doc) => {
     const d = doc.data();
+    if (!d.date || d.date < pastStr || d.date > futureStr) return;
     bookings.push({
       id: doc.id,
       type: 'parking',
@@ -81,6 +65,7 @@ async function handler(req, res) {
 
   roomSnap.docs.forEach((doc) => {
     const d = doc.data();
+    if (!d.date || d.date < pastStr || d.date > futureStr) return;
     bookings.push({
       id: doc.id,
       type: 'room',

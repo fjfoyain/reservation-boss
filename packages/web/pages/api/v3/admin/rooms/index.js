@@ -6,9 +6,16 @@ import { withCors } from '@/lib/middleware/cors';
 
 async function handler(req, res) {
   if (req.method === 'GET') {
-    const snap = await db.collection('v3_rooms').orderBy('type').orderBy('name').get();
-    const rooms = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    return res.status(200).json({ rooms });
+    try {
+      const snap = await db.collection('v3_rooms').get();
+      const rooms = snap.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name));
+      return res.status(200).json({ rooms });
+    } catch (err) {
+      console.error('admin/rooms GET error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
   if (req.method === 'POST') {

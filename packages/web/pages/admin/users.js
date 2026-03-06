@@ -35,6 +35,12 @@ export default function AdminUsersPage() {
   const [toast, setToast] = useState('');
   const [takenSpots, setTakenSpots] = useState(new Set());
   const [internalSpots, setInternalSpots] = useState([]);
+  const [resettingPassword, setResettingPassword] = useState(false);
+
+  // Attendance rules
+  const [scheduleDeadlineTime, setScheduleDeadlineTime] = useState('23:00');
+  const [weekSwitchTime, setWeekSwitchTime] = useState('17:00');
+  const [savingAttRules, setSavingAttRules] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
@@ -42,6 +48,7 @@ export default function AdminUsersPage() {
       const idToken = await firebaseUser.getIdToken();
       setToken(idToken);
       fetchUsers(idToken);
+      fetchAttendanceConfig(idToken);
       fetch('/api/v3/admin/parking-config', { headers: { Authorization: `Bearer ${idToken}` } })
         .then((r) => r.json())
         .then((d) => {
@@ -52,6 +59,31 @@ export default function AdminUsersPage() {
     });
     return () => unsubscribe();
   }, []);
+
+  async function fetchAttendanceConfig(t = token) {
+    try {
+      const res = await fetch('/api/v3/admin/attendance-config', { headers: { Authorization: `Bearer ${t}` } });
+      const data = await res.json();
+      if (data.config) {
+        setScheduleDeadlineTime(data.config.scheduleDeadlineTime ?? '23:00');
+        setWeekSwitchTime(data.config.weekSwitchTime ?? '17:00');
+      }
+    } catch {}
+  }
+
+  async function saveAttRules() {
+    setSavingAttRules(true);
+    try {
+      const res = await fetch('/api/v3/admin/attendance-config', {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scheduleDeadlineTime, weekSwitchTime }),
+      });
+      if (res.ok) showToast('Attendance rules updated');
+      else showToast('Failed to update attendance rules');
+    } catch { showToast('Failed to update attendance rules'); }
+    setSavingAttRules(false);
+  }
 
   async function fetchUsers(t = token) {
     setLoading(true);
@@ -106,6 +138,20 @@ export default function AdminUsersPage() {
       else { showToast('User updated'); setEditUser(null); fetchUsers(); }
     } catch { showToast('Failed to update user'); }
     setSaving(false);
+  }
+
+  async function sendPasswordReset(uid) {
+    setResettingPassword(true);
+    try {
+      const res = await fetch('/api/v3/admin/users/reset-password', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid }),
+      });
+      if (res.ok) showToast('Password reset email sent');
+      else { const d = await res.json(); showToast(d.error || 'Failed to send reset email'); }
+    } catch { showToast('Failed to send reset email'); }
+    setResettingPassword(false);
   }
 
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 3500); }
@@ -262,6 +308,53 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
+      {/* Attendance Rules */}
+      <div className="max-w-5xl mx-auto mt-6">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <h3 className="text-base font-semibold text-gray-900 mb-1">Attendance Rules</h3>
+          <p className="text-sm text-gray-500 mb-5">Configure when weekly schedules lock and when the dashboard previews the next week.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                <span className="material-symbols-outlined text-gray-400" style={{ fontSize: 18 }}>lock_clock</span>
+                Schedule Deadline (Monday)
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="time" value={scheduleDeadlineTime}
+                  onChange={(e) => setScheduleDeadlineTime(e.target.value)}
+                  className="w-32 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                />
+                <span className="text-xs text-gray-500">After this time on Monday, that week&apos;s schedule is locked.</span>
+              </div>
+            </div>
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                <span className="material-symbols-outlined text-gray-400" style={{ fontSize: 18 }}>skip_next</span>
+                Next-Week Preview (Friday)
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="time" value={weekSwitchTime}
+                  onChange={(e) => setWeekSwitchTime(e.target.value)}
+                  className="w-32 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                />
+                <span className="text-xs text-gray-500">After this time on Friday, the dashboard shows next week by default.</span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 flex justify-end">
+            <button
+              onClick={saveAttRules} disabled={savingAttRules}
+              className="px-4 py-2 text-sm font-medium text-white rounded-lg disabled:opacity-60 transition-colors"
+              style={{ backgroundColor: '#1183d4' }}
+            >
+              {savingAttRules ? 'Updating…' : 'Update Rules'}
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Invite modal */}
       {inviteModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -369,7 +462,17 @@ export default function AdminUsersPage() {
                 <span className="text-sm text-gray-700">Active account</span>
               </div>
             </div>
-            <div className="flex gap-3 mt-6 justify-end">
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <button
+                onClick={() => sendPasswordReset(editUser.uid)}
+                disabled={resettingPassword}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-amber-700 border border-amber-200 bg-amber-50 rounded-lg hover:bg-amber-100 disabled:opacity-60 transition-colors"
+              >
+                <span className="material-symbols-outlined text-base">lock_reset</span>
+                {resettingPassword ? 'Sending…' : 'Send Password Reset Email'}
+              </button>
+            </div>
+            <div className="flex gap-3 mt-4 justify-end">
               <button onClick={() => setEditUser(null)} className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
               <button
                 onClick={saveUserEdit}

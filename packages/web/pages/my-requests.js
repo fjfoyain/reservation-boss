@@ -27,7 +27,6 @@ export default function MyRequestsPage() {
       const res = await fetch('/api/v3/profile', { headers: { Authorization: `Bearer ${idToken}` } });
       if (!res.ok) { router.replace('/auth/login'); return; }
       const profile = await res.json();
-      if (profile.isAdmin || profile.role === 'admin') { router.replace('/admin'); return; }
       setUser(profile);
 
       // Fetch requests
@@ -61,6 +60,9 @@ export default function MyRequestsPage() {
             <Link href="/dashboard" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Dashboard</Link>
             <Link href="/rooms" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Rooms</Link>
             <span className="text-sm font-medium border-b-2 pb-1" style={{ color: '#00A3E0', borderColor: '#00A3E0' }}>My Requests</span>
+            {(user?.isAdmin || user?.role === 'admin') && (
+              <Link href="/admin" className="text-sm font-medium text-purple-600 hover:text-purple-800 transition-colors">Admin Panel</Link>
+            )}
           </nav>
           <button
             onClick={() => signOut(auth).then(() => router.push('/auth/login'))}

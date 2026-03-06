@@ -111,11 +111,6 @@ export default function AdminParkingPage() {
   const [cutoffTime, setCutoffTime] = useState('08:00');
   const [savingRules, setSavingRules] = useState(false);
 
-  // Attendance rules
-  const [scheduleDeadlineTime, setScheduleDeadlineTime] = useState('23:00');
-  const [weekSwitchTime, setWeekSwitchTime] = useState('17:00');
-  const [savingAttRules, setSavingAttRules] = useState(false);
-
   // Add spot form
   const [newSpotName, setNewSpotName] = useState({ internal: '', external: '' });
 
@@ -132,7 +127,7 @@ export default function AdminParkingPage() {
       if (!firebaseUser) return;
       const t = await firebaseUser.getIdToken();
       setToken(t);
-      await Promise.all([fetchUsers(t), fetchConfig(t), fetchBlackouts(t), fetchAttendanceConfig(t)]);
+      await Promise.all([fetchUsers(t), fetchConfig(t), fetchBlackouts(t)]);
       setLoading(false);
     });
     return () => unsubscribe();
@@ -152,15 +147,6 @@ export default function AdminParkingPage() {
       setCutoffTime(data.config.cutoffTime ?? '08:00');
       setDisabledSpots(new Set(data.config.disabledSpots ?? []));
       setSpots(data.config.spots ?? DEFAULT_SPOTS);
-    }
-  }
-
-  async function fetchAttendanceConfig(t = token) {
-    const res = await fetch('/api/v3/admin/attendance-config', { headers: { Authorization: `Bearer ${t}` } });
-    const data = await res.json();
-    if (data.config) {
-      setScheduleDeadlineTime(data.config.scheduleDeadlineTime ?? '23:00');
-      setWeekSwitchTime(data.config.weekSwitchTime ?? '17:00');
     }
   }
 
@@ -239,20 +225,6 @@ export default function AdminParkingPage() {
       else showToast('Failed to update rules');
     } catch { showToast('Failed to update rules'); }
     setSavingRules(false);
-  }
-
-  async function saveAttRules() {
-    setSavingAttRules(true);
-    try {
-      const res = await fetch('/api/v3/admin/attendance-config', {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scheduleDeadlineTime, weekSwitchTime }),
-      });
-      if (res.ok) showToast('Attendance rules updated');
-      else showToast('Failed to update attendance rules');
-    } catch { showToast('Failed to update attendance rules'); }
-    setSavingAttRules(false);
   }
 
   async function addBlackout() {
@@ -462,51 +434,6 @@ export default function AdminParkingPage() {
                   style={{ backgroundColor: '#1183d4' }}
                 >
                   {savingRules ? 'Updating…' : 'Update Rules'}
-                </button>
-              </div>
-            </div>
-
-            {/* Attendance Rules */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Attendance Rules</h3>
-              <div className="space-y-5">
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <span className="material-symbols-outlined text-gray-400" style={{ fontSize: 18 }}>lock_clock</span>
-                    Schedule Deadline (Monday)
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="time" value={scheduleDeadlineTime}
-                      onChange={(e) => setScheduleDeadlineTime(e.target.value)}
-                      className="w-32 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                    />
-                    <span className="text-xs text-gray-500">After this time on Monday, schedules for the week are locked.</span>
-                  </div>
-                </div>
-                <div className="border-t border-gray-100" />
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <span className="material-symbols-outlined text-gray-400" style={{ fontSize: 18 }}>skip_next</span>
-                    Next-Week Preview (Friday)
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="time" value={weekSwitchTime}
-                      onChange={(e) => setWeekSwitchTime(e.target.value)}
-                      className="w-32 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                    />
-                    <span className="text-xs text-gray-500">After this time on Friday, the dashboard shows next week by default.</span>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-5 flex justify-end">
-                <button
-                  onClick={saveAttRules} disabled={savingAttRules}
-                  className="px-4 py-2 text-sm font-medium text-white rounded-lg disabled:opacity-60 transition-colors"
-                  style={{ backgroundColor: '#1183d4' }}
-                >
-                  {savingAttRules ? 'Updating…' : 'Update Rules'}
                 </button>
               </div>
             </div>

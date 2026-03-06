@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
 import AdminLayout from '@/components/AdminLayout';
 
-const TYPE_LABELS = { meeting: 'Meeting Room', calling: 'Calling Booth' };
+const TYPE_LABELS = { meeting: 'Meeting Room', calling: 'Calling Booth', conference: 'Conference Room' };
 
 export default function AdminRoomsPage() {
   const [token, setToken] = useState('');
@@ -13,6 +13,7 @@ export default function AdminRoomsPage() {
   const [form, setForm] = useState({ name: '', type: 'meeting', capacity: 6 });
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState(null); // room to delete
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
@@ -67,28 +68,30 @@ export default function AdminRoomsPage() {
     setSaving(false);
   }
 
-  async function handleDeactivate(id) {
+  async function handleDelete(id) {
     try {
       await fetch(`/api/v3/admin/rooms/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-      showToast('Room deactivated');
+      showToast('Room deleted');
+      setDeleteConfirm(null);
       fetchRooms();
-    } catch { showToast('Failed to deactivate room'); }
+    } catch { showToast('Failed to delete room'); }
   }
 
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 3000); }
 
   const meetingRooms = rooms.filter((r) => r.type === 'meeting');
   const callingBooths = rooms.filter((r) => r.type === 'calling');
+  const conferenceRooms = rooms.filter((r) => r.type === 'conference');
 
   function RoomTable({ list }) {
     if (list.length === 0) return <div className="text-center py-8 text-gray-400 text-sm">No rooms configured.</div>;
     return (
       <div className="divide-y divide-gray-100">
         {list.map((room) => (
-          <div key={room.id} className={`flex items-center justify-between px-5 py-3 ${!room.active ? 'opacity-50' : ''}`}>
+          <div key={room.id} className="flex items-center justify-between px-5 py-3">
             <div className="flex items-center gap-3">
               <span className="material-symbols-outlined text-gray-400">
                 {room.type === 'calling' ? 'phone_in_talk' : 'meeting_room'}
@@ -99,23 +102,18 @@ export default function AdminRoomsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {!room.active && (
-                <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Inactive</span>
-              )}
               <button
                 onClick={() => setEditRoom({ ...room })}
                 className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 Edit
               </button>
-              {room.active && (
-                <button
-                  onClick={() => handleDeactivate(room.id)}
-                  className="px-3 py-1.5 text-xs border border-red-200 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
-                >
-                  Deactivate
-                </button>
-              )}
+              <button
+                onClick={() => setDeleteConfirm(room)}
+                className="px-3 py-1.5 text-xs border border-red-200 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
@@ -166,6 +164,16 @@ export default function AdminRoomsPage() {
               </div>
               <RoomTable list={callingBooths} />
             </div>
+
+            {/* Conference Rooms */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+                <span className="material-symbols-outlined text-lg" style={{ color: '#112A46' }}>groups</span>
+                <h3 className="font-semibold text-gray-900">Conference Rooms</h3>
+                <span className="ml-auto text-xs text-gray-400">{conferenceRooms.length} room{conferenceRooms.length !== 1 ? 's' : ''}</span>
+              </div>
+              <RoomTable list={conferenceRooms} />
+            </div>
           </>
         )}
       </div>
@@ -195,6 +203,7 @@ export default function AdminRoomsPage() {
                 >
                   <option value="meeting">Meeting Room</option>
                   <option value="calling">Calling Booth</option>
+                  <option value="conference">Conference Room</option>
                 </select>
               </div>
               <div>
@@ -248,6 +257,7 @@ export default function AdminRoomsPage() {
                 >
                   <option value="meeting">Meeting Room</option>
                   <option value="calling">Calling Booth</option>
+                  <option value="conference">Conference Room</option>
                 </select>
               </div>
               <div>
@@ -283,6 +293,30 @@ export default function AdminRoomsPage() {
                 style={{ backgroundColor: '#1183d4' }}
               >
                 {saving ? 'Saving…' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirm modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm">
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Delete Room</h2>
+            <p className="text-sm text-gray-500 mb-6">
+              Are you sure you want to permanently delete <span className="font-semibold text-gray-800">{deleteConfirm.name}</span>? This cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(deleteConfirm.id)}
+                className="px-4 py-2 text-sm text-white rounded-lg"
+                style={{ backgroundColor: '#dc2626' }}
+              >
+                Delete
               </button>
             </div>
           </div>

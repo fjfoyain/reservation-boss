@@ -194,22 +194,24 @@ export default function RoomsPage() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           {/* Room type tabs */}
-          <div className="flex gap-2">
-            {['meeting', 'calling'].map((t) => (
+          <div className="flex gap-2 flex-wrap">
+            {[
+              { key: 'meeting', label: 'Meeting Rooms', icon: 'meeting_room' },
+              { key: 'calling', label: 'Calling Booths', icon: 'phone_in_talk' },
+              { key: 'conference', label: 'Conference Rooms', icon: 'groups' },
+            ].map(({ key, label, icon }) => (
               <button
-                key={t}
-                onClick={() => setRoomType(t)}
+                key={key}
+                onClick={() => setRoomType(key)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                  roomType === t
+                  roomType === key
                     ? 'text-white border-transparent'
                     : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                 }`}
-                style={roomType === t ? { backgroundColor: '#00A3E0', borderColor: '#00A3E0' } : {}}
+                style={roomType === key ? { backgroundColor: '#00A3E0', borderColor: '#00A3E0' } : {}}
               >
-                <span className="material-symbols-outlined text-sm mr-1 align-middle">
-                  {t === 'meeting' ? 'meeting_room' : 'phone_in_talk'}
-                </span>
-                {t === 'meeting' ? 'Meeting Rooms' : 'Calling Booths'}
+                <span className="material-symbols-outlined text-sm mr-1 align-middle">{icon}</span>
+                {label}
               </button>
             ))}
           </div>

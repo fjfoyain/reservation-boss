@@ -21,7 +21,7 @@ async function handler(req, res) {
   if (req.method === 'POST') {
     const { name, type, capacity } = req.body;
     if (!name?.trim()) return res.status(400).json({ error: 'Room name is required' });
-    if (!['meeting', 'calling'].includes(type)) return res.status(400).json({ error: 'Type must be "meeting" or "calling"' });
+    if (!['meeting', 'calling', 'conference'].includes(type)) return res.status(400).json({ error: 'Type must be "meeting", "calling", or "conference"' });
 
     const docRef = await db.collection('v3_rooms').add({
       name: name.trim(),

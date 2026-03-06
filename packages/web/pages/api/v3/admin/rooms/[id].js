@@ -1,5 +1,5 @@
 // PUT /api/v3/admin/rooms/[id] — Update room (name, type, capacity, active)
-// DELETE /api/v3/admin/rooms/[id] — Deactivate room
+// DELETE /api/v3/admin/rooms/[id] — Permanently delete room
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
@@ -15,7 +15,7 @@ async function handler(req, res) {
     const updates = {};
     if (name !== undefined) updates.name = name.trim();
     if (type !== undefined) {
-      if (!['meeting', 'calling'].includes(type)) return res.status(400).json({ error: 'Invalid type' });
+      if (!['meeting', 'calling', 'conference'].includes(type)) return res.status(400).json({ error: 'Invalid type' });
       updates.type = type;
     }
     if (capacity !== undefined) updates.capacity = Number(capacity);
@@ -27,8 +27,7 @@ async function handler(req, res) {
   }
 
   if (req.method === 'DELETE') {
-    // Soft-delete: set active = false
-    await docRef.update({ active: false });
+    await docRef.delete();
     return res.status(200).json({ success: true });
   }
 

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import AppHeader from '@/components/AppHeader';
 import {
   getDefaultWeekMonday,
   getPrevMonday,
@@ -252,40 +252,7 @@ export default function DashboardPage() {
       {/* Material Symbols */}
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
 
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined" style={{ color: '#112A46' }}>domain</span>
-            <span className="text-lg font-bold tracking-tight" style={{ color: '#112A46' }}>NORTH HIGHLAND</span>
-          </div>
-          <nav className="hidden md:flex space-x-6 items-center">
-            <span className="text-sm font-medium border-b-2 pb-1" style={{ color: '#00A3E0', borderColor: '#00A3E0' }}>Dashboard</span>
-            <Link href="/rooms" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Rooms</Link>
-            <Link href="/my-bookings" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Bookings</Link>
-            <Link href="/my-requests" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Requests</Link>
-            {(user?.isAdmin || user?.role === 'admin') && (
-              <Link href="/admin" className="flex items-center gap-1 text-sm font-medium px-3 py-1 rounded-md text-white transition-colors" style={{ backgroundColor: '#112A46' }}>
-                <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-                Admin
-              </Link>
-            )}
-          </nav>
-          <div className="flex items-center gap-4">
-            <span className="text-sm hidden sm:block">
-              <span className="text-gray-500">Welcome, </span>
-              <span className="font-medium text-gray-900">{user.name}</span>
-            </span>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-            >
-              <span className="material-symbols-outlined text-lg">logout</span>
-              <span className="hidden sm:inline">Logout</span>
-            </button>
-          </div>
-        </div>
-      </header>
+      <AppHeader user={user} activePage="dashboard" onSignOut={handleSignOut} />
 
       <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
         {/* Page header */}

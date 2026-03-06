@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { generateTimeSlots, formatTimeSlot } from '@/lib/utils/roomHelpers';
 import { toDateString, toGye } from '@/lib/utils/weekHelpersV3';
+import AppHeader from '@/components/AppHeader';
 
 const TIME_SLOTS = generateTimeSlots(8, 18, 30);
 
@@ -128,33 +128,11 @@ export default function RoomsPage() {
     <div className="min-h-screen flex flex-col bg-gray-50" style={{ fontFamily: 'Inter, sans-serif' }}>
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
 
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined" style={{ color: '#112A46' }}>domain</span>
-            <span className="text-lg font-bold tracking-tight" style={{ color: '#112A46' }}>NORTH HIGHLAND</span>
-          </div>
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/dashboard" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Dashboard</Link>
-            <span className="text-sm font-medium border-b-2 pb-1" style={{ color: '#00A3E0', borderColor: '#00A3E0' }}>Rooms</span>
-            <Link href="/my-requests" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Requests</Link>
-            {(user?.isAdmin || user?.role === 'admin') && (
-              <Link href="/admin" className="flex items-center gap-1 text-sm font-medium px-3 py-1 rounded-md text-white transition-colors" style={{ backgroundColor: '#112A46' }}>
-                <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-                Admin
-              </Link>
-            )}
-          </nav>
-          <button
-            onClick={() => signOut(auth).then(() => router.push('/auth/login'))}
-            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-          >
-            <span className="material-symbols-outlined text-lg">logout</span>
-            <span className="hidden sm:inline">Logout</span>
-          </button>
-        </div>
-      </header>
+      <AppHeader
+        user={user}
+        activePage="rooms"
+        onSignOut={() => signOut(auth).then(() => router.push('/auth/login'))}
+      />
 
       <main className="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-8 w-full">
         <div className="mb-6">

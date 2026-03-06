@@ -8,13 +8,13 @@ const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: 'dashboard' },
   { href: '/admin/users', label: 'User Management', icon: 'group' },
   { href: '/admin/requests', label: 'Pending Requests', icon: 'schedule' },
-  { href: '/admin/reports', label: 'Reports', icon: 'bar_chart' },
+  { href: '/admin/reports', label: 'Reports & Analytics', icon: 'bar_chart' },
   { href: '/admin/parking', label: 'Parking Config', icon: 'local_parking' },
   { href: '/admin/rooms', label: 'Room Management', icon: 'meeting_room' },
-  { href: '/admin/room-analytics', label: 'Room Analytics', icon: 'analytics' },
   { divider: true },
   { href: '/dashboard', label: 'My Schedule', icon: 'calendar_month' },
   { href: '/rooms', label: 'Book a Room', icon: 'meeting_room' },
+  { href: '/my-requests', label: 'My Requests', icon: 'inbox' },
 ];
 
 export default function AdminLayout({ children, title = 'Admin' }) {

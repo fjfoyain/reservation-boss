@@ -27,7 +27,7 @@ export default function MyRequestsPage() {
       const res = await fetch('/api/v3/profile', { headers: { Authorization: `Bearer ${idToken}` } });
       if (!res.ok) { router.replace('/auth/login'); return; }
       const profile = await res.json();
-      if (profile.role === 'admin') { router.replace('/admin'); return; }
+      if (profile.isAdmin || profile.role === 'admin') { router.replace('/admin'); return; }
       setUser(profile);
 
       // Fetch requests

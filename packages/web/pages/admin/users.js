@@ -2,25 +2,35 @@ import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
 import AdminLayout from '@/components/AdminLayout';
 
-const ROLE_LABELS = {
-  admin: { label: 'Admin', bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200' },
-  internal: { label: 'Internal Parking', bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-200' },
-  external: { label: 'External Parking', bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-200' },
-  none: { label: 'No Parking', bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200' },
+const PARKING_LABELS = {
+  internal: { label: 'Internal', bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-200' },
+  external: { label: 'External', bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-200' },
+  none: { label: 'No Parking', bg: 'bg-gray-100', text: 'text-gray-600', border: 'border-gray-200' },
 };
 
-const ROLE_FILTERS = ['all', 'admin', 'internal', 'external', 'none'];
+const PARKING_FILTERS = ['all', 'internal', 'external', 'none'];
+
+function isAdminUser(u) {
+  return u.isAdmin === true || u.role === 'admin';
+}
+
+function getParkingType(u) {
+  // Legacy: if role === 'admin', parking type defaults to 'none'
+  if (u.role === 'admin') return 'none';
+  return u.role || 'none';
+}
 
 export default function AdminUsersPage() {
   const [token, setToken] = useState('');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterRole, setFilterRole] = useState('all');
+  const [filterParking, setFilterParking] = useState('all');
+  const [filterAdmin, setFilterAdmin] = useState('all'); // 'all' | 'admin' | 'user'
   const [search, setSearch] = useState('');
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [inviting, setInviting] = useState(false);
-  const [editUser, setEditUser] = useState(null); // { uid, role, internalSpot }
+  const [editUser, setEditUser] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
   const [takenSpots, setTakenSpots] = useState(new Set());
@@ -32,7 +42,6 @@ export default function AdminUsersPage() {
       const idToken = await firebaseUser.getIdToken();
       setToken(idToken);
       fetchUsers(idToken);
-      // Load dynamic parking spots from config
       fetch('/api/v3/admin/parking-config', { headers: { Authorization: `Bearer ${idToken}` } })
         .then((r) => r.json())
         .then((d) => {
@@ -50,9 +59,8 @@ export default function AdminUsersPage() {
       const res = await fetch('/api/v3/admin/users', { headers: { Authorization: `Bearer ${t}` } });
       const data = await res.json();
       setUsers(data.users || []);
-      // Track taken internal spots
       const taken = new Set(
-        (data.users || []).filter((u) => u.role === 'internal' && u.internalSpot).map((u) => u.internalSpot)
+        (data.users || []).filter((u) => getParkingType(u) === 'internal' && u.internalSpot).map((u) => u.internalSpot)
       );
       setTakenSpots(taken);
     } finally {
@@ -80,8 +88,12 @@ export default function AdminUsersPage() {
     if (!editUser) return;
     setSaving(true);
     try {
-      const body = { role: editUser.role, active: editUser.active };
-      if (editUser.role === 'internal') body.internalSpot = editUser.internalSpot || null;
+      const body = {
+        isAdmin: editUser.isAdmin,
+        role: editUser.parkingType,
+        active: editUser.active,
+      };
+      if (editUser.parkingType === 'internal') body.internalSpot = editUser.internalSpot || null;
       else body.internalSpot = null;
 
       const res = await fetch(`/api/v3/admin/users/${editUser.uid}`, {
@@ -99,7 +111,9 @@ export default function AdminUsersPage() {
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 3500); }
 
   const filtered = users.filter((u) => {
-    if (filterRole !== 'all' && u.role !== filterRole) return false;
+    if (filterParking !== 'all' && getParkingType(u) !== filterParking) return false;
+    if (filterAdmin === 'admin' && !isAdminUser(u)) return false;
+    if (filterAdmin === 'user' && isAdminUser(u)) return false;
     if (search && !u.name?.toLowerCase().includes(search.toLowerCase()) && !u.email?.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
@@ -111,7 +125,7 @@ export default function AdminUsersPage() {
         <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-end mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
-            <p className="text-sm text-gray-500 mt-1">Manage employee parking types and access.</p>
+            <p className="text-sm text-gray-500 mt-1">Manage employee parking types and admin access.</p>
           </div>
           <button
             onClick={() => setInviteModalOpen(true)}
@@ -124,32 +138,45 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4 shadow-sm">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none">search</span>
-              <input
-                type="text"
-                placeholder="Search by name or email…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 bg-gray-50 focus:outline-none focus:ring-2"
-              />
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {ROLE_FILTERS.map((r) => (
-                <button
-                  key={r}
-                  onClick={() => setFilterRole(r)}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium border transition-colors capitalize ${
-                    filterRole === r ? 'text-white border-transparent' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
-                  }`}
-                  style={filterRole === r ? { backgroundColor: '#1183d4' } : {}}
-                >
-                  {r === 'all' ? 'All Users' : ROLE_LABELS[r]?.label || r}
-                </button>
-              ))}
-            </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4 shadow-sm space-y-3">
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none">search</span>
+            <input
+              type="text"
+              placeholder="Search by name or email…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 bg-gray-50 focus:outline-none focus:ring-2"
+            />
+          </div>
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-xs text-gray-500 mr-1">Parking:</span>
+            {PARKING_FILTERS.map((r) => (
+              <button
+                key={r}
+                onClick={() => setFilterParking(r)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                  filterParking === r ? 'text-white border-transparent' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                }`}
+                style={filterParking === r ? { backgroundColor: '#1183d4' } : {}}
+              >
+                {r === 'all' ? 'All' : PARKING_LABELS[r]?.label || r}
+              </button>
+            ))}
+            <span className="text-xs text-gray-300 mx-1">|</span>
+            <span className="text-xs text-gray-500 mr-1">Access:</span>
+            {[['all', 'All'], ['admin', 'Admins'], ['user', 'Non-admins']].map(([val, lbl]) => (
+              <button
+                key={val}
+                onClick={() => setFilterAdmin(val)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                  filterAdmin === val ? 'text-white border-transparent' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                }`}
+                style={filterAdmin === val ? { backgroundColor: '#7c3aed' } : {}}
+              >
+                {lbl}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -164,8 +191,8 @@ export default function AdminUsersPage() {
                   <tr>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Employee</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden sm:table-cell">Parking Type</th>
-                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Internal Spot</th>
-                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden xl:table-cell">Last Login</th>
+                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Internal Spot</th>
+                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell text-center">Admin</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-center">Active</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-right">Actions</th>
                   </tr>
@@ -175,7 +202,9 @@ export default function AdminUsersPage() {
                     <tr><td colSpan={6} className="text-center py-10 text-gray-400 text-sm">No users found</td></tr>
                   )}
                   {filtered.map((u) => {
-                    const roleStyle = ROLE_LABELS[u.role] || ROLE_LABELS.none;
+                    const pt = getParkingType(u);
+                    const pStyle = PARKING_LABELS[pt] || PARKING_LABELS.none;
+                    const admin = isAdminUser(u);
                     return (
                       <tr key={u.uid} className={`hover:bg-gray-50 transition-colors ${!u.active ? 'opacity-60' : ''}`}>
                         <td className="px-4 py-4">
@@ -183,24 +212,37 @@ export default function AdminUsersPage() {
                           <div className="text-xs text-gray-500">{u.email}</div>
                         </td>
                         <td className="px-4 py-4 hidden sm:table-cell">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${roleStyle.bg} ${roleStyle.text} ${roleStyle.border}`}>
-                            {roleStyle.label}
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${pStyle.bg} ${pStyle.text} ${pStyle.border}`}>
+                            {pStyle.label}
                           </span>
                         </td>
-                        <td className="px-4 py-4 text-sm text-gray-600 hidden lg:table-cell">
-                          {u.role === 'internal' ? (u.internalSpot || <span className="text-amber-600">Unassigned</span>) : '—'}
+                        <td className="px-4 py-4 text-sm text-gray-600 hidden md:table-cell">
+                          {pt === 'internal' ? (u.internalSpot || <span className="text-amber-600">Unassigned</span>) : '—'}
                         </td>
-                        <td className="px-4 py-4 text-xs text-gray-500 hidden xl:table-cell">
-                          {u.lastLogin
-                            ? new Date(u.lastLogin._seconds ? u.lastLogin._seconds * 1000 : u.lastLogin).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                            : <span className="text-gray-300">Never</span>}
+                        <td className="px-4 py-4 hidden lg:table-cell text-center">
+                          {admin ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
+                              <span className="material-symbols-outlined text-xs">shield</span>
+                              Admin
+                            </span>
+                          ) : (
+                            <span className="text-gray-300 text-xs">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-4 text-center">
                           <span className={`inline-block w-2.5 h-2.5 rounded-full ${u.active ? 'bg-green-400' : 'bg-gray-300'}`} />
                         </td>
                         <td className="px-4 py-4 text-right">
                           <button
-                            onClick={() => setEditUser({ uid: u.uid, name: u.name, email: u.email, role: u.role, internalSpot: u.internalSpot || '', active: u.active ?? true })}
+                            onClick={() => setEditUser({
+                              uid: u.uid,
+                              name: u.name,
+                              email: u.email,
+                              parkingType: pt,
+                              isAdmin: admin,
+                              internalSpot: u.internalSpot || '',
+                              active: u.active ?? true,
+                            })}
                             className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white hover:bg-gray-50 transition-colors inline-flex items-center gap-1"
                           >
                             Edit
@@ -257,20 +299,22 @@ export default function AdminUsersPage() {
             <h2 className="text-lg font-bold text-gray-900 mb-1">Edit User</h2>
             <p className="text-sm text-gray-500 mb-4">{editUser.name} · {editUser.email}</p>
             <div className="space-y-4">
+              {/* Parking Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Parking Type</label>
                 <select
-                  value={editUser.role}
-                  onChange={(e) => setEditUser({ ...editUser, role: e.target.value, internalSpot: '' })}
+                  value={editUser.parkingType}
+                  onChange={(e) => setEditUser({ ...editUser, parkingType: e.target.value, internalSpot: '' })}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2"
                 >
                   <option value="none">No Parking</option>
                   <option value="external">External Parking</option>
                   <option value="internal">Internal Parking</option>
-                  <option value="admin">Admin</option>
                 </select>
               </div>
-              {editUser.role === 'internal' && (
+
+              {/* Internal spot selector */}
+              {editUser.parkingType === 'internal' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Assign Internal Spot</label>
                   <select
@@ -290,6 +334,28 @@ export default function AdminUsersPage() {
                   </select>
                 </div>
               )}
+
+              {/* Admin access toggle */}
+              <div className="rounded-lg border border-gray-200 p-3 flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-medium text-gray-800 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-base text-purple-600">admin_panel_settings</span>
+                    Admin Access
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5">Can access the admin dashboard</div>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={editUser.isAdmin}
+                    onChange={(e) => setEditUser({ ...editUser, isAdmin: e.target.checked })}
+                  />
+                  <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-500" />
+                </label>
+              </div>
+
+              {/* Active toggle */}
               <div className="flex items-center gap-3">
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -324,6 +390,11 @@ export default function AdminUsersPage() {
           {toast}
         </div>
       )}
+
+      <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        rel="stylesheet"
+      />
     </AdminLayout>
   );
 }

@@ -73,8 +73,8 @@ async function handler(req, res) {
       type: 'parking',
       date: d.date,
       detail: d.spot,
-      fixed: role === 'internal' || role === 'admin', // internal/admin spots are permanent
-      internalSpot: role === 'internal' || role === 'admin' ? (internalSpot || null) : null,
+      fixed: role === 'internal',
+      internalSpot: role === 'internal' ? (internalSpot || null) : null,
       lateRequestId: pendingByReservation[doc.id] || null,
     });
   });

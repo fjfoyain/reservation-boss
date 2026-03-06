@@ -264,7 +264,7 @@ export default function DashboardPage() {
             <Link href="/rooms" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Rooms</Link>
             <Link href="/my-bookings" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Bookings</Link>
             <Link href="/my-requests" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">My Requests</Link>
-            {user?.role === 'admin' && (
+            {(user?.isAdmin || user?.role === 'admin') && (
               <Link href="/admin" className="flex items-center gap-1 text-sm font-medium px-3 py-1 rounded-md text-white transition-colors" style={{ backgroundColor: '#112A46' }}>
                 <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
                 Admin
@@ -457,7 +457,7 @@ export default function DashboardPage() {
                   )}
 
                   {/* Internal parking label */}
-                  {isOffice && (user.role === 'internal' || user.role === 'admin') && (
+                  {isOffice && user.role === 'internal' && (
                     <div className="mt-4 rounded-lg p-4 border bg-gray-50 border-gray-200">
                       <div className="flex items-start gap-3">
                         <span className="material-symbols-outlined mt-0.5 text-xl text-gray-500">local_parking</span>

@@ -70,7 +70,7 @@ async function handler(req, res) {
 
   const columns = ['Employee', 'Email', ...dateLabels, 'Days In Office'];
   const rows = usersSnap.docs
-    .filter((doc) => doc.data().role !== 'admin')
+    .filter((doc) => !doc.data().isAdmin && doc.data().role !== 'admin')
     .map((doc) => {
       const u = doc.data();
       const dayCells = workdays.map((d) => {

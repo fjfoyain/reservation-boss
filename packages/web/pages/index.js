@@ -16,7 +16,7 @@ export default function Home() {
       const res = await fetch('/api/v3/profile', { headers: { Authorization: `Bearer ${token}` } });
       if (!res.ok) { router.replace('/auth/login'); return; }
       const profile = await res.json();
-      router.replace(profile.role === 'admin' ? '/admin' : '/dashboard');
+      router.replace((profile.isAdmin || profile.role === 'admin') ? '/admin' : '/dashboard');
     });
     return () => unsubscribe();
   }, [router]);

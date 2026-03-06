@@ -12,12 +12,16 @@ async function handler(req, res) {
   const doc = await docRef.get();
   if (!doc.exists) return res.status(404).json({ error: 'User not found' });
 
-  const { role, internalSpot, active } = req.body;
+  const { role, internalSpot, active, isAdmin } = req.body;
   const updates = {};
 
+  if (isAdmin !== undefined) {
+    updates.isAdmin = Boolean(isAdmin);
+  }
+
   if (role !== undefined) {
-    const validRoles = ['admin', 'internal', 'external', 'none'];
-    if (!validRoles.includes(role)) return res.status(400).json({ error: 'Invalid role' });
+    const validRoles = ['internal', 'external', 'none'];
+    if (!validRoles.includes(role)) return res.status(400).json({ error: 'Invalid role. Must be internal, external, or none' });
     updates.role = role;
     // Clear internalSpot when changing away from internal
     if (role !== 'internal') updates.internalSpot = null;
@@ -25,13 +29,9 @@ async function handler(req, res) {
 
   if (internalSpot !== undefined) {
     if (internalSpot !== null) {
-      // Check spot is not already assigned to another active user
-      const existingSnap = await db
-        .collection('v3_users')
-        .where('internalSpot', '==', internalSpot)
-        .where('active', '==', true)
-        .get();
-      const conflict = existingSnap.docs.find((d) => d.id !== uid);
+      // Check spot is not already assigned to another active user (single-field query + JS filter)
+      const existingSnap = await db.collection('v3_users').where('internalSpot', '==', internalSpot).get();
+      const conflict = existingSnap.docs.find((d) => d.id !== uid && d.data().active !== false);
       if (conflict) {
         return res.status(409).json({ error: `Spot "${internalSpot}" is already assigned to another user` });
       }

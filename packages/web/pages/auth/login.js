@@ -34,7 +34,7 @@ export default function LoginPage() {
       }
 
       const profile = await res.json();
-      if (profile.role === 'admin') {
+      if (profile.isAdmin || profile.role === 'admin') {
         router.push('/admin');
       } else {
         router.push('/dashboard');

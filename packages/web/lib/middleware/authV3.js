@@ -54,7 +54,8 @@ export function withAdminAuth(handler) {
       if (!profile.active) {
         return res.status(403).json({ error: 'Account is inactive' });
       }
-      if (profile.role !== 'admin') {
+      // isAdmin is the new field; role === 'admin' kept for backwards compatibility
+      if (!profile.isAdmin && profile.role !== 'admin') {
         return res.status(403).json({ error: 'Forbidden: Admin access required' });
       }
       req.user = decoded;

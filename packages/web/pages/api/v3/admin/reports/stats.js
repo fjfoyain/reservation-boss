@@ -72,7 +72,7 @@ async function handler(req, res) {
     db.collection('v3_late_requests').where('date', '>=', range.start).where('date', '<=', range.end).get(),
   ]);
 
-  const nonAdminUsers = usersSnap.docs.filter((d) => d.data().role !== 'admin');
+  const nonAdminUsers = usersSnap.docs.filter((d) => !d.data().isAdmin && d.data().role !== 'admin');
   const totalEmployees = nonAdminUsers.length;
   const officeAttendances = attSnap.docs.filter((d) => d.data().status === 'office');
   const avgDailyAttendance = totalEmployees > 0

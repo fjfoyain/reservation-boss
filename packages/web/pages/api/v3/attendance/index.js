@@ -24,9 +24,13 @@ async function handler(req, res) {
     return res.status(400).json({ error: 'date must be YYYY-MM-DD' });
   }
 
+  // Fetch attendance config for deadline time
+  const attConfigSnap = await db.collection('v3_config').doc('attendance_rules').get();
+  const attConfig = attConfigSnap.exists ? attConfigSnap.data() : {};
+
   // Check week is editable
   const monday = getMondayOfDate(date);
-  if (!isWeekEditable(monday)) {
+  if (!isWeekEditable(monday, attConfig)) {
     return res.status(403).json({
       error: 'This week is locked. Changes require admin approval.',
       lateCancellation: true,

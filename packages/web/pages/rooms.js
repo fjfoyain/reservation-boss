@@ -35,10 +35,6 @@ export default function RoomsPage() {
   const [confirmModal, setConfirmModal] = useState(null); // { room, slot }
   const [booking, setBooking] = useState(false);
   const [toast, setToast] = useState('');
-  const [lateModalOpen, setLateModalOpen] = useState(false);
-  const [lateModalData, setLateModalData] = useState(null);
-  const [lateReason, setLateReason] = useState('');
-  const [submittingLate, setSubmittingLate] = useState(false);
 
   const weekdayDates = getWeekdayDates(14); // next 14 weekdays
   const today = toDateString(toGye());
@@ -107,7 +103,7 @@ export default function RoomsPage() {
     setConfirmModal(null);
   }
 
-  async function handleCancel(reservationId, date) {
+  async function handleCancel(reservationId) {
     try {
       const res = await fetch(`/api/v3/room-reservations/${reservationId}`, {
         method: 'DELETE',
@@ -115,33 +111,8 @@ export default function RoomsPage() {
       });
       if (res.ok) { showToast('Booking cancelled'); fetchReservations(); return; }
       const data = await res.json();
-      if (data.lateCancellation) {
-        setLateModalData({ type: 'room', reservationId, date });
-        setLateModalOpen(true);
-      } else {
-        showToast(data.error || 'Failed to cancel');
-      }
+      showToast(data.error || 'Failed to cancel');
     } catch { showToast('Failed to cancel'); }
-  }
-
-  async function submitLateRequest() {
-    if (!lateModalData || !lateReason.trim()) return;
-    setSubmittingLate(true);
-    try {
-      const res = await fetch('/api/v3/late-requests', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...lateModalData, reason: lateReason.trim() }),
-      });
-      if (res.ok) {
-        showToast('Request submitted. Admins will review it.');
-        setLateModalOpen(false); setLateReason(''); setLateModalData(null);
-      } else {
-        const data = await res.json();
-        showToast(data.error || 'Failed to submit request');
-      }
-    } catch { showToast('Failed to submit request'); }
-    setSubmittingLate(false);
   }
 
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 3500); }
@@ -280,7 +251,7 @@ export default function RoomsPage() {
                           )}
                           {status === 'mine' && (
                             <button
-                              onClick={() => handleCancel(resId, selectedDate)}
+                              onClick={() => handleCancel(resId)}
                               className="w-full text-left px-3 py-1.5 rounded-md text-xs font-medium border transition-colors"
                               style={{ backgroundColor: '#eaf4fd', borderColor: '#1183d4', color: '#1183d4' }}
                             >
@@ -336,34 +307,6 @@ export default function RoomsPage() {
                 style={{ backgroundColor: '#1183d4' }}
               >
                 {booking ? 'Booking…' : 'Confirm Booking'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Late request modal */}
-      {lateModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Request Late Cancellation</h2>
-            <p className="text-sm text-gray-500 mb-4">The 8:00 AM cancellation deadline has passed. Provide a reason and admins will review your request.</p>
-            <textarea
-              value={lateReason}
-              onChange={(e) => setLateReason(e.target.value)}
-              placeholder="Reason for late cancellation…"
-              className="w-full border border-gray-300 rounded-lg p-3 text-sm text-gray-900 focus:outline-none resize-none"
-              rows={3}
-            />
-            <div className="flex gap-3 mt-4 justify-end">
-              <button onClick={() => { setLateModalOpen(false); setLateReason(''); }} className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
-              <button
-                onClick={submitLateRequest}
-                disabled={!lateReason.trim() || submittingLate}
-                className="px-4 py-2 text-sm text-white rounded-lg disabled:opacity-60"
-                style={{ backgroundColor: '#1183d4' }}
-              >
-                {submittingLate ? 'Submitting…' : 'Submit Request'}
               </button>
             </div>
           </div>

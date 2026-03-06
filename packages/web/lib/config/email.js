@@ -43,6 +43,15 @@ export async function sendReservationEmail({ email, spot, date }) {
 
 // ─── v3 Email Helpers ────────────────────────────────────────────────────────
 
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 const NH_HEADER = `
   <div style="background:#112A46;padding:28px 32px;border-radius:12px 12px 0 0;border-bottom:4px solid #00A3E0;text-align:center;">
     <h1 style="color:white;font-size:20px;font-weight:700;margin:0;letter-spacing:-0.5px;">NORTH HIGHLAND</h1>
@@ -67,10 +76,10 @@ export async function sendV3ParkingConfirmation({ email, name, spot, date }) {
         ${NH_HEADER}
         <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
           <h2 style="color:#059669;font-size:20px;margin-top:0;">Parking Reserved</h2>
-          <p>Hi ${name},</p>
+          <p>Hi ${escapeHtml(name)},</p>
           <p>Your parking spot has been successfully reserved.</p>
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;margin:20px 0;">
-            <p style="margin:0 0 6px;"><strong>Spot:</strong> ${spot}</p>
+            <p style="margin:0 0 6px;"><strong>Spot:</strong> ${escapeHtml(spot)}</p>
             <p style="margin:0;"><strong>Date:</strong> ${dateLabel}</p>
           </div>
           <p style="color:#6b7280;font-size:13px;">Cancellations must be made before 8:00 AM on the day of the reservation.</p>
@@ -100,12 +109,12 @@ export async function sendV3RoomConfirmation({ email, name, roomName, roomType, 
         ${NH_HEADER}
         <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
           <h2 style="color:#1183d4;font-size:20px;margin-top:0;">Room Booked</h2>
-          <p>Hi ${name},</p>
+          <p>Hi ${escapeHtml(name)},</p>
           <p>Your room has been successfully reserved.</p>
           <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:16px;margin:20px 0;">
-            <p style="margin:0 0 6px;"><strong>Room:</strong> ${roomName} (${typeLabel})</p>
+            <p style="margin:0 0 6px;"><strong>Room:</strong> ${escapeHtml(roomName)} (${escapeHtml(typeLabel)})</p>
             <p style="margin:0 0 6px;"><strong>Date:</strong> ${dateLabel}</p>
-            <p style="margin:0;"><strong>Time:</strong> ${startTime} – ${endTime}</p>
+            <p style="margin:0;"><strong>Time:</strong> ${escapeHtml(startTime)} – ${escapeHtml(endTime)}</p>
           </div>
           <p style="color:#6b7280;font-size:13px;">To cancel, log in to the portal before 8:00 AM on the day of the booking.</p>
           ${NH_FOOTER}
@@ -135,10 +144,10 @@ export async function sendV3LateRequestNotification({ adminEmail, userName, user
         <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
           <h2 style="color:#f59e0b;font-size:20px;margin-top:0;">New Late Change Request</h2>
           <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:20px 0;">
-            <p style="margin:0 0 6px;"><strong>Employee:</strong> ${userName} (${userEmail})</p>
+            <p style="margin:0 0 6px;"><strong>Employee:</strong> ${escapeHtml(userName)} (${escapeHtml(userEmail)})</p>
             <p style="margin:0 0 6px;"><strong>Date:</strong> ${dateLabel}</p>
-            <p style="margin:0 0 6px;"><strong>Type:</strong> ${TYPE_LABELS[type] || type}</p>
-            <p style="margin:0;"><strong>Reason:</strong> ${reason}</p>
+            <p style="margin:0 0 6px;"><strong>Type:</strong> ${escapeHtml(TYPE_LABELS[type] || type)}</p>
+            <p style="margin:0;"><strong>Reason:</strong> ${escapeHtml(reason)}</p>
           </div>
           <a href="${process.env.NEXT_PUBLIC_API_URL || 'https://reservationboss.io'}/admin/requests"
              style="display:inline-block;padding:12px 24px;background:#1183d4;color:white;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;">

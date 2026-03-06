@@ -51,10 +51,16 @@ export function getWeekDates(mondayStr) {
  * Get the default "visible" week Monday (YYYY-MM-DD) based on current Ecuador time.
  *
  * v3 rule:
- *   - Mon–Fri before 5pm Ecuador → show current week
- *   - Fri 5pm or later / Sat / Sun → show next week
+ *   - Mon–Fri before weekSwitchTime Ecuador → show current week
+ *   - Fri at/after weekSwitchTime / Sat / Sun → show next week
+ *
+ * @param {object} [config] - Optional config. Defaults to system defaults if not provided.
+ * @param {string} [config.weekSwitchTime='17:00'] - HH:MM time on Friday to switch to next week view.
  */
-export function getDefaultWeekMonday() {
+export function getDefaultWeekMonday(config = {}) {
+  const switchTime = config.weekSwitchTime || '17:00';
+  const [sh, sm] = switchTime.split(':').map(Number);
+
   const now = toGye();
   const dow = now.getDay(); // 0=Sun ... 6=Sat
   const hour = now.getHours();
@@ -62,8 +68,8 @@ export function getDefaultWeekMonday() {
 
   let monday = getMondayOf(now);
 
-  // After Fri 17:00 or on Sat/Sun → next week
-  if ((dow === 5 && (hour > 17 || (hour === 17 && minute > 0))) || dow === 6 || dow === 0) {
+  // After Fri [switchTime] or on Sat/Sun → next week
+  if ((dow === 5 && (hour > sh || (hour === sh && minute > sm))) || dow === 6 || dow === 0) {
     monday.setDate(monday.getDate() + 7);
   }
 
@@ -91,10 +97,17 @@ export function getNextMonday(mondayStr) {
 /**
  * Determine if a given week (by Monday string) is still editable.
  *
- * Editable until Monday 11:00 PM Ecuador time of that week.
+ * Editable until Monday at scheduleDeadlineTime Ecuador time of that week.
  * Returns true if the week can be edited.
+ *
+ * @param {string} mondayStr - YYYY-MM-DD of the week's Monday.
+ * @param {object} [config] - Optional config. Defaults to system defaults if not provided.
+ * @param {string} [config.scheduleDeadlineTime='23:00'] - HH:MM deadline on Monday for that week.
  */
-export function isWeekEditable(mondayStr) {
+export function isWeekEditable(mondayStr, config = {}) {
+  const deadlineTime = config.scheduleDeadlineTime || '23:00';
+  const [dh, dm] = deadlineTime.split(':').map(Number);
+
   const now = toGye();
   const monday = new Date(`${mondayStr}T00:00:00`);
 
@@ -102,16 +115,16 @@ export function isWeekEditable(mondayStr) {
   const currentMonday = getMondayOf(now);
   if (monday < currentMonday) return false;
 
-  // Current week: editable until Mon 23:00 Ecuador
+  // Current week: editable until Mon [deadlineTime] Ecuador
   if (toDateString(monday) === toDateString(currentMonday)) {
     const dow = now.getDay();
     if (dow === 1) { // Monday
       const hour = now.getHours();
       const minute = now.getMinutes();
-      return hour < 23 || (hour === 23 && minute === 0);
+      return hour < dh || (hour === dh && minute <= dm);
     }
     if (dow > 1) return false; // Tue onward of current week → locked
-    return true; // Should not happen (Mon before 11pm)
+    return true;
   }
 
   // Future weeks are always editable

@@ -33,6 +33,9 @@ async function handler(req, res) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return res.status(400).json({ error: 'date must be YYYY-MM-DD' });
     }
+    if (!/^\d{2}:\d{2}$/.test(startTime) || !/^\d{2}:\d{2}$/.test(endTime)) {
+      return res.status(400).json({ error: 'startTime and endTime must be HH:MM' });
+    }
     if (startTime >= endTime) {
       return res.status(400).json({ error: 'startTime must be before endTime' });
     }

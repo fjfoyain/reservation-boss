@@ -3,9 +3,23 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
-import { transporter } from '@/lib/config/email';
 
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || process.env.EMAIL_USER;
+
+const COLLECTION_MAP = {
+  attendance: 'v3_attendance',
+  parking: 'v3_parking',
+  room: 'v3_room_reservations',
+};
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 async function handler(req, res) {
   if (req.method === 'GET') {
@@ -42,6 +56,12 @@ async function handler(req, res) {
     const { email, name } = req.userProfile;
     const now = new Date();
 
+    // Verify the reservation exists and belongs to the current user
+    const resDoc = await db.collection(COLLECTION_MAP[type]).doc(reservationId).get();
+    if (!resDoc.exists || resDoc.data().userId !== uid) {
+      return res.status(404).json({ error: 'Reservation not found' });
+    }
+
     // Check if a pending request already exists for this reservation (JS filter to avoid composite index)
     const existing = await db
       .collection('v3_late_requests')
@@ -70,6 +90,7 @@ async function handler(req, res) {
     const dateFormatted = new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
     });
+    const { transporter } = await import('@/lib/config/email');
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: ADMIN_EMAIL,
@@ -83,11 +104,11 @@ async function handler(req, res) {
             <table style="width: 100%; border-collapse: collapse;">
               <tr style="border-bottom: 1px solid #f3f4f6;">
                 <td style="padding: 8px 0; color: #6b7280; font-size: 14px; width: 140px;">Employee</td>
-                <td style="padding: 8px 0; font-size: 14px; font-weight: 600;">${name}</td>
+                <td style="padding: 8px 0; font-size: 14px; font-weight: 600;">${escapeHtml(name)}</td>
               </tr>
               <tr style="border-bottom: 1px solid #f3f4f6;">
                 <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Email</td>
-                <td style="padding: 8px 0; font-size: 14px;">${email}</td>
+                <td style="padding: 8px 0; font-size: 14px;">${escapeHtml(email)}</td>
               </tr>
               <tr style="border-bottom: 1px solid #f3f4f6;">
                 <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Date</td>
@@ -95,11 +116,11 @@ async function handler(req, res) {
               </tr>
               <tr style="border-bottom: 1px solid #f3f4f6;">
                 <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Type</td>
-                <td style="padding: 8px 0; font-size: 14px; text-transform: capitalize;">${type}</td>
+                <td style="padding: 8px 0; font-size: 14px; text-transform: capitalize;">${escapeHtml(type)}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Reason</td>
-                <td style="padding: 8px 0; font-size: 14px;">${reason.trim()}</td>
+                <td style="padding: 8px 0; font-size: 14px;">${escapeHtml(reason.trim())}</td>
               </tr>
             </table>
             <div style="margin-top: 24px;">

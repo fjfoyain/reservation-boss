@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { canModifyParking } from '@/lib/utils/weekHelpersV3';
+import AppHeader from '@/components/AppHeader';
 
 const TYPE_ICONS = { attendance: 'calendar_today', parking: 'local_parking', room: 'meeting_room' };
 const TYPE_LABELS = { attendance: 'Office Attendance', parking: 'Parking', room: 'Meeting Room' };
@@ -14,15 +15,18 @@ function isSameDayOrFuture(dateStr) {
 }
 
 function isPastDeadlineForDate(dateStr, type) {
+  // Rooms have no cancellation deadline — always cancellable
+  if (type === 'room') return false;
+
   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guayaquil' });
   if (dateStr > today) return false;
   if (dateStr < today) return true;
-  // Same day — check 8am cutoff for parking/room, Mon 11pm for attendance
+  // Same day
   if (type === 'attendance') {
-    // Attendance cutoff is Mon 11pm of that week — simplified: same day always past
+    // Attendance cutoff is Mon 11pm of that week — same day is always past
     return true;
   }
-  // Parking/room: 8am GYE cutoff
+  // Parking: 8am GYE cutoff
   const gyeNow = new Date().toLocaleString('en-US', { timeZone: 'America/Guayaquil' });
   const hour = new Date(gyeNow).getHours();
   return hour >= 8;
@@ -208,24 +212,24 @@ export default function MyBookingsPage() {
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: 'Inter, sans-serif' }}>
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
 
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <a href="/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
-            <span className="material-symbols-outlined text-xl">arrow_back</span>
-          </a>
-          <div>
-            <h1 className="text-lg font-bold text-gray-900">My Bookings</h1>
-            <p className="text-xs text-gray-500">View, manage, and cancel your reservations</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <a href="/dashboard" className="text-sm text-gray-600 hover:text-gray-900 hidden sm:block">Dashboard</a>
-          <a href="/rooms" className="text-sm text-gray-600 hover:text-gray-900 hidden sm:block">Book a Room</a>
-        </div>
-      </header>
+      <AppHeader
+        user={user}
+        activePage="my-bookings"
+        onSignOut={() => signOut(auth).then(() => router.push('/auth/login'))}
+      />
 
       <main className="max-w-4xl mx-auto px-4 py-6">
+        {/* Page title */}
+        <div className="flex items-center gap-3 mb-5">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 hover:bg-gray-200 transition-colors"
+          >
+            <span className="material-symbols-outlined text-xl">arrow_back</span>
+          </button>
+          <h1 className="text-xl font-bold text-gray-900">My Bookings</h1>
+        </div>
+
         {/* Tabs */}
         <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
           {TABS.map((t) => (
@@ -273,8 +277,9 @@ export default function MyBookingsPage() {
             </div>
           )}
           <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 text-xs text-gray-400">
-            Cancellations after 8:00 AM on the day of the booking require admin approval.
+            Parking cancellations after 8:00 AM on the day require admin approval.
             Attendance changes require admin approval after Monday 11:00 PM for that week.
+            Room reservations can be cancelled at any time.
           </div>
         </div>
       </main>

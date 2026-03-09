@@ -1,7 +1,7 @@
-// POST /api/reserve - Create a new reservation
+// POST /api/reserve - Create a new reservation (or approval request if user has a People Lead)
 import { withCors } from '@/lib/middleware/cors';
 import { db } from '@/lib/config/firebaseAdmin';
-import { sendReservationEmail } from '@/lib/config/email';
+import { sendReservationEmail, sendApprovalRequestEmail } from '@/lib/config/email';
 import { PARKING_SPOTS, MAX_WEEKLY_RESERVATIONS } from '@/lib/config/constants';
 import { getVisibleWeekRange } from '@/lib/utils/weekHelpers';
 import { validateEmail } from '@/lib/utils/validation';
@@ -36,6 +36,52 @@ async function handler(req, res) {
   // Validate parking spot
   if (!PARKING_SPOTS.includes(spot)) {
     return res.status(400).json({ error: 'Invalid parking spot selected.' });
+  }
+
+  // Check if user has a People Lead assigned → route to approval
+  const userSnap = await db.collection('users')
+    .where('email', '==', normalizedEmail)
+    .limit(1)
+    .get();
+
+  if (!userSnap.empty) {
+    const userData = userSnap.docs[0].data();
+    if (userData.peopleLeadEmail) {
+      // Check for an existing pending approval for this email+date
+      const existingApproval = await db.collection('approvalRequests')
+        .where('email', '==', normalizedEmail)
+        .where('date', '==', date)
+        .where('status', '==', 'pending')
+        .limit(1)
+        .get();
+
+      if (!existingApproval.empty) {
+        return res.status(400).json({ error: 'You already have a pending approval request for this date.' });
+      }
+
+      // Create approval request instead of a direct reservation
+      await db.collection('approvalRequests').add({
+        email: normalizedEmail,
+        date,
+        spot,
+        peopleLeadEmail: userData.peopleLeadEmail,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      sendApprovalRequestEmail({
+        peopleLeadEmail: userData.peopleLeadEmail,
+        email: normalizedEmail,
+        spot,
+        date,
+      }).catch((err) => console.error('Approval request email failed:', err));
+
+      return res.status(202).json({
+        message: `Your reservation request for ${spot} on ${date} has been sent to your People Lead for approval.`,
+        pending: true,
+      });
+    }
   }
 
   const reservationsRef = db.collection('reservations');

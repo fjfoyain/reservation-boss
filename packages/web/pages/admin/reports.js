@@ -21,8 +21,22 @@ export default function Reports() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        setUser(currentUser);
         const idToken = await currentUser.getIdToken();
+
+        // People Leads are not allowed here — send them to approvals
+        try {
+          const { data } = await axios.get('/api/auth/role', {
+            headers: { Authorization: `Bearer ${idToken}` },
+          });
+          if (data.isPeopleLead) {
+            router.push('/admin/approvals');
+            return;
+          }
+        } catch {
+          // If role check fails, continue as full admin
+        }
+
+        setUser(currentUser);
         setToken(idToken);
         fetchWeeklyReport(idToken);
       } else {
@@ -124,6 +138,12 @@ export default function Reports() {
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-white font-medium">{user?.email}</span>
+                <button
+                  onClick={() => router.push('/admin/users')}
+                  className="px-4 py-2 text-sm font-semibold text-white hover:bg-nh-dark-navy rounded-md transition-colors border border-white/40"
+                >
+                  Manage Users
+                </button>
                 <button
                   onClick={handleLogout}
                   className="px-4 py-2 text-sm font-semibold text-white hover:bg-nh-dark-navy rounded-md transition-colors border border-white/40"

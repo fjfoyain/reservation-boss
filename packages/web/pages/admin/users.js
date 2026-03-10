@@ -46,7 +46,7 @@ export default function UsersPage() {
             headers: { Authorization: `Bearer ${idToken}` },
           });
           if (data.isPeopleLead) {
-            router.push('/admin/approvals');
+            router.push('/admin/pl-dashboard');
             return;
           }
         } catch {

@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
+import PLNav from '../../components/PLNav';
 
 const API_URL = '/api';
 
@@ -117,8 +118,6 @@ export default function ApprovalsPage() {
     );
   }
 
-  const tabCount = (tab) => (activeTab === tab ? approvals.length : null);
-
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -128,8 +127,8 @@ export default function ApprovalsPage() {
           <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-white">Pending Approvals</h1>
-                <p className="text-sm text-nh-teal mt-1 font-semibold">People Lead Dashboard</p>
+                <h1 className="text-3xl font-bold text-white">People Lead Portal</h1>
+                <p className="text-sm text-nh-teal mt-1 font-semibold">Reservation Boss</p>
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-white font-medium">{currentUser?.email}</span>
@@ -143,6 +142,9 @@ export default function ApprovalsPage() {
             </div>
           </div>
         </header>
+
+        {/* Sub-navigation */}
+        <PLNav token={token} />
 
         <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-md">

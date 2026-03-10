@@ -26,7 +26,7 @@ export default function LoginPage() {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
-      router.push(data.isPeopleLead ? '/admin/approvals' : '/admin/reports');
+      router.push(data.isPeopleLead ? '/admin/pl-dashboard' : '/admin/reports');
     } catch (err) {
       setError('Failed to log in. Please check your email and password.');
     } finally {

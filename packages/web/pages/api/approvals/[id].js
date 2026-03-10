@@ -3,7 +3,7 @@ import { withCors } from '@/lib/middleware/cors';
 import { withAuth } from '@/lib/middleware/auth';
 import { db } from '@/lib/config/firebaseAdmin';
 import { sendReservationEmail, sendApprovalDecisionEmail } from '@/lib/config/email';
-import { MAX_WEEKLY_RESERVATIONS } from '@/lib/config/constants';
+import { MAX_WEEKLY_RESERVATIONS, APPROVAL_REQUESTS_COLLECTION } from '@/lib/config/constants';
 import { clearCache } from '@/lib/utils/cache';
 
 // Get Mon-Fri bounds for any given YYYY-MM-DD date string
@@ -33,7 +33,7 @@ async function handler(req, res) {
     return res.status(400).json({ error: 'Action must be "approve" or "reject"' });
   }
 
-  const docRef = db.collection('approvalRequests').doc(id);
+  const docRef = db.collection(APPROVAL_REQUESTS_COLLECTION).doc(id);
   const doc = await docRef.get();
 
   if (!doc.exists) return res.status(404).json({ error: 'Approval request not found' });

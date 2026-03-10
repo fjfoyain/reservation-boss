@@ -2,7 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { db } from '@/lib/config/firebaseAdmin';
 import { sendReservationEmail, sendApprovalRequestEmail } from '@/lib/config/email';
-import { PARKING_SPOTS, MAX_WEEKLY_RESERVATIONS } from '@/lib/config/constants';
+import { PARKING_SPOTS, MAX_WEEKLY_RESERVATIONS, USERS_COLLECTION, APPROVAL_REQUESTS_COLLECTION } from '@/lib/config/constants';
 import { getVisibleWeekRange } from '@/lib/utils/weekHelpers';
 import { validateEmail } from '@/lib/utils/validation';
 import { clearCache } from '@/lib/utils/cache';
@@ -39,7 +39,7 @@ async function handler(req, res) {
   }
 
   // Check if user has a People Lead assigned → route to approval
-  const userSnap = await db.collection('users')
+  const userSnap = await db.collection(USERS_COLLECTION)
     .where('email', '==', normalizedEmail)
     .limit(1)
     .get();
@@ -48,7 +48,7 @@ async function handler(req, res) {
     const userData = userSnap.docs[0].data();
     if (userData.peopleLeadEmail) {
       // Check for an existing pending approval for this email+date
-      const existingApproval = await db.collection('approvalRequests')
+      const existingApproval = await db.collection(APPROVAL_REQUESTS_COLLECTION)
         .where('email', '==', normalizedEmail)
         .where('date', '==', date)
         .where('status', '==', 'pending')
@@ -60,7 +60,7 @@ async function handler(req, res) {
       }
 
       // Create approval request instead of a direct reservation
-      await db.collection('approvalRequests').add({
+      await db.collection(APPROVAL_REQUESTS_COLLECTION).add({
         email: normalizedEmail,
         date,
         spot,

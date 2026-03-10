@@ -16,6 +16,10 @@ export const ALLOWED_DOMAIN = '@northhighland.com';
 export const MAX_WEEKLY_RESERVATIONS = 4;
 export const TIMEZONE = 'America/Guayaquil';
 
+// Firestore collection names — change here to update everywhere
+export const USERS_COLLECTION = 'v3_users';
+export const APPROVAL_REQUESTS_COLLECTION = 'approvalRequests';
+
 // CORS allowed origins
 export const ALLOWED_ORIGINS = [
   'https://reservationboss.io',

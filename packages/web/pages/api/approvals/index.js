@@ -2,6 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuth } from '@/lib/middleware/auth';
 import { db } from '@/lib/config/firebaseAdmin';
+import { APPROVAL_REQUESTS_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -10,7 +11,7 @@ async function handler(req, res) {
 
   const { status } = req.query; // 'pending' | 'approved' | 'rejected' | omit for all
 
-  let query = db.collection('approvalRequests')
+  let query = db.collection(APPROVAL_REQUESTS_COLLECTION)
     .where('peopleLeadEmail', '==', req.user.email);
 
   if (status && ['pending', 'approved', 'rejected'].includes(status)) {

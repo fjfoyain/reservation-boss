@@ -12,11 +12,19 @@ async function handler(req, res) {
   const doc = await docRef.get();
   if (!doc.exists) return res.status(404).json({ error: 'User not found' });
 
-  const { role, internalSpot, active, isAdmin } = req.body;
+  const { role, internalSpot, active, isAdmin, isPeopleLead, peopleLeadEmail } = req.body;
   const updates = {};
 
   if (isAdmin !== undefined) {
     updates.isAdmin = Boolean(isAdmin);
+  }
+
+  if (isPeopleLead !== undefined) {
+    updates.isPeopleLead = Boolean(isPeopleLead);
+  }
+
+  if (peopleLeadEmail !== undefined) {
+    updates.peopleLeadEmail = peopleLeadEmail || null;
   }
 
   if (role !== undefined) {

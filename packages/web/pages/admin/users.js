@@ -122,6 +122,8 @@ export default function AdminUsersPage() {
     try {
       const body = {
         isAdmin: editUser.isAdmin,
+        isPeopleLead: editUser.isPeopleLead,
+        peopleLeadEmail: editUser.peopleLeadEmail || null,
         role: editUser.parkingType,
         active: editUser.active,
       };
@@ -239,13 +241,14 @@ export default function AdminUsersPage() {
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden sm:table-cell">Parking Type</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Internal Spot</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell text-center">Admin</th>
+                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell text-center">People Lead</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-center">Active</th>
                     <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.length === 0 && (
-                    <tr><td colSpan={6} className="text-center py-10 text-gray-400 text-sm">No users found</td></tr>
+                    <tr><td colSpan={7} className="text-center py-10 text-gray-400 text-sm">No users found</td></tr>
                   )}
                   {filtered.map((u) => {
                     const pt = getParkingType(u);
@@ -275,6 +278,16 @@ export default function AdminUsersPage() {
                             <span className="text-gray-300 text-xs">—</span>
                           )}
                         </td>
+                        <td className="px-4 py-4 hidden lg:table-cell text-center">
+                          {u.isPeopleLead ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800 border border-teal-200">
+                              <span className="material-symbols-outlined text-xs">supervisor_account</span>
+                              PL
+                            </span>
+                          ) : (
+                            <span className="text-gray-300 text-xs">—</span>
+                          )}
+                        </td>
                         <td className="px-4 py-4 text-center">
                           <span className={`inline-block w-2.5 h-2.5 rounded-full ${u.active ? 'bg-green-400' : 'bg-gray-300'}`} />
                         </td>
@@ -286,6 +299,8 @@ export default function AdminUsersPage() {
                               email: u.email,
                               parkingType: pt,
                               isAdmin: admin,
+                              isPeopleLead: u.isPeopleLead || false,
+                              peopleLeadEmail: u.peopleLeadEmail || '',
                               internalSpot: u.internalSpot || '',
                               active: u.active ?? true,
                             })}
@@ -446,6 +461,46 @@ export default function AdminUsersPage() {
                   />
                   <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-500" />
                 </label>
+              </div>
+
+              {/* People Lead toggle */}
+              <div className="rounded-lg border border-gray-200 p-3 flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-medium text-gray-800 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-base text-teal-600">supervisor_account</span>
+                    People Lead
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5">Can approve parking requests for their team</div>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={editUser.isPeopleLead}
+                    onChange={(e) => setEditUser({ ...editUser, isPeopleLead: e.target.checked })}
+                  />
+                  <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500" />
+                </label>
+              </div>
+
+              {/* Assigned People Lead dropdown */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Assigned People Lead</label>
+                <select
+                  value={editUser.peopleLeadEmail}
+                  onChange={(e) => setEditUser({ ...editUser, peopleLeadEmail: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2"
+                >
+                  <option value="">— None —</option>
+                  {users
+                    .filter((u) => u.isPeopleLead && u.uid !== editUser.uid)
+                    .map((pl) => (
+                      <option key={pl.uid} value={pl.email}>{pl.name} ({pl.email})</option>
+                    ))}
+                </select>
+                {users.filter((u) => u.isPeopleLead).length === 0 && (
+                  <p className="text-xs text-gray-400 mt-1">No People Leads yet — mark a user as People Lead first.</p>
+                )}
               </div>
 
               {/* Active toggle */}

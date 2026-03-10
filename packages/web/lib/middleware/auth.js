@@ -1,18 +1,19 @@
 // Authentication middleware for Next.js API routes
 import { auth, db } from '@/lib/config/firebaseAdmin';
+import { USERS_COLLECTION } from '@/lib/config/constants';
 
 /**
  * Verify Firebase authentication token from Authorization header
  */
 export async function verifyAuthToken(req) {
   const authHeader = req.headers.authorization || '';
-  
+
   if (!authHeader.startsWith('Bearer ')) {
     throw new Error('Unauthorized: No token provided');
   }
-  
+
   const idToken = authHeader.slice('Bearer '.length);
-  
+
   try {
     const decoded = await auth.verifyIdToken(idToken);
     return decoded;
@@ -37,7 +38,10 @@ export function withAuth(handler) {
 }
 
 /**
- * Middleware wrapper to require full admin (blocks People Leads)
+ * Middleware wrapper to require full admin access.
+ * Blocks users who are People Lead ONLY (isPeopleLead: true AND NOT isAdmin).
+ * Admins who are also People Leads (isAdmin: true) are allowed through.
+ * Users not found in the collection are treated as full admins (no regression).
  */
 export function withFullAdmin(handler) {
   return async (req, res) => {
@@ -45,13 +49,17 @@ export function withFullAdmin(handler) {
       const user = await verifyAuthToken(req);
       req.user = user;
 
-      const snap = await db.collection('users')
+      const snap = await db.collection(USERS_COLLECTION)
         .where('email', '==', user.email)
         .limit(1)
         .get();
 
-      if (!snap.empty && snap.docs[0].data().isPeopleLead === true) {
-        return res.status(403).json({ error: 'Access denied: People Leads can only access approvals.' });
+      if (!snap.empty) {
+        const data = snap.docs[0].data();
+        const isPLOnly = data.isPeopleLead === true && !data.isAdmin && data.role !== 'admin';
+        if (isPLOnly) {
+          return res.status(403).json({ error: 'Access denied: People Leads can only access approvals.' });
+        }
       }
 
       return handler(req, res);

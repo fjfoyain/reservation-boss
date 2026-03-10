@@ -4,20 +4,33 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push('/'); // Redirect to homepage on success
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await credential.user.getIdToken();
+
+      // Check role and redirect: People Leads go to approvals, full admins go to reports
+      const { data } = await axios.get('/api/auth/role', {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+
+      router.push(data.isPeopleLead ? '/admin/pl-dashboard' : '/admin/reports');
     } catch (err) {
       setError('Failed to log in. Please check your email and password.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,8 +55,12 @@ export default function LoginPage() {
           required
         />
         {error && <p className="text-red-600 text-sm mb-4 font-medium">{error}</p>}
-        <button type="submit" className="bg-blue-600 text-white p-3 w-full rounded-lg hover:bg-blue-700 font-bold shadow-lg transition-colors">
-          Login
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 text-white p-3 w-full rounded-lg hover:bg-blue-700 font-bold shadow-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
     </div>

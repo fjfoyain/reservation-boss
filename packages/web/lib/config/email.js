@@ -166,6 +166,73 @@ export async function sendV3LateRequestNotification({ adminEmail, userName, user
 
 // ─── End v3 Email Helpers ─────────────────────────────────────────────────────
 
+// Send approval request notification to people lead
+export async function sendApprovalRequestEmail({ peopleLeadEmail, email, spot, date }) {
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: peopleLeadEmail,
+      subject: 'Parking Approval Request - Reservation Boss',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #2563eb;">New Parking Approval Request</h2>
+          <p>One of your team members has requested a parking spot that requires your approval:</p>
+          <ul style="background: #f3f4f6; padding: 20px; border-radius: 8px;">
+            <li><strong>Employee:</strong> ${email}</li>
+            <li><strong>Parking Spot:</strong> ${spot}</li>
+            <li><strong>Date:</strong> ${date}</li>
+          </ul>
+          <p>Please log in to <a href="https://reservationboss.io/admin/approvals">Reservation Boss</a> to approve or reject this request.</p>
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+          <p style="color: #6b7280; font-size: 12px;">
+            This is an automated message from Reservation Boss. Please do not reply to this email.
+          </p>
+        </div>
+      `,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Approval request email failed:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Send approval decision (approved or rejected) to the employee
+export async function sendApprovalDecisionEmail({ email, spot, date, approved, notes }) {
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: `Parking Request ${approved ? 'Approved' : 'Rejected'} - Reservation Boss`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: ${approved ? '#16a34a' : '#dc2626'};">
+            Parking Request ${approved ? 'Approved' : 'Rejected'}
+          </h2>
+          <p>Your parking reservation request has been <strong>${approved ? 'approved' : 'rejected'}</strong>:</p>
+          <ul style="background: #f3f4f6; padding: 20px; border-radius: 8px;">
+            <li><strong>Parking Spot:</strong> ${spot}</li>
+            <li><strong>Date:</strong> ${date}</li>
+          </ul>
+          ${!approved && notes ? `
+          <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin: 16px 0;">
+            <strong>Reason:</strong> ${notes}
+          </div>` : ''}
+          ${approved ? '<p>Your spot is confirmed. Please arrive on time and park only in your designated spot.</p>' : '<p>Please contact your People Lead for more information.</p>'}
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+          <p style="color: #6b7280; font-size: 12px;">
+            This is an automated message from Reservation Boss. Please do not reply to this email.
+          </p>
+        </div>
+      `,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Approval decision email failed:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Send cancellation code email
 export async function sendCancellationCodeEmail({ email, code, spot, date }) {
   try {

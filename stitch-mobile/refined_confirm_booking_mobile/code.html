@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Room Booking Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0a1a17",
+                        "surface-dark": "#162a26",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .slot-selected {
+            background: rgba(11, 218, 184, 0.15);
+            border-color: #0bdab8;
+            box-shadow: 0 0 0 2px #0bdab8;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden">
+<!-- Top Navigation -->
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Room Details</h2>
+</div>
+<!-- Hero Image Section -->
+<div class="@container px-4 py-2">
+<div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-background-light dark:bg-background-dark rounded-2xl min-h-[220px] shadow-xl" data-alt="Modern high-tech glass corporate boardroom interior" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDZTIsl2SZRhhml7AcQwkVVYp3qy-QYmM1gIhOfWU9PXQ0-0ZWDgVPEbe_6RSkKbR-du_oIRynvFv7K6cYQYJs7osWcB1UbYDqUocpFhLJyOFay9Fp64oyKQZ0Ft7kH8A4H1eUxe2ji_7jOymF3j_TdfJuWBbPTrbf7ySD7qjNXrdaqVzs9CtY6x-zO7HsqSKGAZ2NBT6op8j-BJcgc16WMqdOZ8u1OFic8g8fW7UkgzE382Yph_DlROJeNG0C5APLJKd3C0Ho6CNU");'>
+</div>
+</div>
+<!-- Room Header Info -->
+<div class="px-5 pt-4">
+<h1 class="text-slate-900 dark:text-slate-100 tracking-tight text-3xl font-extrabold leading-tight">Executive Boardroom 4A</h1>
+<div class="flex items-center gap-1.5 mt-1.5">
+<span class="material-symbols-outlined text-primary text-lg font-bold">location_on</span>
+<p class="text-slate-600 dark:text-primary/80 text-sm font-semibold">North Highland HQ • Floor 4</p>
+</div>
+</div>
+<!-- Amenities Chips -->
+<div class="px-5 pt-6">
+<h3 class="text-slate-900 dark:text-slate-100 text-base font-bold uppercase tracking-wider mb-4 opacity-80">Amenities</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-center gap-3 bg-white dark:bg-surface-dark px-4 py-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
+<span class="material-symbols-outlined text-primary text-2xl">videocam</span>
+<span class="text-xs font-semibold">4K Video</span>
+</div>
+<div class="flex items-center gap-3 bg-white dark:bg-surface-dark px-4 py-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
+<span class="material-symbols-outlined text-primary text-2xl">wifi</span>
+<span class="text-xs font-semibold">Gigabit Wifi</span>
+</div>
+<div class="flex items-center gap-3 bg-white dark:bg-surface-dark px-4 py-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
+<span class="material-symbols-outlined text-primary text-2xl">groups</span>
+<span class="text-xs font-semibold">12 Seats</span>
+</div>
+<div class="flex items-center gap-3 bg-white dark:bg-surface-dark px-4 py-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
+<span class="material-symbols-outlined text-primary text-2xl">tv</span>
+<span class="text-xs font-semibold">Smart Display</span>
+</div>
+</div>
+</div>
+<!-- Time Slot Picker -->
+<div class="px-5 pt-8">
+<div class="flex justify-between items-end mb-4">
+<h3 class="text-slate-900 dark:text-slate-100 text-base font-bold uppercase tracking-wider opacity-80">Select Time Slot</h3>
+<span class="text-xs font-medium text-primary">Today, Oct 24</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="slot-selected flex flex-col items-center justify-center p-4 rounded-xl border border-primary transition-all duration-200">
+<span class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Morning</span>
+<span class="text-slate-900 dark:text-white font-bold text-sm">09:00 - 10:00 AM</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-surface-dark hover:border-primary/50 transition-all duration-200">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Mid-day</span>
+<span class="text-slate-900 dark:text-white font-bold text-sm">11:00 - 12:00 PM</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 opacity-40 cursor-not-allowed">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Lunch</span>
+<span class="text-slate-900 dark:text-white font-bold text-sm line-through">01:00 - 02:00 PM</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-surface-dark hover:border-primary/50 transition-all duration-200">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Afternoon</span>
+<span class="text-slate-900 dark:text-white font-bold text-sm">03:00 - 04:00 PM</span>
+</button>
+</div>
+</div>
+<!-- Booking Details Summary -->
+<div class="mt-8 mx-5 p-5 rounded-2xl bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="flex justify-between items-center mb-4 pb-4 border-b border-slate-100 dark:border-white/5">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">Selected Date</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">October 24, 2023</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Duration</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">1 Hour (09:00 - 10:00)</span>
+</div>
+</div>
+<!-- Map Location Snippet -->
+<div class="px-5 pt-8">
+<h3 class="text-slate-900 dark:text-slate-100 text-base font-bold uppercase tracking-wider mb-4 opacity-80">Room Location</h3>
+<div class="h-32 w-full rounded-2xl overflow-hidden relative border border-slate-200 dark:border-white/10">
+<img alt="Office floor map" class="w-full h-full object-cover grayscale opacity-30 dark:opacity-20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxNuaBHp6OBhbazdvX8QWN3GgZSeSsGxJvDyEWIs1-pd7al-1SijtsrAMmlI0RK1Ydjg12NpDGO9XY8N4xHtedXgJWvmfb-KLcO_iscWCUExrLTIqBg0gOmWMNBLS5p7zPc_mdwu5iMmuWlnFZYL-N_VMIfpa6UN-Zaqr1HY-b3zcvcBGNPXcP_V2WvMmF1CJSx97wBO6I3-YnbD1yFIBK8lHYCn-XiadaCmOpYihiW6NtmFwPyflWwMZALF-pjGn-854gQR2CqeA"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary/20 p-4 rounded-full animate-pulse ring-1 ring-primary/40">
+<div class="bg-primary p-2 rounded-full shadow-lg shadow-primary/40">
+<span class="material-symbols-outlined text-background-dark text-lg font-bold">my_location</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="p-5 mt-4 mb-8">
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-extrabold py-5 rounded-2xl transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-3 active:scale-[0.98]">
+<span class="material-symbols-outlined font-bold">check_circle</span>
+                Confirm Booking
+            </button>
+</div>
+</div>
+</body></html>

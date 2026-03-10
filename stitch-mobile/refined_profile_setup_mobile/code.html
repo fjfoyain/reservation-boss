@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Profile Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#10221f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full max-w-md mx-auto flex-col bg-background-light dark:bg-background-dark overflow-x-hidden">
+<!-- TopAppBar -->
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="text-slate-900 dark:text-slate-100 flex size-12 shrink-0 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Profile Setup</h2>
+</div>
+<!-- Progress Indicator -->
+<div class="flex flex-col gap-3 p-4">
+<div class="flex gap-6 justify-between">
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium leading-normal">Complete your profile</p>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-normal leading-normal">Step 2 of 2</p>
+</div>
+<div class="rounded-full bg-primary/20 h-2 w-full overflow-hidden">
+<div class="h-full rounded-full bg-primary" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Header Content -->
+<div class="px-4 pt-5 pb-2">
+<h3 class="text-slate-900 dark:text-slate-100 tracking-tight text-2xl font-bold leading-tight">Final Details</h3>
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-normal mt-2">Let's finish setting up your North Highland account.</p>
+</div>
+<!-- Form Fields -->
+<div class="flex flex-col gap-5 px-4 py-3">
+<!-- Email (Read Only) -->
+<label class="flex flex-col gap-2">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal">Email Address</p>
+<div class="flex w-full items-stretch rounded-lg border border-primary/30 bg-primary/5">
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-slate-500 dark:text-slate-400 h-14 px-4 text-base font-normal" readonly="" type="email" value="j.doe@northhighland.com"/>
+<div class="flex items-center px-4 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+</div>
+</label>
+<!-- Full Name -->
+<label class="flex flex-col gap-2">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal">Full Name</p>
+<div class="flex w-full items-stretch rounded-lg border border-slate-200 dark:border-primary/20 bg-white dark:bg-slate-800/50 shadow-sm">
+<input class="flex-1 bg-transparent border-none focus:ring-2 focus:ring-primary/50 rounded-lg text-slate-900 dark:text-slate-100 h-14 px-4 text-base font-normal placeholder:text-slate-400" placeholder="Enter your full name" type="text"/>
+</div>
+</label>
+<!-- Password -->
+<label class="flex flex-col gap-2">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal">Create Password</p>
+<div class="flex w-full items-stretch rounded-lg border border-slate-200 dark:border-primary/20 bg-white dark:bg-slate-800/50 shadow-sm">
+<input class="flex-1 bg-transparent border-none focus:ring-2 focus:ring-primary/50 rounded-lg text-slate-900 dark:text-slate-100 h-14 px-4 text-base font-normal placeholder:text-slate-400" placeholder="At least 8 characters" type="password"/>
+<div class="flex items-center px-4 text-slate-400 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</div>
+</div>
+</label>
+</div>
+<!-- Spacer -->
+<div class="flex-1 min-h-[40px]"></div>
+<!-- Bottom Actions -->
+<div class="p-4 flex flex-col gap-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-4 rounded-xl transition-colors shadow-lg shadow-primary/10">
+                Complete Registration
+            </button>
+<p class="text-center text-xs text-slate-500 dark:text-slate-400 px-4 leading-relaxed">
+                By clicking "Complete Registration", you agree to North Highland's 
+                <a class="text-primary hover:underline" href="#">Terms of Service</a> and 
+                <a class="text-primary hover:underline" href="#">Privacy Policy</a>.
+            </p>
+</div>
+<div class="h-6"></div>
+</div>
+</body></html>

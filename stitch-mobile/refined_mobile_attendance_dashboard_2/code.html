@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Attendance Dashboard - North Highland</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8", // North Highland Teal
+                        "background-dark": "#0a1a17",
+                        "surface-dark": "#162a26",
+                        "accent": "#00C9CB"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0a1a17;
+            min-height: 100dvh;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 0px;
+            width: 0px;
+        }
+        .active-toggle {
+            background-color: #0bdab8;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-100 font-display antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col max-w-[480px] mx-auto overflow-x-hidden pb-32">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-5 sticky top-0 z-30 bg-background-dark/90 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-extrabold tracking-tight">Attendance</h2>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/30" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDS31Ntq0u9Lkt8KegECPODzVlGy1OGFlppqmbTnWmDHeSMGxiqBfvioBGbByqGhsN4RY6fLSo5N0ql6evDgln9-WUkpWPB30_dkqQnXvOII2IR3P47dM6kwrKRJCmjmViYPr3rdkWmnXMp9xqULd3b4nxmgmL1FgWjAZycLvGQvCVQCB5Z2671u2BkwPJ4D5-1D2fWE0itLS7TX1iLmko66R6s08xP7ceOel-XNh6BDEcXYzc-lbZ_ot4mhHPDBAqc_CkW1As4uV4");'></div>
+</header>
+<div class="flex flex-col gap-6 p-4">
+<!-- User Summary & Profile -->
+<div class="flex items-center justify-between bg-surface-dark p-5 rounded-2xl border border-white/5 shadow-xl">
+<div class="flex flex-col">
+<h1 class="text-xl font-bold tracking-tight">Alex Morgan</h1>
+<p class="text-primary text-xs font-semibold uppercase tracking-widest mt-1">Internal Parking User</p>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-black text-primary">3</span>
+<span class="text-slate-400 text-sm font-bold">/ 4 Days</span>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Weekly Goal</p>
+</div>
+</div>
+<!-- Limit Alert Banner (Active when 4/4 reached, shown here for state demo) -->
+<div class="flex items-center gap-3 bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl">
+<span class="material-symbols-outlined text-amber-500">info</span>
+<p class="text-xs font-medium text-amber-200/80 leading-snug">Weekly attendance limit reached. Friday is now locked to remote status.</p>
+</div>
+<!-- Week Picker -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between mb-1 px-1">
+<h3 class="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500">Select Week</h3>
+<div class="flex items-center gap-1 text-[10px] text-slate-500">
+<span class="material-symbols-outlined text-xs">schedule</span>
+<span>Auto-switch Friday 5PM</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-3 px-4 rounded-xl bg-primary text-background-dark font-bold text-sm shadow-lg shadow-primary/20 transition-all">
+                        Oct 23 - Oct 27
+                    </button>
+<button class="flex-1 py-3 px-4 rounded-xl bg-surface-dark border border-white/5 text-slate-400 font-bold text-sm hover:border-primary/30 transition-all">
+                        Oct 30 - Nov 03
+                    </button>
+</div>
+</div>
+<!-- Attendance List -->
+<div class="flex flex-col gap-4">
+<!-- Card 1: Attending -->
+<div class="flex flex-col bg-surface-dark p-5 rounded-2xl border border-white/5 shadow-lg group transition-all">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold text-white tracking-tight">Monday, Oct 23</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-400">
+<span class="material-symbols-outlined text-sm">business</span>
+<span class="text-xs font-medium">In-Office Attendance</span>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-pointer items-center rounded-full bg-primary p-1 transition-all">
+<div class="h-5 w-5 rounded-full bg-white shadow-sm translate-x-5"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Fixed Parking Attribute (Type 2 User) -->
+<div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-lg">directions_car</span>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-white">Spot #402</p>
+<p class="text-[10px] text-slate-500 font-medium">Permanent Level 4 Space</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-primary/60 uppercase tracking-widest bg-primary/5 px-2 py-1 rounded">Assigned</span>
+</div>
+</div>
+<!-- Card 2: Attending -->
+<div class="flex flex-col bg-surface-dark p-5 rounded-2xl border border-primary/30 shadow-[0_0_20px_rgba(11,218,184,0.05)] transition-all">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold text-primary tracking-tight">Tuesday, Oct 24</p>
+<div class="flex items-center gap-1.5 mt-1 text-primary/70">
+<span class="material-symbols-outlined text-sm">business</span>
+<span class="text-xs font-medium">In-Office Attendance</span>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-pointer items-center rounded-full bg-primary p-1 transition-all">
+<div class="h-5 w-5 rounded-full bg-white shadow-sm translate-x-5"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-lg">directions_car</span>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-white">Spot #402</p>
+<p class="text-[10px] text-slate-500 font-medium">Permanent Level 4 Space</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-primary/60 uppercase tracking-widest bg-primary/5 px-2 py-1 rounded">Assigned</span>
+</div>
+</div>
+<!-- Card 3: Remote -->
+<div class="flex flex-col bg-surface-dark/40 p-5 rounded-2xl border border-white/5 opacity-60">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold text-slate-400 tracking-tight">Wednesday, Oct 25</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">home_work</span>
+<span class="text-xs font-medium">Remote Work</span>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-pointer items-center rounded-full bg-slate-700 p-1 transition-all">
+<div class="h-5 w-5 rounded-full bg-white shadow-sm"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Card 4: Attending -->
+<div class="flex flex-col bg-surface-dark p-5 rounded-2xl border border-white/5 shadow-lg transition-all">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold text-white tracking-tight">Thursday, Oct 26</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-400">
+<span class="material-symbols-outlined text-sm">business</span>
+<span class="text-xs font-medium">In-Office Attendance</span>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-pointer items-center rounded-full bg-primary p-1 transition-all">
+<div class="h-5 w-5 rounded-full bg-white shadow-sm translate-x-5"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-lg">directions_car</span>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-white">Spot #402</p>
+<p class="text-[10px] text-slate-500 font-medium">Permanent Level 4 Space</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-primary/60 uppercase tracking-widest bg-primary/5 px-2 py-1 rounded">Assigned</span>
+</div>
+</div>
+<!-- Card 5: Locked (Limit Reached) -->
+<div class="flex flex-col bg-slate-900/20 p-5 rounded-2xl border border-white/5 opacity-40 grayscale pointer-events-none">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold text-slate-500 tracking-tight">Friday, Oct 27</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-600">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="text-xs font-medium">Remote (Limit Reached)</span>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-not-allowed items-center rounded-full bg-slate-800 p-1 transition-all">
+<div class="h-5 w-5 rounded-full bg-slate-600 shadow-sm"></div>
+<input class="hidden" disabled="" type="checkbox"/>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto z-40 border-t border-white/5 bg-background-dark/95 backdrop-blur-xl px-4 pb-8 pt-3 shadow-2xl">
+<div class="flex items-center justify-around">
+<a class="flex flex-col items-center justify-center gap-1.5 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">dashboard</span>
+<p class="text-[10px] font-bold">Dashboard</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<p class="text-[10px] font-medium">Bookings</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">meeting_room</span>
+<p class="text-[10px] font-medium">Rooms</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-medium">Profile</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registration Complete - North Highland</title>
+<!-- BEGIN: Scripts -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'nh-dark': '#0a0a0a',
+            'nh-teal': '#0bdab8',
+            'nh-gray': '#1c1c1c'
+          }
+        }
+      }
+    }
+  </script>
+<!-- END: Scripts -->
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="layout-styles">
+    body {
+      background-color: #0a0a0a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .success-bg-glow {
+      background: radial-gradient(circle at center, rgba(11, 218, 184, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- BEGIN: Success Content Container -->
+<main class="flex-grow flex flex-col items-center justify-center px-8 relative overflow-hidden" data-purpose="main-content">
+<!-- Background Glow Effect -->
+<div class="absolute inset-0 success-bg-glow pointer-events-none"></div>
+<!-- BEGIN: Visual Icon Section -->
+<div class="relative mb-10" data-purpose="success-icon-container">
+<!-- Animated Ring Background -->
+<div class="absolute inset-0 rounded-full border-4 border-nh-teal opacity-20 scale-125 animate-pulse"></div>
+<!-- Main Success Circle -->
+<div class="w-24 h-24 rounded-full bg-nh-teal/10 border-2 border-nh-teal flex items-center justify-center shadow-[0_0_30px_rgba(11,218,184,0.3)]">
+<svg class="h-12 w-12 text-nh-teal" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<!-- END: Visual Icon Section -->
+<!-- BEGIN: Text Content -->
+<div class="text-center z-10" data-purpose="message-block">
+<h1 class="text-3xl font-bold mb-4 tracking-tight">
+        You're All Set!
+      </h1>
+<p class="text-gray-400 text-base leading-relaxed max-w-xs mx-auto">
+        Welcome to <span class="text-white font-medium">North Highland Secure Access</span>. You can now start managing your attendance and reservations.
+      </p>
+</div>
+<!-- END: Text Content -->
+</main>
+<!-- END: Success Content Container -->
+<!-- BEGIN: Footer Actions -->
+<footer class="p-8 pb-12 w-full max-w-md mx-auto" data-purpose="footer-actions">
+<!-- Primary Action Button -->
+<button class="w-full bg-nh-teal hover:bg-[#09c0a3] text-nh-dark font-bold py-4 rounded-xl transition-all duration-200 active:scale-[0.98] shadow-lg shadow-nh-teal/20" data-purpose="primary-action-button" id="btn-dashboard">
+      Go to Dashboard
+    </button>
+<!-- Optional: Subtle secondary link if needed later -->
+<div class="mt-6 text-center">
+<span class="text-xs text-gray-500 uppercase tracking-widest font-semibold">North Highland Internal</span>
+</div>
+</footer>
+<!-- END: Footer Actions -->
+</body></html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland | Parking Configuration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "nh-deep": "#081b18",
+                        "nh-surface": "#0c2521",
+                        "nh-accent": "#14332e",
+                        "background-dark": "#081b18",
+                        "accent-teal": "#90cbc1"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #081b18; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(12, 37, 33, 0.9), rgba(8, 27, 24, 0.95));
+            border: 1px solid rgba(11, 218, 184, 0.1);
+        }
+        .chart-glow {
+            filter: drop-shadow(0 0 8px rgba(11, 218, 184, 0.2));
+        }
+    </style>
+</head>
+<body class="bg-nh-deep text-slate-100 font-display antialiased">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-x-hidden pb-32">
+<!-- Header -->
+<header class="sticky top-0 z-30 flex items-center justify-between bg-nh-deep/80 backdrop-blur-lg px-6 py-5 border-b border-primary/10">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight text-white">Parking Config</h1>
+</div>
+<button class="text-primary font-bold text-sm uppercase tracking-widest px-4 py-2 bg-primary/10 rounded-lg border border-primary/20">Save</button>
+</header>
+<main class="flex flex-col gap-8 p-6">
+<!-- Global Rules Section -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-6 bg-primary rounded-full"></div>
+<h2 class="text-lg font-extrabold tracking-tight text-white uppercase text-xs tracking-[0.2em]">Global Rules</h2>
+</div>
+<div class="space-y-3">
+<!-- Weekly Limit -->
+<div class="flex items-center justify-between p-5 glass-panel rounded-2xl shadow-lg">
+<div class="flex flex-col">
+<p class="text-white font-bold text-sm">Weekly Limit</p>
+<p class="text-primary/60 text-[10px] font-bold uppercase tracking-wider mt-0.5">Max days per employee</p>
+</div>
+<div class="flex items-center gap-4 bg-nh-accent/50 p-1.5 rounded-xl border border-white/5">
+<button class="size-8 flex items-center justify-center rounded-lg bg-nh-accent text-primary hover:bg-nh-accent/80 transition-all border border-primary/10">
+<span class="material-symbols-outlined text-base">remove</span>
+</button>
+<span class="text-lg font-black text-white px-1">4</span>
+<button class="size-8 flex items-center justify-center rounded-lg bg-primary text-nh-deep shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined text-base font-bold">add</span>
+</button>
+</div>
+</div>
+<!-- Cutoff Time -->
+<div class="flex items-center justify-between p-5 glass-panel rounded-2xl shadow-lg">
+<div class="flex flex-col">
+<p class="text-white font-bold text-sm">Cancellation Cutoff</p>
+<p class="text-primary/60 text-[10px] font-bold uppercase tracking-wider mt-0.5">Same-day deadline</p>
+</div>
+<button class="flex items-center gap-2.5 px-4 py-2.5 bg-nh-accent rounded-xl text-white font-bold text-xs border border-white/5 hover:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-primary text-base">schedule</span>
+                            8:00 AM
+                        </button>
+</div>
+</div>
+</section>
+<!-- Parking Spots Management -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-6 bg-primary rounded-full"></div>
+<h2 class="text-lg font-extrabold tracking-tight text-white uppercase text-xs tracking-[0.2em]">Manage Spots</h2>
+</div>
+<span class="text-[10px] font-black px-2.5 py-1 bg-primary/10 text-primary rounded-full border border-primary/20 uppercase">42 Total</span>
+</div>
+<!-- Tabs -->
+<div class="flex gap-2 p-1 bg-nh-accent/30 rounded-2xl border border-white/5">
+<button class="flex-1 py-3 text-[11px] font-black uppercase tracking-wider rounded-xl bg-primary text-nh-deep shadow-lg shadow-primary/10">Internal</button>
+<button class="flex-1 py-3 text-[11px] font-black uppercase tracking-wider rounded-xl text-slate-400 hover:text-primary transition-colors">Contracted</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Spot Item -->
+<div class="flex items-center justify-between p-4 glass-panel rounded-2xl shadow-lg group">
+<div class="flex items-center gap-4">
+<div class="size-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1">directions_car</span>
+</div>
+<div>
+<p class="text-white font-bold text-sm tracking-tight">Spot A-102</p>
+<p class="text-slate-500 text-[10px] font-bold uppercase tracking-tighter">Executive Floor</p>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-pointer items-center rounded-full bg-primary p-1 transition-all shadow-inner">
+<div class="h-5 w-5 rounded-full bg-white shadow-sm translate-x-5"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Spot Item -->
+<div class="flex items-center justify-between p-4 glass-panel rounded-2xl shadow-lg group">
+<div class="flex items-center gap-4">
+<div class="size-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1">directions_car</span>
+</div>
+<div>
+<p class="text-white font-bold text-sm tracking-tight">Spot A-103</p>
+<p class="text-slate-500 text-[10px] font-bold uppercase tracking-tighter">Standard Row</p>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-pointer items-center rounded-full bg-primary p-1 transition-all shadow-inner">
+<div class="h-5 w-5 rounded-full bg-white shadow-sm translate-x-5"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Spot Item (Disabled) -->
+<div class="flex items-center justify-between p-4 glass-panel rounded-2xl shadow-lg opacity-40 grayscale group">
+<div class="flex items-center gap-4">
+<div class="size-11 rounded-xl bg-nh-accent border border-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500">construction</span>
+</div>
+<div>
+<p class="text-slate-400 font-bold text-sm tracking-tight">Spot B-05</p>
+<p class="text-slate-600 text-[10px] font-bold uppercase tracking-tighter">Maintenance</p>
+</div>
+</div>
+<label class="relative flex h-7 w-12 cursor-not-allowed items-center rounded-full bg-slate-800 p-1 transition-all">
+<div class="h-5 w-5 rounded-full bg-slate-600 shadow-sm"></div>
+<input class="hidden" disabled="" type="checkbox"/>
+</label>
+</div>
+</div>
+</section>
+<!-- Blackout Dates -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-6 bg-primary rounded-full"></div>
+<h2 class="text-lg font-extrabold tracking-tight text-white uppercase text-xs tracking-[0.2em]">Blackout Dates</h2>
+</div>
+<button class="flex items-center gap-1.5 text-primary text-[10px] font-black uppercase tracking-widest bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20 hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-xs">add_circle</span>
+                        Add Date
+                    </button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Date Card -->
+<div class="flex items-center gap-4 p-5 glass-panel rounded-2xl border-l-4 border-l-primary shadow-xl group">
+<div class="size-12 rounded-xl bg-primary/10 flex flex-col items-center justify-center border border-primary/20">
+<span class="text-[10px] font-black text-primary uppercase leading-none">Sep</span>
+<span class="text-lg font-black text-white leading-tight">02</span>
+</div>
+<div class="flex-1">
+<p class="text-white font-bold text-sm tracking-tight">Labor Day Weekend</p>
+<p class="text-primary/60 text-[10px] font-bold uppercase tracking-tighter">Sept 2 - Sept 4, 2024</p>
+</div>
+<button class="p-2 text-slate-600 hover:text-rose-400 transition-colors">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+<!-- Date Card -->
+<div class="flex items-center gap-4 p-5 glass-panel rounded-2xl border-l-4 border-l-primary shadow-xl group">
+<div class="size-12 rounded-xl bg-primary/10 flex flex-col items-center justify-center border border-primary/20">
+<span class="text-[10px] font-black text-primary uppercase leading-none">Nov</span>
+<span class="text-lg font-black text-white leading-tight">23</span>
+</div>
+<div class="flex-1">
+<p class="text-white font-bold text-sm tracking-tight">Thanksgiving Break</p>
+<p class="text-primary/60 text-[10px] font-bold uppercase tracking-tighter">Nov 23 - Nov 25, 2024</p>
+</div>
+<button class="p-2 text-slate-600 hover:text-rose-400 transition-colors">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto border-t border-primary/10 bg-nh-deep/90 backdrop-blur-xl px-4 pb-8 pt-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<div class="flex items-center justify-around">
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<p class="text-[9px] font-bold uppercase tracking-[0.1em]">Dashboard</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">group</span>
+<p class="text-[9px] font-bold uppercase tracking-[0.1em]">Users</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">monitoring</span>
+<p class="text-[9px] font-bold uppercase tracking-[0.1em]">Analytics</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-primary relative" href="#">
+<div class="absolute -top-1.5 size-1 rounded-full bg-primary shadow-[0_0_8px_#0bdab8]"></div>
+<div class="bg-primary/10 rounded-xl px-4 py-1.5 flex flex-col items-center gap-0.5 border border-primary/20">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1">settings</span>
+<p class="text-[9px] font-black uppercase tracking-[0.1em]">Settings</p>
+</div>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

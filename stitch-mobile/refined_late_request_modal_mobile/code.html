@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Attendance - Late Request</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "nh-dark": "#0a110f",
+                        "nh-surface": "#111d1a",
+                        "nh-teal": "#00e5b0",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0a110f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { 
+                        "DEFAULT": "0.25rem", 
+                        "lg": "0.5rem", 
+                        "xl": "0.75rem", 
+                        "2xl": "1.5rem",
+                        "full": "9999px" 
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .bottom-sheet-up {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden font-display">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-[960px] flex-1 bg-white dark:bg-nh-surface rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 py-4 bg-white dark:bg-nh-surface z-10">
+<div class="flex items-center gap-4 text-slate-900 dark:text-slate-100">
+<div class="size-6 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">apartment</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">North Highland</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200 dark:border-slate-700" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD10Kx9AU3qZz2XDsh1luWZ-2zJr8SzVy4OwWsbKfpkYM7rLMWlgv9EDeVeWZiCSEgp6q1C8upcapY9gcX6mW2Yqh-Rv92LvjOjUeWDrnqi5s337vD2DWqyEy1Cv9zVUSwOSjBQJMPST0eTUoYeZfWMQqm40o1MzJrWLhO-6vBr9qqiOH1sChRyZOZAR6c8XO1fICQjryjPRcZvXcTV3Mmn_dN71WOXIemU4HqsgJQGHSpa5PM0Q0VNBUI0j-wKyAaxezAuEnt237s");'></div>
+</div>
+</header>
+<div class="flex flex-col flex-1 relative h-full">
+<!-- Main Content Area (Background dimmed/blurred) -->
+<div class="flex-1 overflow-y-auto pb-24 filter blur-[2px] opacity-40">
+<!-- User Info -->
+<div class="p-6 bg-slate-50 dark:bg-nh-dark/50 border-b border-slate-200 dark:border-slate-800">
+<div class="flex gap-4 items-center mb-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 shadow-sm" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHd8kcjk094SJRDZ8Jl4Tkkmx6BgRt1XOQ45FUginMIhqKEALUZ-oQQKcNB6tkgulq_0B1FjncxZZ-71HfQqWUnbscl4tMHetrTAGNi_h4h8NPvy2g_KAlDAcNKYs-b5e52V1rxxQVX2kyyEFRqv0O9ZER1H8GRhIfn-rbAk29f4LshzvADim-nuTz3rMv-EsbQAkfpgWh1Wdt5BuTHKZosaKM95ZZbsmN7Sem6N4KHzom-aJK1MIwLfsT3y1jQvW8b_4lORdagss");'></div>
+<div class="flex flex-col">
+<h1 class="text-lg font-semibold leading-normal">Welcome, Sarah</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Atlanta Office • Marketing</p>
+</div>
+</div>
+<!-- Quick Nav -->
+<div class="grid grid-cols-4 gap-2">
+<button class="flex flex-col items-center gap-1 p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-xs font-medium">Dashboard</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-xs font-medium">Schedule</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">directions_car</span>
+<span class="text-xs font-medium">Parking</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 rounded-lg text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">person</span>
+<span class="text-xs font-medium">Profile</span>
+</button>
+</div>
+</div>
+<!-- Dashboard Content -->
+<div class="p-6">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h2 class="text-2xl font-bold leading-tight">This Week</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Oct 16 - Oct 20</p>
+</div>
+</div>
+<!-- Schedule List (Static Preview) -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-nh-surface opacity-70">
+<div class="flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 shrink-0 size-12">
+<span class="material-symbols-outlined">business</span>
+</div>
+<div class="flex flex-col flex-1">
+<p class="text-base font-semibold leading-normal">Monday, Oct 16</p>
+<p class="text-slate-500 text-sm">Office • Completed</p>
+</div>
+<span class="material-symbols-outlined text-slate-400">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- REFINED LATE REQUEST BOTTOM SHEET -->
+<div class="absolute inset-0 bg-slate-900/60 dark:bg-nh-dark/80 backdrop-blur-[2px] z-30 flex flex-col justify-end">
+<div class="bg-white dark:bg-nh-surface w-full rounded-t-2xl shadow-2xl border-t border-slate-200 dark:border-white/10 bottom-sheet-up">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center pt-4 pb-2">
+<div class="w-10 h-1 bg-slate-200 dark:bg-white/20 rounded-full"></div>
+</div>
+<div class="px-6 pb-8 pt-2 max-w-md mx-auto">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Late Change Request</h3>
+<button class="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200/50 dark:border-amber-500/30 rounded-xl flex gap-3 items-start">
+<span class="material-symbols-outlined text-amber-500 shrink-0">info</span>
+<div class="space-y-1">
+<p class="text-sm font-semibold text-amber-900 dark:text-amber-200">Policy Deadline Passed</p>
+<p class="text-xs text-amber-800 dark:text-amber-300/80 leading-relaxed">
+                                            The 8:00 AM change window for today has closed. This request requires manager review and approval.
+                                        </p>
+</div>
+</div>
+<form class="space-y-6">
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">Cancellation Reason</label>
+<div class="relative">
+<select class="block w-full rounded-xl border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-nh-dark text-slate-900 dark:text-slate-100 shadow-sm focus:border-nh-teal focus:ring-nh-teal sm:text-sm py-3.5 px-4 appearance-none transition-all">
+<option disabled="" selected="" value="">Select a reason...</option>
+<option value="sick">Feeling Unwell / Sick</option>
+<option value="emergency">Family Emergency</option>
+<option value="transit">Transit/Commute Issue</option>
+<option value="client">Client Request Change</option>
+<option value="other">Other (Explain below)</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+<span class="material-symbols-outlined">unfold_more</span>
+</div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2 ml-1">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Additional Details</label>
+<span class="text-[10px] text-slate-400 font-medium">Optional</span>
+</div>
+<div class="relative group">
+<textarea class="block w-full rounded-xl border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-nh-dark text-slate-900 dark:text-slate-100 shadow-sm focus:border-nh-teal focus:ring-nh-teal sm:text-sm p-4 placeholder:text-slate-400 min-h-[120px] transition-all" placeholder="Tell us more about why you need to change your schedule..."></textarea>
+<div class="absolute bottom-3 right-4 text-[10px] text-slate-400 font-medium pointer-events-none">
+                                                0 / 250
+                                            </div>
+</div>
+</div>
+<div class="pt-2 flex flex-col gap-3">
+<button class="w-full flex justify-center items-center gap-2 rounded-xl bg-nh-teal px-4 py-4 text-sm font-bold text-nh-dark shadow-lg shadow-nh-teal/20 hover:bg-[#00d1a1] active:scale-[0.98] transition-all" type="button">
+                                            Submit Request
+                                            <span class="material-symbols-outlined text-lg">check_circle</span>
+</button>
+<button class="w-full flex justify-center items-center rounded-xl bg-transparent px-4 py-3 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors" type="button">
+                                            Cancel &amp; Go Back
+                                        </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

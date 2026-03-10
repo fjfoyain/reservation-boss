@@ -8,168 +8,140 @@ The mobile app **reuses the existing backend entirely** — all `/api/v3/*` endp
 
 ---
 
-## Recommended Stack: React Native with Expo
+## Tech Stack
 
-### Why Expo / React Native
-- Team already knows React — hooks, state, and component model are identical
-- Firebase has a first-class React Native SDK
-- Expo EAS Build generates `.ipa` (iOS) and `.aab` (Android) in the cloud — no Mac required for iOS builds
-- Existing `/api/v3/*` REST API works as-is from the mobile app
-- No need to learn Swift or Kotlin — one codebase covers both platforms
+| Layer | Choice | Why |
+|-------|--------|-----|
+| **Framework** | React Native + Expo SDK 52 | Team knows React; single codebase for iOS + Android |
+| **Routing** | Expo Router (file-based) | Same mental model as Next.js Pages Router |
+| **Auth** | Firebase JS SDK (`firebase/auth`) | Same SDK as web app, works in Expo Go without native modules |
+| **API** | REST calls to `/api/v3/*` | Backend unchanged — just HTTP + Bearer token |
+| **Styling** | `StyleSheet.create` | Simple, zero config; add NativeWind later if needed |
+| **Icons** | `@expo/vector-icons` (MaterialIcons) | Closest match to Material Symbols used on web |
+| **Font** | Inter via `expo-font` | Matches web design system |
+| **Language** | TypeScript | Type safety, better DX |
 
-### Why not native Swift/Kotlin
-- Would require two separate codebases in two new languages
-- Performance difference is imperceptible for a reservation/scheduling tool (forms, lists, calendars)
-- Native makes sense for games, AR, Bluetooth, video processing — none of which apply here
+### Why not...
+- **Native Swift/Kotlin** — 2 codebases, 2 languages, 2x maintenance for a forms/lists app
+- **Capacitor/Ionic** — WebView wrapper, worse UX than true native components
+- **PWA** — iOS limitations (no push notifications, limited background)
+- **`@react-native-firebase`** — requires native modules, can't use Expo Go without dev client builds
 
-### Alternatives Considered
-
-| Option | Pros | Cons |
-|---|---|---|
-| **React Native + Expo** ✅ | Native feel, reuses React knowledge, single codebase | UI layer must be rewritten (no HTML/Tailwind) |
-| **Native Swift/Kotlin** | Truly native, maximum performance | Two codebases, two new languages, 2x maintenance |
-| **Capacitor (web wrapper)** | Fastest to ship, zero UI rewrite | Feels like a WebView, worse performance/UX |
-| **PWA** | Zero new code | iOS limitations (no push notifications, no background sync) |
+### Why Firebase JS SDK instead of `@react-native-firebase`
+- Works in **Expo Go** out of the box (no native modules)
+- **Same SDK** you already use in `packages/web` — same `signInWithEmailAndPassword`, `getIdToken`, etc.
+- No `google-services.json` or `GoogleService-Info.plist` needed during development
+- Only switch to native Firebase if you need push notifications, crashlytics, or offline Firestore sync later
 
 ---
 
-## Distribution Strategy (Decided: Internal Only)
+## Project Location: `apps/mobile/`
 
-Since this is an internal tool for North Highland employees only, **we skip the public App Stores entirely**.
+```
+reservation-boss/
+├── packages/
+│   ├── web/              ← existing Next.js app (unchanged)
+│   ├── shared/           ← shared constants, types, helpers
+│   └── backend/          ← legacy (archived)
+├── apps/
+│   └── mobile/           ← NEW: Expo Router app
+│       ├── app/          ← file-based routes (like pages/ in Next.js)
+│       │   ├── _layout.tsx        ← root layout (auth provider, nav)
+│       │   ├── (auth)/
+│       │   │   ├── login.tsx
+│       │   │   └── forgot-password.tsx
+│       │   └── (tabs)/
+│       │       ├── _layout.tsx    ← tab navigator
+│       │       ├── index.tsx      ← Dashboard (attendance)
+│       │       ├── rooms.tsx      ← Room reservations
+│       │       ├── bookings.tsx   ← My Bookings
+│       │       ├── requests.tsx   ← My Requests
+│       │       └── profile.tsx    ← Profile / Settings
+│       ├── components/
+│       │   ├── ui/               ← reusable primitives (Button, Card, etc.)
+│       │   ├── WeekGrid.tsx      ← attendance week view
+│       │   ├── RoomSlotGrid.tsx  ← room time slot grid
+│       │   └── BookingCard.tsx   ← booking list item
+│       ├── lib/
+│       │   ├── firebase.ts       ← Firebase JS SDK init
+│       │   ├── api.ts            ← apiFetch() wrapper with auth token
+│       │   ├── auth-context.tsx  ← AuthProvider + useAuth hook
+│       │   └── constants.ts     ← colors, API base URL, timezone
+│       ├── assets/               ← app icon, splash screen
+│       ├── app.json              ← Expo config
+│       ├── eas.json              ← EAS Build profiles
+│       ├── tsconfig.json
+│       └── package.json
+```
+
+This lives in `apps/` (not `packages/`) because it's a deployable app, not a library. The root `package.json` already has `"workspaces": ["packages/*", "apps/*"]`.
+
+---
+
+## Distribution Strategy (Internal Only)
 
 ### Phase 1 — Development & Testing: Expo Go
 - Employees download the free **Expo Go** app from App Store / Play Store
-- You share a QR code or link — they scan it and the app loads instantly
-- **No Apple Developer account needed, no Google Play account needed, $0 cost**
-- Updates are instant — push code, employees get new version automatically on next open
-- Best for: active development, internal testing, demos
+- Share a QR code — they scan it and the app loads instantly
+- **$0 cost**, no Apple Developer account needed
+- Updates are instant — push code, employees get new version on next open
 
 ### Phase 2 — Stable Internal Release: EAS Internal Distribution
-- Build a proper standalone `.ipa` / `.apk` once via EAS
-- Share a link — employees tap and install directly, no app stores involved
-- Standalone app icon on home screen, works offline
-- Requires $99/year Apple Developer account for iOS code signing (Android is free)
-- Updates require a new build + resharing the link
-- Best for: stable production-ready internal release
+- Build standalone `.ipa` / `.apk` via EAS
+- Share install link — employees tap and install directly
+- Requires $99/year Apple Developer account for iOS code signing
+- Android is free (sideload APK)
 
 ### What we skip
-- Public App Store listing (not needed)
-- Apple Business Manager (overkill for this size)
-- Google Play internal track (EAS internal distribution is simpler)
-
----
-
-## Location Features
-
-Location support is fully available in Expo with `expo-location`:
-
-```bash
-npx expo install expo-location
-```
-
-### Capabilities
-- Get current GPS coordinates
-- Reverse geocoding (coordinates → address)
-- Geofencing (trigger when entering/leaving an area)
-- Map display via `react-native-maps`
-
-### Potential use cases for this app
-- **Auto check-in** — detect arrival at the office, auto-mark attendance as "Office"
-- **Parking suggestion** — show available spots near current location
-- **Proximity alert** — "You're near the office — did you forget to book parking?"
-- **Confirm on arrival** — prompt "You've arrived, confirm your attendance?"
-
-### Permissions note
-- **Foreground location** (while app is open) — straightforward, no issues
-- **Background location** — needs extra justification for App Store; not needed for our use cases
-- For internal distribution via Expo Go / EAS internal, permission prompts work the same as any app
-
----
-
-## What to Reuse vs. Rewrite
-
-### Reuse (unchanged)
-- All `/api/v3/*` API routes
-- Firebase Auth (login, token refresh)
-- Firebase Firestore collections (`v3_*`)
-- Business logic (week helpers, deadlines, parking rules)
-- All environment variables and config
-
-### Rewrite (mobile UI layer)
-- Navigation → **React Navigation** (instead of Next.js Router)
-- UI components → `View`, `Text`, `Pressable` (or **NativeWind** for Tailwind-like syntax)
-- No HTML, no Tailwind CSS classes
-- Firebase Auth client → `@react-native-firebase/auth`
+- Public App Store listing
+- Apple Business Manager
+- Google Play internal track
 
 ---
 
 ## Screens to Build
 
-| Screen | Corresponds to Web Page |
-|---|---|
-| Login | `/auth/login` |
-| Dashboard (Weekly Attendance) | `/dashboard` |
-| Room Reservations | `/rooms` |
-| My Bookings | `/my-bookings` |
-| My Requests | `/my-requests` |
-| Profile / Settings | (basic) |
+| Screen | Web Equivalent | Tab? |
+|--------|---------------|------|
+| Login | `/auth/login` | No (auth flow) |
+| Forgot Password | `/auth/forgot-password` | No (auth flow) |
+| Dashboard (Attendance) | `/dashboard` | Tab 1 |
+| Rooms | `/rooms` | Tab 2 |
+| My Bookings | `/my-bookings` | Tab 3 |
+| My Requests | `/my-requests` | Tab 4 |
+| Profile / Settings | (basic) | Tab 5 |
 
-Admin screens are not planned for mobile — the admin portal is better suited to desktop/web.
-
----
-
-## Project Setup
-
-```bash
-# Create Expo project (place alongside the web package)
-npx create-expo-app packages/mobile --template blank-typescript
-
-# Install dependencies
-cd packages/mobile
-npx expo install @react-native-firebase/app @react-native-firebase/auth
-npm install @react-navigation/native @react-navigation/stack
-npx expo install react-native-screens react-native-safe-area-context
-
-# Location support
-npx expo install expo-location
-
-# For Tailwind-like styling (optional but recommended)
-npm install nativewind
-npm install --save-dev tailwindcss
-```
-
-### Project structure suggestion
-```
-reservation-boss/
-├── packages/
-│   ├── web/          ← existing Next.js app
-│   └── mobile/       ← new Expo app
-│       ├── app/      (or screens/)
-│       ├── components/
-│       ├── lib/
-│       │   ├── firebase.ts   ← Firebase client config
-│       │   └── api.ts        ← fetch wrappers for /api/v3/*
-│       └── ...
-```
+**Admin screens stay web-only** — admin portal is better suited to desktop.
 
 ---
 
 ## Authentication Flow
 
-The mobile app uses the same Firebase Auth project:
+Same Firebase Auth project, same approach as web:
 
-1. User enters email + password → `signInWithEmailAndPassword`
-2. Get `idToken` via `user.getIdToken()`
-3. Pass token as `Authorization: Bearer <token>` header on all API calls
-4. Token auto-refreshes via Firebase SDK
+```ts
+// lib/firebase.ts
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+
+const app = initializeApp({
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+});
+
+export const auth = getAuth(app);
+```
 
 ```ts
 // lib/api.ts
-import auth from '@react-native-firebase/auth';
+import { auth } from './firebase';
 
-async function apiFetch(path: string, options: RequestInit = {}) {
-  const token = await auth().currentUser?.getIdToken();
-  return fetch(`https://your-domain.com${path}`, {
+const API_BASE = process.env.EXPO_PUBLIC_API_URL; // https://reservationboss.io
+
+export async function apiFetch(path: string, options: RequestInit = {}) {
+  const token = await auth.currentUser?.getIdToken();
+  const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -177,33 +149,55 @@ async function apiFetch(path: string, options: RequestInit = {}) {
       ...options.headers,
     },
   });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
 }
 ```
 
-> **Note:** Replace `https://your-domain.com` with the production domain. For local dev, use your machine's LAN IP (not `localhost`) — devices can't reach localhost. Android emulator uses `http://10.0.2.2:3000`.
+> **Local dev:** Use your machine's LAN IP (`http://192.168.x.x:3000`), not `localhost`. Android emulator uses `http://10.0.2.2:3000`.
 
 ---
 
-## EAS Build for Internal Distribution
+## Design System
+
+Match the web app exactly:
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| Navy | `#112A46` | Headers, nav bar |
+| Teal | `#00A3E0` | Accent, links |
+| Blue | `#1183d4` | Primary buttons, interactive |
+| Green | `#059669` | Success states |
+| Red | `#DC2626` | Destructive actions |
+| Gray-50 | `#f9fafb` | Backgrounds |
+| Gray-900 | `#111827` | Body text |
+| Font | Inter | `expo-font` + `@expo-google-fonts/inter` |
+| Icons | MaterialIcons | `@expo/vector-icons` |
+| Border radius | 12px | Cards, modals |
+| Border radius | 8px | Buttons, inputs |
+
+**Important:** The stitch-mobile designs have different colors/styles. Follow the **web app design** as the source of truth, not the stitch-mobile mockups. Use stitch-mobile only for layout/UX reference.
+
+---
+
+## Environment Variables
 
 ```bash
-# Install EAS CLI
-npm install -g eas-cli
-
-# Login to Expo account
-eas login
-
-# Configure the project
-eas build:configure
-
-# Build for internal distribution (no App Store)
-eas build --platform all --profile preview
-
-# Share the install link with employees (printed after build completes)
+# apps/mobile/.env
+EXPO_PUBLIC_FIREBASE_API_KEY=your-api-key
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+EXPO_PUBLIC_API_URL=https://reservationboss.io
 ```
 
-### `eas.json`
+Expo automatically exposes `EXPO_PUBLIC_*` vars to the client bundle.
+
+---
+
+## EAS Build Config
+
 ```json
+// apps/mobile/eas.json
 {
   "build": {
     "development": {
@@ -220,57 +214,84 @@ eas build --platform all --profile preview
 
 ---
 
-## Environment Variables
+## Implementation Phases
 
-```ts
-// app.config.ts
-export default {
-  extra: {
-    firebaseApiKey: process.env.FIREBASE_API_KEY,
-    firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
-    apiBaseUrl: process.env.API_BASE_URL, // e.g. https://reservationboss.io
-  },
-};
-```
+### Phase 0: Project Scaffold (do first)
+- [ ] Create Expo project at `apps/mobile/` with Expo Router template
+- [ ] Configure TypeScript
+- [ ] Set up Firebase JS SDK (`lib/firebase.ts`)
+- [ ] Create `apiFetch()` wrapper (`lib/api.ts`)
+- [ ] Create `AuthProvider` context (`lib/auth-context.tsx`)
+- [ ] Set up root layout with auth guard (`app/_layout.tsx`)
+- [ ] Add Inter font via `expo-font`
+- [ ] Create design tokens/constants file
+- [ ] Add root scripts: `"dev:mobile": "npm run start --workspace=apps/mobile"`
+- [ ] Test Expo Go on physical device
 
-```ts
-import Constants from 'expo-constants';
-const { apiBaseUrl } = Constants.expoConfig.extra;
-```
+### Phase 1: Auth Screens
+- [ ] Login screen (email + password)
+- [ ] Forgot Password screen (send reset email)
+- [ ] Auth flow redirect (logged in → tabs, logged out → login)
+
+### Phase 2: Dashboard (Attendance)
+- [ ] Weekly attendance grid (Mon-Fri)
+- [ ] Toggle office/remote per day
+- [ ] Week navigation (current + next week)
+- [ ] Lock indicators for past/deadline dates
+- [ ] Late request modal for locked dates
+- [ ] Parking section for external users
+
+### Phase 3: Rooms
+- [ ] Date picker (next 14 weekdays)
+- [ ] Room type filter (meeting/calling)
+- [ ] Time slot grid per room
+- [ ] Booking confirmation modal
+- [ ] Cancel booking flow
+
+### Phase 4: My Bookings & Requests
+- [ ] Aggregated booking list (attendance + parking + rooms)
+- [ ] Cancel actions with deadline enforcement
+- [ ] Late cancellation request flow
+- [ ] My Requests list (pending/approved/denied)
+
+### Phase 5: Profile & Polish
+- [ ] Profile screen (name, email, role display)
+- [ ] Pull-to-refresh on all screens
+- [ ] Loading skeletons
+- [ ] Error handling / retry states
+- [ ] Haptic feedback on actions
+
+### Phase 6: Internal Distribution
+- [ ] Create Expo account
+- [ ] Configure EAS Build
+- [ ] Build preview profiles (iOS + Android)
+- [ ] Share install links with team
+- [ ] Set up OTA updates via EAS Update
+
+### Phase 7: Optional Enhancements
+- [ ] Push notifications (Expo Notifications)
+- [ ] Location-based auto check-in (`expo-location`)
+- [ ] Biometric login (Face ID / fingerprint)
+- [ ] Offline support with local cache
 
 ---
 
 ## Development Tips
 
-- Use **Expo Go** on a real device for fast iteration — scan QR from `npx expo start`
-- Use iOS Simulator (Mac only) or Android Studio emulator for full testing
-- For local API dev: use your machine's LAN IP (`http://192.168.x.x:3000`)
-- Android emulator alias for localhost: `http://10.0.2.2:3000`
+- Use **Expo Go** on a real device for fastest iteration — scan QR from `npx expo start`
+- Use iOS Simulator (Mac only) or Android Studio emulator for testing
+- For local API dev: run `npm run dev:web` and point `EXPO_PUBLIC_API_URL` to LAN IP
+- Android emulator localhost alias: `http://10.0.2.2:3000`
+- Use `console.log` + Expo dev tools for debugging (React Native Debugger for advanced)
 
 ---
 
-## Next Steps (ordered)
+## What Can Be Shared (`packages/shared/`)
 
-1. [ ] Set up Expo project under `packages/mobile`
-2. [ ] Configure Firebase client (`google-services.json` for Android, `GoogleService-Info.plist` for iOS)
-3. [ ] Build Auth screens (Login, Forgot Password)
-4. [ ] Build Dashboard screen (weekly attendance grid)
-5. [ ] Build Rooms screen (date picker + slot grid)
-6. [ ] Build My Bookings screen (list with cancel actions)
-7. [ ] Build My Requests screen
-8. [ ] Test internally via Expo Go with the team
-9. [ ] Set up EAS Build `preview` profile for standalone internal distribution
-10. [ ] (Optional) Add location-based auto check-in with `expo-location`
-11. [ ] (Optional) Add push notifications via Expo Notifications
+Move these from `packages/web/` into `packages/shared/` as mobile development begins:
 
----
+- `weekHelpersV3.js` — week calculation logic (Mon-Fri dates, deadlines)
+- `constants.js` — roles, collection names, allowed domain
+- TypeScript types for API responses (create as needed)
 
-## Design System
-
-Match the web app:
-- Primary navy: `#112A46`
-- Accent teal: `#00A3E0`
-- Interactive blue: `#1183d4`
-- Font: Inter (via `expo-font` or `@expo-google-fonts/inter`)
-- Icons: `@expo/vector-icons` (MaterialIcons or MaterialCommunityIcons as substitute for Material Symbols)
+This avoids duplicating business logic between web and mobile.

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Admin Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "nh-deep": "#081b18",
+                        "nh-surface": "#0c2521",
+                        "nh-accent": "#14332e",
+                        "background-dark": "#081b18",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: 100dvh;
+        }
+        .chart-glow {
+            filter: drop-shadow(0 0 8px rgba(11, 218, 184, 0.3));
+        }
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(12, 37, 33, 0.9), rgba(8, 27, 24, 0.95));
+            border: 1px solid rgba(11, 218, 184, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-nh-deep font-display text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center justify-between bg-nh-deep/80 backdrop-blur-lg px-6 py-5 border-b border-primary/10">
+<div class="flex items-center gap-3">
+<div class="bg-primary/20 p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1">grid_view</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-white">Admin Analytics</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<main class="flex flex-col gap-6 p-6">
+<!-- KPI Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-3 rounded-2xl p-5 glass-panel shadow-lg">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Total Attendance</p>
+<div class="flex items-end justify-between">
+<p class="text-3xl font-bold text-white">1,284</p>
+<span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full border border-primary/20">+12%</span>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-2xl p-5 glass-panel shadow-lg">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Parking Usage</p>
+<div class="flex items-end justify-between">
+<p class="text-3xl font-bold text-white">82%</p>
+<span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full border border-primary/20">+5%</span>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-2xl p-5 glass-panel shadow-lg col-span-2">
+<div class="flex items-center justify-between">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Late Cancellations</p>
+<span class="text-[10px] font-bold text-rose-400 bg-rose-400/10 px-2 py-1 rounded-full border border-rose-400/20">-8%</span>
+</div>
+<div class="flex items-baseline gap-2">
+<p class="text-3xl font-bold text-white">14</p>
+<p class="text-xs text-slate-500">this week</p>
+</div>
+</div>
+</div>
+<!-- Attendance Chart -->
+<section class="rounded-2xl glass-panel p-6 shadow-xl">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="text-lg font-bold text-white">Weekly Attendance</h2>
+<p class="text-xs text-primary/50 font-medium">Oct 23 - Oct 29, 2023</p>
+</div>
+<div class="flex bg-nh-accent p-1 rounded-xl">
+<button class="text-[10px] font-bold px-4 py-2 rounded-lg bg-primary text-nh-deep shadow-lg">Day</button>
+<button class="text-[10px] font-bold px-4 py-2 rounded-lg text-primary/60">Week</button>
+</div>
+</div>
+<div class="relative h-44 w-full">
+<svg class="w-full h-full chart-glow" preserveaspectratio="none" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0bdab8" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#0bdab8" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area -->
+<path d="M0,130 C40,120 60,30 100,60 C140,90 180,20 220,40 C260,60 300,140 340,100 C380,60 400,80 400,80 L400,150 L0,150 Z" fill="url(#chartGradient)"></path>
+<!-- Line -->
+<path d="M0,130 C40,120 60,30 100,60 C140,90 180,20 220,40 C260,60 300,140 340,100 C380,60 400,80 400,80" fill="none" stroke="#0bdab8" stroke-linecap="round" stroke-width="3"></path>
+<!-- Tooltip Point -->
+<circle cx="220" cy="40" fill="#0bdab8" r="5" stroke="#0c2521" stroke-width="2"></circle>
+</svg>
+<!-- Tooltip UI -->
+<div class="absolute top-2 left-[200px] bg-primary px-2 py-1 rounded text-[10px] font-bold text-nh-deep shadow-lg">
+                        Thu: 184
+                    </div>
+</div>
+<div class="flex justify-between mt-6 px-1">
+<span class="text-[10px] text-slate-500 font-bold">MON</span>
+<span class="text-[10px] text-slate-500 font-bold">TUE</span>
+<span class="text-[10px] text-slate-500 font-bold">WED</span>
+<span class="text-[10px] text-primary font-black border-b-2 border-primary pb-1">THU</span>
+<span class="text-[10px] text-slate-500 font-bold">FRI</span>
+<span class="text-[10px] text-slate-500 font-bold">SAT</span>
+<span class="text-[10px] text-slate-500 font-bold">SUN</span>
+</div>
+</section>
+<!-- User Distribution -->
+<section class="rounded-2xl glass-panel p-6 shadow-xl">
+<h2 class="text-lg font-bold text-white mb-6">User Distribution</h2>
+<div class="flex items-center gap-8">
+<div class="relative size-32">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<circle class="stroke-nh-accent" cx="18" cy="18" fill="none" r="15.915" stroke-width="4"></circle>
+<circle class="stroke-primary chart-glow" cx="18" cy="18" fill="none" r="15.915" stroke-dasharray="65 100" stroke-linecap="round" stroke-width="4"></circle>
+<circle class="stroke-primary/40" cx="18" cy="18" fill="none" r="15.915" stroke-dasharray="25 100" stroke-dashoffset="-65" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-white">1.2k</span>
+<span class="text-[8px] text-primary font-bold uppercase tracking-widest">Total</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(11,218,184,0.4)]"></div>
+<span class="text-xs text-slate-400 font-medium">Consultants</span>
+</div>
+<span class="text-xs font-bold text-white">65%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-2.5 rounded-full bg-primary/40"></div>
+<span class="text-xs text-slate-400 font-medium">Internal</span>
+</div>
+<span class="text-xs font-bold text-white">25%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-2.5 rounded-full bg-nh-accent"></div>
+<span class="text-xs text-slate-400 font-medium">Others</span>
+</div>
+<span class="text-xs font-bold text-white">10%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Requests -->
+<section class="rounded-2xl glass-panel p-6 shadow-xl">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-bold text-white">Recent Requests</h2>
+<button class="text-xs text-primary font-bold px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20">View All</button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Request Item -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-xl bg-nh-accent border border-primary/20 flex items-center justify-center text-primary font-bold text-sm shadow-inner">JD</div>
+<div>
+<p class="text-sm font-bold text-white">Jane Doe</p>
+<p class="text-[10px] text-primary/50 font-medium">Parking Spot #42</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 uppercase tracking-tighter">Pending</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-primary"><span class="material-symbols-outlined text-sm">check_circle</span></button>
+<button class="p-1 text-rose-400"><span class="material-symbols-outlined text-sm">cancel</span></button>
+</div>
+</div>
+</div>
+<div class="h-px bg-primary/5 w-full"></div>
+<!-- Request Item -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-xl bg-nh-accent border border-primary/20 flex items-center justify-center text-primary font-bold text-sm shadow-inner">MK</div>
+<div>
+<p class="text-sm font-bold text-white">Mike King</p>
+<p class="text-[10px] text-primary/50 font-medium">Conference Room B</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-tighter">Approved</span>
+</div>
+</div>
+<div class="h-px bg-primary/5 w-full"></div>
+<!-- Request Item -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-xl bg-nh-accent border border-primary/20 flex items-center justify-center text-primary font-bold text-sm shadow-inner">SL</div>
+<div>
+<p class="text-sm font-bold text-white">Sarah Lee</p>
+<p class="text-[10px] text-primary/50 font-medium">Desk Wing A-04</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[9px] font-bold text-rose-400 bg-rose-400/10 px-2 py-0.5 rounded-full border border-rose-400/20 uppercase tracking-tighter">Late</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 z-20 border-t border-primary/10 bg-nh-deep/90 backdrop-blur-xl px-6 pb-8 pt-4 shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
+<div class="mx-auto flex max-w-md items-center justify-between">
+<a class="flex flex-1 flex-col items-center gap-1.5 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-[10px] font-bold uppercase tracking-wider">Dashboard</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1.5 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-[10px] font-bold uppercase tracking-wider">Users</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1.5 text-primary relative" href="#">
+<div class="absolute -top-1 size-1 rounded-full bg-primary shadow-[0_0_8px_#0bdab8]"></div>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">monitoring</span>
+<p class="text-[10px] font-black uppercase tracking-wider">Analytics</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1.5 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-[10px] font-bold uppercase tracking-wider">Settings</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

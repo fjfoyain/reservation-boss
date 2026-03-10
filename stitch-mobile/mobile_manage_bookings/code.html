@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manage My Bookings - North Highland</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto bg-white dark:bg-slate-900 shadow-2xl">
+<!-- Header -->
+<header class="flex items-center px-4 py-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-10">
+<button class="text-slate-900 dark:text-slate-100 p-1">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold text-slate-900 dark:text-slate-100 pr-8">Manage My Bookings</h1>
+</header>
+<!-- Tabs -->
+<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="flex">
+<a class="flex-1 text-center py-3 border-b-2 border-primary text-primary font-bold text-sm" href="#">
+                    Active
+                </a>
+<a class="flex-1 text-center py-3 border-b-2 border-transparent text-slate-500 dark:text-slate-400 font-medium text-sm" href="#">
+                    Past
+                </a>
+</div>
+</div>
+<!-- Content Area -->
+<main class="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+<!-- Reservation Section: Attendance & Desk -->
+<section class="space-y-3">
+<div class="flex items-center justify-between">
+<h2 class="text-slate-900 dark:text-slate-100 font-bold text-base">Office Attendance</h2>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Oct 24, 2023</span>
+</div>
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">business</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">In-Office Reservation</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Desk - Floor 4, North Wing</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wider rounded">Confirmed</span>
+</div>
+<div class="flex gap-2 mt-4">
+<button class="flex-1 py-2 bg-primary text-white text-xs font-bold rounded-lg">Edit</button>
+<button class="flex-1 py-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-lg">Cancel</button>
+</div>
+</div>
+</section>
+<!-- Reservation Section: Meeting Rooms -->
+<section class="space-y-3">
+<h2 class="text-slate-900 dark:text-slate-100 font-bold text-base">Meeting Rooms</h2>
+<!-- Meeting Room 1 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">meeting_room</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">Executive Boardroom</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">10:00 AM - 11:30 AM (90 min)</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wider rounded">Confirmed</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 bg-primary text-white text-xs font-bold rounded-lg">Edit</button>
+<button class="flex-1 py-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-lg">Cancel</button>
+</div>
+</div>
+<!-- Meeting Room 2 (Late Cancellation Scenario) -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">call</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">Focus Pod - 02</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">08:30 AM - 09:30 AM</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-[10px] font-bold uppercase tracking-wider rounded">Pending Approval</span>
+</div>
+<div class="mt-2 mb-3 px-3 py-2 bg-slate-50 dark:bg-slate-900 rounded text-[11px] text-slate-600 dark:text-slate-400 italic">
+                        Past 8:00 AM cutoff. Approval required for cancellation.
+                    </div>
+<button class="w-full py-2 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs font-bold rounded-lg">Request Late Cancellation</button>
+</div>
+</section>
+<!-- Reservation Section: Parking -->
+<section class="space-y-3 pb-8">
+<h2 class="text-slate-900 dark:text-slate-100 font-bold text-base">Parking</h2>
+<!-- Internal User Parking (Non-cancellable) -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">local_parking</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">Permanent Spot - P2-14</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Internal User Assigned Slot</p>
+</div>
+</div>
+<div class="h-8 w-8 flex items-center justify-center text-slate-300">
+<span class="material-symbols-outlined">lock</span>
+</div>
+</div>
+</div>
+<!-- Guest/Standard Parking -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm opacity-60">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-slate-100 dark:bg-slate-900 rounded-lg text-slate-400">
+<span class="material-symbols-outlined">local_parking</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-400 line-through">Reserved Spot - P1-05</p>
+<p class="text-xs text-slate-400">Client Guest Parking</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-slate-100 dark:bg-slate-900 text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded">Cancelled</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="flex items-center justify-around bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 pb-6 pt-2">
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined active-icon">calendar_month</span>
+<span class="text-[10px] font-bold">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">meeting_room</span>
+<span class="text-[10px] font-medium">Rooms</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

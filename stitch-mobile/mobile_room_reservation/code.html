@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Room Reservation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#005f73", /* Professional Teal */
+                        "secondary": "#0a2342", /* Professional Navy */
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab {
+            box-shadow: 0 0 4px rgba(0,0,0,0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden max-w-md mx-auto bg-white dark:bg-background-dark shadow-xl">
+<!-- Header -->
+<header class="flex items-center bg-white dark:bg-background-dark p-4 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+<button class="text-secondary dark:text-slate-100 flex size-10 items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-secondary dark:text-slate-100 text-lg font-bold flex-1 text-center pr-10">Room Reservation</h1>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Room Type Toggle -->
+<div class="px-4 py-4">
+<div class="flex h-11 items-center rounded-xl bg-slate-100 dark:bg-slate-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center rounded-lg px-2 bg-white dark:bg-slate-700 shadow-sm text-primary font-semibold text-sm">
+<span class="truncate">Meeting Rooms</span>
+<input checked="" class="hidden" name="roomType" type="radio" value="meeting"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center rounded-lg px-2 text-slate-500 dark:text-slate-400 font-medium text-sm">
+<span class="truncate">Calling Rooms</span>
+<input class="hidden" name="roomType" type="radio" value="calling"/>
+</label>
+</div>
+</div>
+<!-- Date Picker Section -->
+<section>
+<div class="flex items-center px-4 py-2 justify-between">
+<h2 class="text-secondary dark:text-slate-100 text-base font-bold">Select Date</h2>
+<div class="flex gap-2">
+<button class="size-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="px-4 pb-4">
+<p class="text-sm font-semibold text-primary mb-3">October 2023</p>
+<div class="grid grid-cols-7 gap-1 text-center">
+<span class="text-[11px] font-bold text-slate-400">S</span>
+<span class="text-[11px] font-bold text-slate-400">M</span>
+<span class="text-[11px] font-bold text-slate-400">T</span>
+<span class="text-[11px] font-bold text-slate-400">W</span>
+<span class="text-[11px] font-bold text-slate-400">T</span>
+<span class="text-[11px] font-bold text-slate-400">F</span>
+<span class="text-[11px] font-bold text-slate-400">S</span>
+<div class="h-10 flex items-center justify-center col-start-2 text-sm text-slate-400">1</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-400">2</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-400">3</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-400">4</div>
+<button class="h-10 flex items-center justify-center rounded-full bg-primary text-white text-sm font-bold shadow-md">5</button>
+<div class="h-10 flex items-center justify-center text-sm text-slate-800 dark:text-slate-200">6</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-800 dark:text-slate-200">7</div>
+</div>
+</div>
+</section>
+<!-- Time Slots -->
+<section class="px-4 py-2">
+<h2 class="text-secondary dark:text-slate-100 text-base font-bold mb-3">Available Times</h2>
+<div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+<button class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium whitespace-nowrap">09:00 AM</button>
+<button class="px-4 py-2 rounded-lg border border-primary bg-primary/10 text-primary text-sm font-bold whitespace-nowrap">10:00 AM</button>
+<button class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium whitespace-nowrap">11:00 AM</button>
+<button class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium whitespace-nowrap">12:00 PM</button>
+</div>
+</section>
+<!-- Room Cards -->
+<section class="px-4 py-4 space-y-4">
+<h2 class="text-secondary dark:text-slate-100 text-base font-bold">Available Rooms</h2>
+<!-- Room Card 1 -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-800/50 shadow-sm">
+<div class="h-32 bg-slate-200 relative">
+<img class="w-full h-full object-cover" data-alt="Modern corporate meeting room with glass walls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtTNn-ROVyvULqXGOr9BOOx48JptSbyvkf0ZPNd7VImJpUQ9cQNW-BIdLi6I2CTOE1LILP3GwTpJ3gnjqRKxaFLbIu5zFxs8_082ssZDt00Qz52fkdtJBQN-ttDSSfcGAVoVzfk1fBXJX_bdBzQq7_dJZsjZYJwZ9ec4FUnUd-i-9YU59dJKz6UnpIw0Shv5XjQZzR1-NC35JqNbKWFbmRdNLp66rduPjiSmsjtr7f9LiQPtIredoB0W8CQT2zzKQMh93Wx_r64k0"/>
+<span class="absolute top-2 right-2 px-2 py-1 bg-green-500 text-white text-[10px] font-bold rounded uppercase">Available</span>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-secondary dark:text-white">The Summit</h3>
+<p class="text-xs text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">groups</span> Capacity: 8-10 people
+                                </p>
+</div>
+<span class="text-primary font-bold text-lg">$45<span class="text-[10px] font-normal text-slate-400">/hr</span></span>
+</div>
+<div class="flex gap-2 my-3">
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 text-[10px] text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-[14px]">tv</span> Smart TV
+                            </div>
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 text-[10px] text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-[14px]">edit_note</span> Whiteboard
+                            </div>
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 text-[10px] text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-[14px]">wifi</span> Fiber WiFi
+                            </div>
+</div>
+<button class="w-full bg-primary text-white py-2.5 rounded-lg font-bold text-sm hover:bg-primary/90 transition-colors">Reserve Room</button>
+</div>
+</div>
+<!-- Room Card 2 -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-800/50 shadow-sm">
+<div class="h-32 bg-slate-200 relative">
+<img class="w-full h-full object-cover" data-alt="Small collaborative workspace with circular table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD86DAIioDbdlUy5YgiftQfJZ4GhvfxARj-D-qCwxJtjtV-fHbVDCAzOhw4iYL5xgWaHAfQ_azeLFwGRkBP5uDoirZx_5M9OPmWl53lTrDqvMiGLrkaRqAhsZoyobFsl0symOa2G0WNgCcfGRu-tvO13Ib2oBr8H2tg4bOzAc4zHS38J8x8kgFloMqJQ_3phdvs53xOOCOCQmVYSIqWOcr27UkNYrhmiadqjbkHJwRlbXSTvoaFKAD8Y19p9ZoKLCD4SBDvHt-6AAE"/>
+<span class="absolute top-2 right-2 px-2 py-1 bg-green-500 text-white text-[10px] font-bold rounded uppercase">Available</span>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-secondary dark:text-white">Collaborate Lab</h3>
+<p class="text-xs text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">groups</span> Capacity: 4 people
+                                </p>
+</div>
+<span class="text-primary font-bold text-lg">$30<span class="text-[10px] font-normal text-slate-400">/hr</span></span>
+</div>
+<div class="flex gap-2 my-3">
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 text-[10px] text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-[14px]">edit_note</span> Whiteboard
+                            </div>
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 text-[10px] text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-[14px]">wifi</span> Fiber WiFi
+                            </div>
+</div>
+<button class="w-full bg-primary text-white py-2.5 rounded-lg font-bold text-sm hover:bg-primary/90 transition-colors">Reserve Room</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 px-4 pb-6 pt-2">
+<div class="flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-[10px] font-medium">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">meeting_room</span>
+<span class="text-[10px] font-bold">Rooms</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

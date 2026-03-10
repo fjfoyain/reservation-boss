@@ -14,6 +14,7 @@
     "build:web": "npm run build --workspace=packages/web",
     "start": "npm run start --workspace=packages/web",
     "start:web": "npm run start --workspace=packages/web",
+    "dev:mobile": "npm run start --workspace=apps/mobile",
     "test": "npm run test --workspaces --if-present",
     "clean": "rm -rf node_modules packages/*/node_modules apps/*/node_modules",
     "install:all": "npm install"

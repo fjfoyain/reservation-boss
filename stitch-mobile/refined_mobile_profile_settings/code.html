@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#009E9F", // Corporate teal
+                        "nh-dark": "#0A1F24", // North Highland deep teal/dark
+                        "nh-slate": "#1E2F33",
+                        "accent": "#00C9CB"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>North Highland - Profile</title>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+            background-color: #0A1F24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 0px;
+        }
+    </style>
+</head>
+<body class="font-display text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-nh-dark shadow-2xl overflow-x-hidden">
+<!-- Header -->
+<div class="sticky top-0 z-30 flex items-center bg-nh-dark/90 backdrop-blur-lg px-4 py-6 border-b border-white/5 justify-between">
+<div class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Profile</h2>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto pb-32 custom-scrollbar">
+<!-- User Profile Section -->
+<div class="flex p-8 flex-col items-center">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-28 w-28 ring-4 ring-primary/30 shadow-2xl" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDS31Ntq0u9Lkt8KegECPODzVlGy1OGFlppqmbTnWmDHeSMGxiqBfvioBGbByqGhsN4RY6fLSo5N0ql6evDgln9-WUkpWPB30_dkqQnXvOII2IR3P47dM6kwrKRJCmjmViYPr3rdkWmnXMp9xqULd3b4nxmgmL1FgWjAZycLvGQvCVQCB5Z2671u2BkwPJ4D5-1D2fWE0itLS7TX1iLmko66R6s08xP7ceOel-XNh6BDEcXYzc-lbZ_ot4mhHPDBAqc_CkW1As4uV4");'>
+</div>
+<div class="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full border-2 border-nh-dark shadow-lg">
+<span class="material-symbols-outlined text-sm block">photo_camera</span>
+</div>
+</div>
+<div class="mt-5 flex flex-col items-center text-center">
+<p class="text-2xl font-bold tracking-tight">Alex Morgan</p>
+<p class="text-primary text-sm font-medium mt-1">Senior Consultant</p>
+<p class="text-slate-400 text-xs mt-0.5">alex.morgan@northhighland.com</p>
+</div>
+<!-- Badge -->
+<div class="mt-4 px-4 py-1.5 bg-primary/20 border border-primary/30 rounded-full">
+<span class="text-[10px] font-bold uppercase tracking-widest text-accent">Internal Parking User</span>
+</div>
+</div>
+<!-- Permanent Spot Info -->
+<div class="mx-5 mb-8 bg-nh-slate/50 rounded-2xl p-5 border border-white/5 shadow-inner">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Assigned Permanent Spot</h3>
+<span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-md font-bold">ACTIVE</span>
+</div>
+<div class="flex items-center gap-5">
+<div class="flex items-center justify-center rounded-xl bg-primary text-white size-14 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-3xl">directions_car</span>
+</div>
+<div class="flex flex-col">
+<p class="text-2xl font-bold text-white tracking-tight">Spot #402</p>
+<p class="text-xs text-slate-400">P2 Parking Garage • Level 4</p>
+</div>
+</div>
+</div>
+<!-- Settings Categories -->
+<div class="px-6 space-y-9">
+<!-- Account Section -->
+<section>
+<h3 class="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-3 ml-1">Security &amp; Account</h3>
+<div class="bg-nh-slate/30 rounded-2xl overflow-hidden border border-white/5">
+<div class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 active:bg-white/10 transition-colors border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="size-9 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-xl">lock_open</span>
+</div>
+<span class="text-sm font-medium">Change Password</span>
+</div>
+<span class="material-symbols-outlined text-slate-600">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 active:bg-white/10 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-9 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-xl">badge</span>
+</div>
+<span class="text-sm font-medium">Personal Information</span>
+</div>
+<span class="material-symbols-outlined text-slate-600">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section>
+<h3 class="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-3 ml-1">Notifications</h3>
+<div class="bg-nh-slate/30 rounded-2xl overflow-hidden border border-white/5">
+<div class="flex items-center justify-between p-4 border-b border-white/5">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Booking Reminders</span>
+<span class="text-[11px] text-slate-500 mt-0.5">Alerts 1 hour before reservations</span>
+</div>
+<div class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-primary transition-colors duration-200 focus:outline-none">
+<span class="translate-x-5 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Status Updates</span>
+<span class="text-[11px] text-slate-500 mt-0.5">Approvals and changes</span>
+</div>
+<div class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-primary transition-colors duration-200 focus:outline-none">
+<span class="translate-x-5 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+</div>
+</div>
+</div>
+</section>
+<!-- Support Section -->
+<section>
+<h3 class="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-3 ml-1">Help &amp; Support</h3>
+<div class="bg-nh-slate/30 rounded-2xl overflow-hidden border border-white/5">
+<div class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="size-9 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-xl">help_center</span>
+</div>
+<span class="text-sm font-medium">Help Center</span>
+</div>
+<span class="material-symbols-outlined text-slate-600">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="size-9 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-xl">support_agent</span>
+</div>
+<span class="text-sm font-medium">Contact IT Support</span>
+</div>
+<span class="material-symbols-outlined text-slate-600">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5">
+<div class="flex items-center gap-4">
+<div class="size-9 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-xl">policy</span>
+</div>
+<span class="text-sm font-medium">Privacy Policy</span>
+</div>
+<span class="material-symbols-outlined text-slate-600">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Log Out -->
+<div class="pt-4 pb-12">
+<button class="w-full py-4 rounded-2xl bg-red-500/10 text-red-500 font-bold text-sm border border-red-500/20 flex items-center justify-center gap-3 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">logout</span>
+                        Log Out
+                    </button>
+<p class="text-center text-[10px] text-slate-600 mt-8 tracking-widest font-medium uppercase">Version 2.4.1 (NH-PRD)</p>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 border-t border-white/5 bg-nh-dark/95 backdrop-blur-xl px-4 pb-8 pt-3">
+<div class="flex items-center justify-around">
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-[10px] font-medium">Dashboard</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<p class="text-[10px] font-medium">Bookings</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">meeting_room</span>
+<p class="text-[10px] font-medium">Rooms</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">person</span>
+<p class="text-[10px] font-bold">Profile</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

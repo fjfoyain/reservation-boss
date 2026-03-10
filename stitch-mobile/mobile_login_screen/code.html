@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mobile Login Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#0bdab8",
+          "background-light": "#f5f8f8",
+          "background-dark": "#10221f",
+        },
+        fontFamily: {
+          "display": ["Inter", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 flex justify-center min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden max-w-[480px] shadow-2xl shadow-black/50">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5 px-4 sm:px-6">
+<div class="layout-content-container flex flex-col w-full flex-1">
+<header class="flex items-center justify-center whitespace-nowrap border-b border-solid border-primary/20 pb-4 pt-2">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight text-slate-900 dark:text-slate-100">North Highland</h2>
+</div>
+</header>
+<div class="flex flex-col flex-1 justify-center py-8">
+<div class="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-4xl text-primary">login</span>
+</div>
+<h1 class="text-slate-900 dark:text-slate-100 tracking-tight text-3xl font-bold leading-tight px-4 text-center pb-2">Welcome Back</h1>
+<p class="text-slate-600 dark:text-slate-400 text-sm font-normal leading-normal pb-8 px-4 text-center">Sign in to access attendance and parking reservation.</p>
+<form class="flex flex-col gap-5 px-4">
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-medium" for="email">Email</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-xl">mail</span>
+</div>
+<input class="form-input flex w-full min-w-0 resize-none overflow-hidden rounded-lg focus:outline-0 focus:ring-2 focus:ring-primary border border-slate-300 dark:border-primary/30 bg-white dark:bg-background-dark text-slate-900 dark:text-slate-100 h-12 pl-10 placeholder:text-slate-400 dark:placeholder:text-slate-500 text-base font-normal leading-normal transition-colors" id="email" placeholder="@northhighland.com" type="email" value=""/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-medium" for="password">Password</label>
+<a class="text-primary text-sm font-medium hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-xl">lock</span>
+</div>
+<input class="form-input flex w-full min-w-0 resize-none overflow-hidden rounded-lg focus:outline-0 focus:ring-2 focus:ring-primary border border-slate-300 dark:border-primary/30 bg-white dark:bg-background-dark text-slate-900 dark:text-slate-100 h-12 pl-10 pr-10 placeholder:text-slate-400 dark:placeholder:text-slate-500 text-base font-normal leading-normal transition-colors" id="password" placeholder="••••••••" type="password" value=""/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" type="button">
+<span class="material-symbols-outlined text-xl">visibility_off</span>
+</button>
+</div>
+</div>
+<button class="mt-4 flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20" type="button">
+<span class="truncate">Sign In</span>
+</button>
+<div class="relative flex items-center py-4">
+<div class="flex-grow border-t border-slate-200 dark:border-primary/20"></div>
+<span class="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-sm">or</span>
+<div class="flex-grow border-t border-slate-200 dark:border-primary/20"></div>
+</div>
+<button class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-slate-300 dark:border-primary/30 text-slate-700 dark:text-slate-300 text-base font-medium leading-normal tracking-[0.015em] hover:bg-slate-50 dark:hover:bg-primary/10 transition-colors gap-2" type="button">
+<span class="material-symbols-outlined text-xl">fingerprint</span>
+<span class="truncate">Sign in with Biometrics</span>
+</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Admin - Pending Approvals</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#008080", // Teal accent for North Highland theme
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                        "border-dark": "#2d2d2d"
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto border-x border-slate-200 dark:border-border-dark">
+<!-- Header -->
+<header class="flex items-center bg-white dark:bg-background-dark p-4 border-b border-slate-200 dark:border-border-dark justify-between sticky top-0 z-10">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-card-dark transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">menu</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center">Pending Approvals</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex size-10 items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-card-dark transition-colors">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">notifications</span>
+</button>
+</div>
+</header>
+<!-- Filters -->
+<div class="bg-white dark:bg-background-dark border-b border-slate-200 dark:border-border-dark">
+<div class="flex px-4 justify-between">
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-3 pt-4 flex-1" href="#">
+<p class="text-sm font-bold tracking-wide">Pending</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-4 flex-1 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold tracking-wide">Approved</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-4 flex-1 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold tracking-wide">Denied</p>
+</a>
+</div>
+</div>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto p-4 space-y-4 pb-24">
+<!-- Request Card 1 -->
+<div class="flex flex-col rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark overflow-hidden shadow-sm">
+<div class="p-4 space-y-3">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">
+<img class="w-full h-full object-cover" data-alt="Headshot of John Doe employee" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcjl9QInRrheNu1DKWg66vhUScA3vZCxhloKkt56CyIv2PRLp299xEoZmnaKeFvbkNJq5T038-kikzR3aokuVR17MgdP3visWdtSx_aaE6Qcc9M0FCyureXHcMbNP1XoPVRiT29118AA4J3PeFzSeXj7JiC1eMr9iD1GcBPL9rf5BW4KJwxljXLcHpSyYWaFgheXVqj1iCuMpM9MVhh9_06FuuqQqkOrm4B94Na6PP85WzpY-I2s-WvuFJKsKchUuVNElMrLeXGIY"/>
+</div>
+<div class="flex-1">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">John Doe</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">External Parking User</p>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-primary text-xs font-bold uppercase tracking-widest">Type of Request</p>
+<p class="text-slate-800 dark:text-slate-200 text-base font-semibold">Attendance + Parking Cancellation</p>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-100 dark:border-slate-700/50">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Reason</p>
+<p class="text-slate-700 dark:text-slate-300 text-sm italic leading-relaxed">
+                            "Family emergency required immediate travel, making it impossible to attend the scheduled shift for the upcoming project milestone."
+                        </p>
+</div>
+<div class="flex gap-3 pt-2">
+<button class="flex-1 h-11 bg-primary hover:bg-primary/90 text-white rounded-lg font-bold text-sm transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                            Approve
+                        </button>
+<button class="flex-1 h-11 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-bold text-sm transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">cancel</span>
+                            Deny
+                        </button>
+</div>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="flex flex-col rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark overflow-hidden shadow-sm">
+<div class="p-4 space-y-3">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">
+<img class="w-full h-full object-cover" data-alt="Headshot of Sarah Miller employee" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrMwwZJ9Ew5Y7MrqQQblQph9dGj5IaTNEkGpSqhObfysemHhhoLrlF1GTfcA6s82dEEfdXj26pu3Vg3kqK76qPCJkvb1lQG90DuWAJAx6ZX5n7vfKN0ZFjw6secbuuDjvbsTagN0wN7CER980l8YBnFBcl1AUZ0XzPfRUGR40ms8CZOqRNj8xk_1NZ8gcTXY0dgKULNXzzSpjNCIqZaYyW3a6tCow0fWOOWw1y40BiQDZmKfVS-MAZ-zsYYz5FmTlxxREqyEw-hoo"/>
+</div>
+<div class="flex-1">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Sarah Miller</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Internal Consultant</p>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-primary text-xs font-bold uppercase tracking-widest">Type of Request</p>
+<p class="text-slate-800 dark:text-slate-200 text-base font-semibold">Late Parking Cancellation</p>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-100 dark:border-slate-700/50">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Reason</p>
+<p class="text-slate-700 dark:text-slate-300 text-sm italic leading-relaxed">
+                            "Vehicle breakdown on the I-85 this morning. Had to arrange towing and cannot make it to the office parking deck today."
+                        </p>
+</div>
+<div class="flex gap-3 pt-2">
+<button class="flex-1 h-11 bg-primary hover:bg-primary/90 text-white rounded-lg font-bold text-sm transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                            Approve
+                        </button>
+<button class="flex-1 h-11 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-bold text-sm transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">cancel</span>
+                            Deny
+                        </button>
+</div>
+</div>
+</div>
+<!-- Request Card 3 (Empty State Mockup) -->
+<div class="flex items-center justify-center py-6">
+<p class="text-slate-400 dark:text-slate-500 text-sm">End of pending list</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t border-slate-200 dark:border-border-dark bg-white dark:bg-background-dark px-4 pb-6 pt-2 z-20">
+<div class="flex gap-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">bar_chart</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase tracking-wider">Analytics</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">group</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase tracking-wider">Users</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">local_parking</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase tracking-wider">Parking</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">description</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase tracking-wider">Requests</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

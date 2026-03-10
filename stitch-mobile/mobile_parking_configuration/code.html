@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland | Parking Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#10221f",
+                        "neutral-dark": "#18342f",
+                        "neutral-border": "#224942",
+                        "accent-teal": "#90cbc1"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen flex-col bg-background-light dark:bg-background-dark max-w-md mx-auto overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center bg-background-light dark:bg-background-dark p-4 border-b border-neutral-border justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
+<h1 class="text-slate-900 dark:text-slate-100 text-lg font-bold tracking-tight">Parking Configuration</h1>
+</div>
+<button class="text-primary font-semibold text-sm">Save</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Global Rules Section -->
+<section class="p-4">
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-4">Global Rules</h2>
+<div class="space-y-3">
+<!-- Weekly Limit -->
+<div class="flex items-center justify-between p-4 bg-white dark:bg-neutral-dark rounded-xl border border-neutral-border/30">
+<div class="flex flex-col">
+<p class="text-slate-900 dark:text-slate-100 font-medium">Weekly Reservation Limit</p>
+<p class="text-accent-teal text-xs">Max days per employee</p>
+</div>
+<div class="flex items-center gap-3 bg-neutral-border/20 p-1 rounded-lg">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-border text-white">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-lg font-bold px-2">4</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-background-dark">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<!-- Cutoff Time -->
+<div class="flex items-center justify-between p-4 bg-white dark:bg-neutral-dark rounded-xl border border-neutral-border/30">
+<div class="flex flex-col">
+<p class="text-slate-900 dark:text-slate-100 font-medium">Cancellation Cutoff</p>
+<p class="text-accent-teal text-xs">Same-day deadline</p>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-neutral-border/40 rounded-lg text-slate-100 font-medium">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                            8:00 AM
+                        </button>
+</div>
+</div>
+</section>
+<!-- Parking Spots Management -->
+<section class="p-4">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Manage Spots</h2>
+<span class="text-xs font-medium px-2 py-1 bg-primary/20 text-primary rounded">42 Total</span>
+</div>
+<!-- Tabs -->
+<div class="flex gap-2 mb-4 bg-neutral-border/20 p-1 rounded-xl">
+<button class="flex-1 py-2 text-sm font-medium rounded-lg bg-primary text-background-dark">Internal</button>
+<button class="flex-1 py-2 text-sm font-medium rounded-lg text-accent-teal">External (Contracted)</button>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Spot Item -->
+<div class="flex items-center justify-between p-3 bg-white dark:bg-neutral-dark rounded-xl border border-neutral-border/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">directions_car</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-slate-100 font-medium">Spot A-102</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Executive Floor</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Spot Item -->
+<div class="flex items-center justify-between p-3 bg-white dark:bg-neutral-dark rounded-xl border border-neutral-border/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">directions_car</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-slate-100 font-medium">Spot A-103</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Standard Row</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Spot Item (Disabled) -->
+<div class="flex items-center justify-between p-3 bg-white dark:bg-neutral-dark rounded-xl border border-neutral-border/30 opacity-60">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500">construction</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-slate-100 font-medium text-strike">Spot B-05</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Maintenance</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Blackout Dates -->
+<section class="p-4">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Blackout Dates</h2>
+<button class="flex items-center gap-1 text-primary text-sm font-semibold">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                        Add Date
+                    </button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 p-4 bg-white dark:bg-neutral-dark rounded-xl border-l-4 border-l-primary border border-neutral-border/30">
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 font-medium">Labor Day Weekend</p>
+<p class="text-accent-teal text-xs">Sept 2 - Sept 4, 2024</p>
+</div>
+<button class="text-slate-400">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="flex items-center gap-4 p-4 bg-white dark:bg-neutral-dark rounded-xl border-l-4 border-l-primary border border-neutral-border/30">
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 font-medium">Thanksgiving Break</p>
+<p class="text-accent-teal text-xs">Nov 23 - Nov 25, 2024</p>
+</div>
+<button class="text-slate-400">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-20 max-w-md mx-auto">
+<div class="flex gap-2 border-t border-neutral-border bg-neutral-dark px-4 pb-3 pt-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-accent-teal" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<p class="text-[10px] font-medium leading-none">Dashboard</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-accent-teal" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">group</span>
+</div>
+<p class="text-[10px] font-medium leading-none">Users</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-accent-teal" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">bar_chart</span>
+</div>
+<p class="text-[10px] font-medium leading-none">Analytics</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-white bg-primary/20 rounded-xl py-1" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">settings</span>
+</div>
+<p class="text-[10px] font-medium leading-none">Settings</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

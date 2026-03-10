@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#10221f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Registration - North Highland</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top Bar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 justify-between z-10">
+<div class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Registration</h2>
+</div>
+<!-- Header Content -->
+<div class="z-10 bg-background-light dark:bg-background-dark px-6 pb-6 pt-2">
+<h3 class="text-slate-900 dark:text-slate-100 tracking-tight text-2xl font-bold leading-tight text-center pb-2">Scan QR Code</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm font-normal leading-normal text-center max-w-xs mx-auto">
+                Scan the QR code from your invitation email to begin registration.
+            </p>
+</div>
+<!-- Camera Viewfinder Container -->
+<div class="relative flex-1 flex items-center justify-center overflow-hidden bg-black">
+<!-- Simulated Camera Feed Background -->
+<div class="absolute inset-0 opacity-40 bg-cover bg-center" data-alt="Abstract dark corporate background for camera feed" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCuMDqHJ-tc8-06PPHv2h0E9oePkSQsZV6Qk3JlJCpUg3J8ja3jen2mfBONol7cReCts2hVVM8byjEU1tUJajtSerDkoV3Pw9JiJHt2BcX5VDQfvkoIR3xQxe-uoYWakTU1djIbBnyQyT6tWdi6vSDZ6CyUk4KD3ESDsGECj66V8Seu8zR8mA5nmn594iSGnG-QPON2-91gsbiwY59YkLTadOy_Srlpajt25jCSC6m9MTVx3CS_XoGoWoGQ5jrKXwg8FXZkF0quZBY');"></div>
+<!-- Scanning Overlay -->
+<div class="relative z-20 w-64 h-64 border-2 border-primary/30 rounded-xl overflow-hidden">
+<!-- Corner Accents -->
+<div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
+<!-- Scanning Line -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_15px_rgba(11,218,184,0.8)] opacity-80" style="top: 40%"></div>
+</div>
+<!-- Viewfinder Controls -->
+<div class="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-10 z-20">
+<button class="flex shrink-0 items-center justify-center rounded-full size-12 bg-slate-900/60 text-white backdrop-blur-md border border-slate-700/50 hover:bg-primary/20">
+<span class="material-symbols-outlined">image</span>
+</button>
+<button class="flex shrink-0 items-center justify-center rounded-full size-20 bg-primary text-slate-900 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined !text-4xl">photo_camera</span>
+</button>
+<button class="flex shrink-0 items-center justify-center rounded-full size-12 bg-slate-900/60 text-white backdrop-blur-md border border-slate-700/50 hover:bg-primary/20">
+<span class="material-symbols-outlined">flashlight_on</span>
+</button>
+</div>
+</div>
+<!-- Bottom Action Area -->
+<div class="bg-background-light dark:bg-background-dark p-6 pb-10">
+<button class="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-primary/10 dark:bg-primary/5 border border-primary/20 text-primary text-base font-bold leading-normal tracking-wide transition-all hover:bg-primary/20">
+<span class="material-symbols-outlined mr-2 text-xl">keyboard</span>
+<span class="truncate">Enter Code Manually</span>
+</button>
+<div class="mt-6 flex justify-center">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-500 text-xs font-medium uppercase tracking-widest">
+<span class="size-1.5 rounded-full bg-primary"></span>
+<span>North Highland Secure Access</span>
+</div>
+</div>
+</div>
+</div>
+</body></html>

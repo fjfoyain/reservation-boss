@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Admin Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#10221f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<header class="sticky top-0 z-10 flex items-center justify-between bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 border-b border-slate-200 dark:border-primary/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl">grid_view</span>
+<h1 class="text-lg font-bold tracking-tight">Admin Analytics</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-primary/10 text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<main class="flex flex-col gap-6 p-4">
+<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+<div class="flex flex-col gap-2 rounded-xl p-4 bg-white dark:bg-primary/5 border border-slate-100 dark:border-primary/10 shadow-sm">
+<p class="text-xs font-medium text-slate-500 dark:text-primary/70 uppercase tracking-wider">Total Attendance</p>
+<div class="flex items-baseline justify-between">
+<p class="text-2xl font-bold">1,284</p>
+<span class="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">+12%</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-4 bg-white dark:bg-primary/5 border border-slate-100 dark:border-primary/10 shadow-sm">
+<p class="text-xs font-medium text-slate-500 dark:text-primary/70 uppercase tracking-wider">Parking Usage</p>
+<div class="flex items-baseline justify-between">
+<p class="text-2xl font-bold">82%</p>
+<span class="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">+5%</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-4 bg-white dark:bg-primary/5 border border-slate-100 dark:border-primary/10 shadow-sm col-span-2 sm:col-span-1">
+<p class="text-xs font-medium text-slate-500 dark:text-primary/70 uppercase tracking-wider">Late Cancellations</p>
+<div class="flex items-baseline justify-between">
+<p class="text-2xl font-bold">14</p>
+<span class="text-[10px] font-bold text-rose-500 bg-rose-500/10 px-1.5 py-0.5 rounded-full">-8%</span>
+</div>
+</div>
+</div>
+<section class="rounded-xl bg-white dark:bg-primary/5 border border-slate-100 dark:border-primary/10 p-5 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h2 class="text-base font-bold">Weekly Attendance</h2>
+<p class="text-xs text-slate-500 dark:text-primary/60">Oct 23 - Oct 29</p>
+</div>
+<div class="flex gap-1 bg-slate-100 dark:bg-primary/10 p-1 rounded-lg">
+<button class="text-[10px] font-bold px-2 py-1 rounded-md bg-white dark:bg-primary text-slate-900 dark:text-background-dark shadow-sm">Day</button>
+<button class="text-[10px] font-bold px-2 py-1 rounded-md text-slate-500 dark:text-primary/60">Week</button>
+</div>
+</div>
+<div class="h-40 w-full">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0bdab8" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#0bdab8" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,120 Q50,110 80,40 T160,60 T240,20 T320,80 T400,30 L400,150 L0,150 Z" fill="url(#chartGradient)"></path>
+<path d="M0,120 Q50,110 80,40 T160,60 T240,20 T320,80 T400,30" fill="none" stroke="#0bdab8" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="240" cy="20" fill="#0bdab8" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-4">
+<span class="text-[10px] text-slate-400 font-medium">Mon</span>
+<span class="text-[10px] text-slate-400 font-medium">Tue</span>
+<span class="text-[10px] text-slate-400 font-medium">Wed</span>
+<span class="text-[10px] text-primary font-bold">Thu</span>
+<span class="text-[10px] text-slate-400 font-medium">Fri</span>
+<span class="text-[10px] text-slate-400 font-medium">Sat</span>
+<span class="text-[10px] text-slate-400 font-medium">Sun</span>
+</div>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<section class="rounded-xl bg-white dark:bg-primary/5 border border-slate-100 dark:border-primary/10 p-5 shadow-sm">
+<h2 class="text-base font-bold mb-4">User Distribution</h2>
+<div class="flex items-center justify-between">
+<div class="relative size-28">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<circle class="stroke-slate-100 dark:stroke-primary/10" cx="18" cy="18" fill="none" r="15.915" stroke-width="3.8"></circle>
+<circle class="stroke-primary" cx="18" cy="18" fill="none" r="15.915" stroke-dasharray="65 100" stroke-linecap="round" stroke-width="3.8"></circle>
+<circle class="stroke-primary/30" cx="18" cy="18" fill="none" r="15.915" stroke-dasharray="25 100" stroke-dashoffset="-65" stroke-linecap="round" stroke-width="3.8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-lg font-bold">1.2k</span>
+<span class="text-[8px] text-slate-500 uppercase">Total</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 pr-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-primary"></div>
+<span class="text-xs text-slate-500 dark:text-primary/70">Consultants (65%)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-primary/30"></div>
+<span class="text-xs text-slate-500 dark:text-primary/70">Internal (25%)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-slate-200 dark:bg-primary/10"></div>
+<span class="text-xs text-slate-500 dark:text-primary/70">Others (10%)</span>
+</div>
+</div>
+</div>
+</section>
+<section class="rounded-xl bg-white dark:bg-primary/5 border border-slate-100 dark:border-primary/10 p-5 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-base font-bold">Recent Requests</h2>
+<button class="text-xs text-primary font-semibold">View All</button>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-slate-100 dark:border-primary/10 pb-2">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">JD</div>
+<div>
+<p class="text-sm font-semibold">Jane Doe</p>
+<p class="text-[10px] text-slate-500 dark:text-primary/60">Parking Spot #42</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full">Pending</span>
+</div>
+<div class="flex items-center justify-between border-b border-slate-100 dark:border-primary/10 pb-2">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">MK</div>
+<div>
+<p class="text-sm font-semibold">Mike King</p>
+<p class="text-[10px] text-slate-500 dark:text-primary/60">Conference Room B</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">Approved</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">SL</div>
+<div>
+<p class="text-sm font-semibold">Sarah Lee</p>
+<p class="text-[10px] text-slate-500 dark:text-primary/60">Desk Wing A-04</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded-full">Late</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-200 dark:border-primary/10 bg-white/90 dark:bg-background-dark/90 backdrop-blur-xl px-4 pb-6 pt-2">
+<div class="mx-auto flex max-w-md items-center justify-between">
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 dark:text-primary/40" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-[10px] font-medium leading-none">Dashboard</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 dark:text-primary/40" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-[10px] font-medium leading-none">Users</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">monitoring</span>
+<p class="text-[10px] font-bold leading-none">Analytics</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 dark:text-primary/40" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-[10px] font-medium leading-none">Settings</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

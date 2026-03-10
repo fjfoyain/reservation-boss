@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Admin Console</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8", // North Highland Teal
+                        "background-dark": "#0a1a17",
+                        "surface-dark": "#162a26",
+                        "nh-slate": "#1e2f33",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #0a1a17; min-height: 100dvh; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-100 antialiased">
+<div class="relative flex min-h-screen flex-col max-w-md mx-auto overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center bg-background-dark/90 backdrop-blur-md px-4 py-5 border-b border-white/5 sticky top-0 z-30 justify-between">
+<div class="flex items-center gap-2">
+<button class="text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-lg font-extrabold tracking-tight">Admin Console</h2>
+</div>
+<button class="bg-primary/10 text-primary p-2 rounded-xl hover:bg-primary/20 transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xl font-bold">person_add</span>
+<span class="text-xs font-bold uppercase tracking-wider pr-1">Invite</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col pb-32">
+<!-- Search & Filter Section -->
+<div class="px-4 pt-6 space-y-4">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-primary/60 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="block w-full h-13 pl-11 pr-4 py-3 bg-surface-dark border border-white/10 rounded-2xl text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-sm font-medium" placeholder="Search by name, email or spot..."/>
+</div>
+<!-- Filter Pills -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary text-background-dark px-5 text-xs font-bold whitespace-nowrap shadow-lg shadow-primary/20">
+                        All Users
+                    </button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-surface-dark text-slate-400 border border-white/5 hover:border-primary/40 px-5 text-xs font-bold whitespace-nowrap transition-all">
+                        Admin
+                    </button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-surface-dark text-slate-400 border border-white/5 hover:border-primary/40 px-5 text-xs font-bold whitespace-nowrap transition-all">
+                        Internal Parking
+                    </button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-surface-dark text-slate-400 border border-white/5 hover:border-primary/40 px-5 text-xs font-bold whitespace-nowrap transition-all">
+                        External
+                    </button>
+</div>
+</div>
+<!-- User List -->
+<div class="flex flex-col px-4 mt-8 space-y-4">
+<div class="flex items-center justify-between px-1">
+<h3 class="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500">Employees</h3>
+<span class="text-[10px] font-bold text-slate-600 bg-white/5 px-2 py-0.5 rounded">124 Total</span>
+</div>
+<!-- User Card 1 (Admin) -->
+<div class="flex flex-col bg-surface-dark p-4 rounded-2xl border border-white/5 shadow-lg active:scale-[0.98] transition-transform cursor-pointer group">
+<div class="flex items-center gap-4">
+<img alt="" class="size-12 rounded-xl object-cover ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFl1rP77YMwzdk5WjiAdtd9p5gOrNyW4bjNjS5N5kAd-Q8BfXh3stTz2BAxjhtwu3kNwwhrzrnUlidxWQjs8e-JGnAWU-EiB6KxJhh_e_E_6I61yKYsmrUFMu0rDGk-_dZfzAnACJsMqPiJI0Hnghk1-0zLC6kOpVv47mcjfwvWOjp48yYlpfh1xZvbPvXRyM1EegOjG89v_XG5gBRuQyi1gd7smQCAsu1iQLILQmRs99LYNF6hsBPkYj76nK0mEn7unLTZeEatuo"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<p class="text-white font-bold truncate">Alex Sterling</p>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary transition-colors">more_vert</span>
+</div>
+<p class="text-slate-500 text-xs truncate mt-0.5">a.sterling@northhighland.com</p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-extrabold uppercase tracking-wider">
+                            Admin
+                        </span>
+<div class="flex items-center gap-1.5 text-slate-500">
+<span class="material-symbols-outlined text-sm">lock_reset</span>
+<span class="text-[10px] font-bold uppercase">Reset Pass</span>
+</div>
+</div>
+</div>
+<!-- User Card 2 (Internal Parking) -->
+<div class="flex flex-col bg-surface-dark p-4 rounded-2xl border border-primary/20 shadow-lg active:scale-[0.98] transition-transform cursor-pointer group">
+<div class="flex items-center gap-4">
+<img alt="" class="size-12 rounded-xl object-cover ring-2 ring-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAasj3j9VPJ3gSz72fb2kF6IRaOnzKiX9vqShziLdPTpBIFZNZCi7xKOw29QEg1G6OdeJk51qhv_XWrJ0A_H7yb5hHX8WF57kGi15iiMftv8DA7PaiO8eBBtch5-rqC6tqFN8A6XEBjyZh3U4xchxKzp9x3GorOI_jQjmI_771bOlnIfVlpg_FZJb28xLm_Fj66C0k_PFTGc3iVuYV3WUL846iR5nuUejO_SpPyxNNoJqf73A34Tdq68rHLtW75ATnkpnSgur11ojE"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<p class="text-white font-bold truncate">Sarah Jenkins</p>
+<span class="material-symbols-outlined text-primary">edit_square</span>
+</div>
+<p class="text-slate-500 text-xs truncate mt-0.5">s.jenkins@northhighland.com</p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+<div class="flex gap-2">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-accent/10 text-accent text-[10px] font-extrabold uppercase tracking-wider">
+                                Internal Parking
+                            </span>
+</div>
+<div class="flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-primary text-sm font-bold">directions_car</span>
+<span class="text-[11px] font-black text-white">Spot #42</span>
+</div>
+</div>
+</div>
+<!-- User Card 3 -->
+<div class="flex flex-col bg-surface-dark p-4 rounded-2xl border border-white/5 shadow-lg active:scale-[0.98] transition-transform cursor-pointer group">
+<div class="flex items-center gap-4">
+<img alt="" class="size-12 rounded-xl object-cover ring-2 ring-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCITH4jOzPxMBvwx4TcqjQfI4SycwDw-3F6cJdERtmBQPlHTZil0KyroLeVDAnUeyytyz8jz6f2NnyOd2rxYBt6-CbmbV7H5y7CK-FcytqYMEhBkbVOU8H9Ot3bjU1KdZPSqH8TfGFlGivXC8xHI49_rIJsqvRYoCnhKLKXtl_q62wGyBK01U4dZTJ26Ip_qb49_zJyh0Cq141_aC2X1XboKRmVqAhV8toFWPnXfJc5O_eQdWSJV7yuU-zFL-1OJeyCde4YsN4xzqc"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<p class="text-white font-bold truncate">Michael Chen</p>
+<span class="material-symbols-outlined text-slate-600">more_vert</span>
+</div>
+<p class="text-slate-500 text-xs truncate mt-0.5">m.chen@northhighland.com</p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-white/5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-500/10 text-slate-500 text-[10px] font-extrabold uppercase tracking-wider">
+                            No Parking
+                        </span>
+</div>
+</div>
+</div>
+<!-- Floating Action Button (Alternative for Add User) -->
+<button class="fixed bottom-24 right-6 size-14 bg-primary text-background-dark rounded-2xl shadow-2xl shadow-primary/40 flex items-center justify-center transition-transform active:scale-90 z-40">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex h-20 items-center justify-around border-t border-white/5 bg-background-dark/95 backdrop-blur-xl px-4 pb-4">
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-[10px] font-medium">Dashboard</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<p class="text-[10px] font-medium">Bookings</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">group</span>
+<div class="absolute -top-1 -right-1 size-2 bg-primary rounded-full ring-2 ring-background-dark"></div>
+</div>
+<p class="text-[10px] font-extrabold">Admin</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1.5 text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-medium">Profile</p>
+</a>
+</nav>
+<!-- Edit Modal Overlay (State demonstration) -->
+<div class="fixed inset-0 z-[60] flex items-end justify-center bg-background-dark/80 backdrop-blur-sm p-0">
+<div class="w-full bg-surface-dark rounded-t-[2.5rem] border-t border-white/10 p-8 shadow-2xl animate-in slide-in-from-bottom duration-300">
+<div class="flex justify-between items-center mb-8">
+<h4 class="text-xl font-extrabold tracking-tight">Edit User Details</h4>
+<button class="size-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<div class="flex items-center gap-5 mb-8">
+<div class="relative">
+<img alt="" class="size-20 rounded-2xl border-2 border-primary ring-4 ring-primary/10 shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAasj3j9VPJ3gSz72fb2kF6IRaOnzKiX9vqShziLdPTpBIFZNZCi7xKOw29QEg1G6OdeJk51qhv_XWrJ0A_H7yb5hHX8WF57kGi15iiMftv8DA7PaiO8eBBtch5-rqC6tqFN8A6XEBjyZh3U4xchxKzp9x3GorOI_jQjmI_771bOlnIfVlpg_FZJb28xLm_Fj66C0k_PFTGc3iVuYV3WUL846iR5nuUejO_SpPyxNNoJqf73A34Tdq68rHLtW75ATnkpnSgur11ojE"/>
+<div class="absolute -bottom-2 -right-2 bg-primary text-background-dark p-1.5 rounded-lg border-2 border-surface-dark">
+<span class="material-symbols-outlined text-sm font-bold">photo_camera</span>
+</div>
+</div>
+<div>
+<p class="text-2xl font-black tracking-tight">Sarah Jenkins</p>
+<p class="text-sm font-semibold text-primary/80">Senior Consultant</p>
+</div>
+</div>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 ml-1">User Type</label>
+<div class="relative">
+<select class="form-select w-full rounded-2xl h-14 bg-nh-slate/40 border border-white/5 text-slate-100 focus:ring-2 focus:ring-primary focus:border-primary appearance-none px-5 font-bold transition-all">
+<option>Admin</option>
+<option selected="">Internal Parking</option>
+<option>External Parking</option>
+<option>No Parking</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-4 pointer-events-none text-slate-500">expand_more</span>
+</div>
+</div>
+<div class="space-y-2 animate-in fade-in slide-in-from-top-4 duration-500">
+<label class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 ml-1">Assigned Spot Number</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-4 text-primary">directions_car</span>
+<input class="form-input w-full pl-12 rounded-2xl h-14 bg-nh-slate/40 border border-white/5 text-slate-100 focus:ring-2 focus:ring-primary focus:border-primary font-black text-lg transition-all" placeholder="Enter spot identifier" type="text" value="42"/>
+</div>
+</div>
+<div class="pt-6 flex gap-4">
+<button class="flex-1 h-14 rounded-2xl border border-white/10 font-bold text-slate-300 hover:bg-white/5 transition-colors" type="button">Cancel</button>
+<button class="flex-1 h-14 rounded-2xl bg-primary text-background-dark font-black shadow-lg shadow-primary/25 active:scale-95 transition-transform" type="submit">Save Changes</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</body></html>

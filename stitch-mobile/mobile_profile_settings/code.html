@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>North Highland - Profile</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-slate-900 shadow-xl overflow-x-hidden">
+<!-- Header -->
+<div class="sticky top-0 z-10 flex items-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-4 border-b border-slate-200 dark:border-slate-800 justify-between">
+<div class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Profile</h2>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto pb-24">
+<!-- User Profile Section -->
+<div class="flex p-6 flex-col items-center">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-24 w-24 ring-4 ring-primary/10" data-alt="Professional headshot of Alex Morgan" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDS31Ntq0u9Lkt8KegECPODzVlGy1OGFlppqmbTnWmDHeSMGxiqBfvioBGbByqGhsN4RY6fLSo5N0ql6evDgln9-WUkpWPB30_dkqQnXvOII2IR3P47dM6kwrKRJCmjmViYPr3rdkWmnXMp9xqULd3b4nxmgmL1FgWjAZycLvGQvCVQCB5Z2671u2BkwPJ4D5-1D2fWE0itLS7TX1iLmko66R6s08xP7ceOel-XNh6BDEcXYzc-lbZ_ot4mhHPDBAqc_CkW1As4uV4");'>
+</div>
+<div class="absolute bottom-0 right-0 bg-primary text-white p-1.5 rounded-full border-2 border-white dark:border-slate-900">
+<span class="material-symbols-outlined text-sm block">edit</span>
+</div>
+</div>
+<div class="mt-4 flex flex-col items-center">
+<p class="text-xl font-bold leading-tight tracking-tight">Alex Morgan</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal">alex.morgan@northhighland.com</p>
+</div>
+</div>
+<!-- Account Information Card -->
+<div class="mx-4 mb-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-100 dark:border-slate-800">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">Internal Status</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">badge</span>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">User Type</p>
+<p class="text-xs text-slate-500">Internal Parking User</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">local_parking</span>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">Assigned Spot</p>
+<p class="text-xs text-slate-500">P2 - Level 4, Spot #402</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Settings Categories -->
+<div class="px-4 space-y-6">
+<!-- Account Section -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">Account Settings</h3>
+<div class="divide-y divide-slate-100 dark:divide-slate-800 border-y border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between py-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">lock</span>
+<span class="text-sm font-medium">Change Password</span>
+</div>
+<span class="material-symbols-outlined text-slate-300">chevron_right</span>
+</div>
+<div class="flex items-center justify-between py-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">person</span>
+<span class="text-sm font-medium">Personal Information</span>
+</div>
+<span class="material-symbols-outlined text-slate-300">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">Notifications</h3>
+<div class="divide-y divide-slate-100 dark:divide-slate-800 border-y border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Booking Reminders</span>
+<span class="text-xs text-slate-500">Alerts 1 hour before reservations</span>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<div class="w-11 h-6 bg-primary rounded-full"></div>
+<div class="absolute left-6 top-1 bg-white w-4 h-4 rounded-full transition-all"></div>
+</div>
+</div>
+<div class="flex items-center justify-between py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Status Updates</span>
+<span class="text-xs text-slate-500">Approvals and changes to bookings</span>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<div class="w-11 h-6 bg-primary rounded-full"></div>
+<div class="absolute left-6 top-1 bg-white w-4 h-4 rounded-full transition-all"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- App Preferences Section -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">App Preferences</h3>
+<div class="divide-y divide-slate-100 dark:divide-slate-800 border-y border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">dark_mode</span>
+<span class="text-sm font-medium">Dark Mode</span>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<div class="w-11 h-6 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+<div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all"></div>
+</div>
+</div>
+<div class="flex items-center justify-between py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">language</span>
+<span class="text-sm font-medium">Language</span>
+</div>
+<div class="flex items-center gap-1 text-slate-400">
+<span class="text-xs">English</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Support Section -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">Support</h3>
+<div class="divide-y divide-slate-100 dark:divide-slate-800 border-y border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between py-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">help_center</span>
+<span class="text-sm font-medium">Help Center</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">support_agent</span>
+<span class="text-sm font-medium">Contact IT</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">policy</span>
+<span class="text-sm font-medium">Privacy Policy</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Log Out -->
+<div class="pt-4 pb-8">
+<button class="w-full py-4 rounded-xl bg-slate-50 dark:bg-slate-800 text-red-500 font-bold text-sm border border-slate-100 dark:border-slate-800 flex items-center justify-center gap-2 active:bg-slate-100 dark:active:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+                        Log Out
+                    </button>
+<p class="text-center text-[10px] text-slate-400 mt-6">Version 2.4.1 (NH-PRD)</p>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-20 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 pb-6 pt-2">
+<div class="flex items-center justify-between gap-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-[10px] font-medium">Dashboard</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<p class="text-[10px] font-medium">Bookings</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">meeting_room</span>
+<p class="text-[10px] font-medium">Rooms</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">person</span>
+<p class="text-[10px] font-bold">Profile</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>North Highland Admin Console</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bdab8",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#10221f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 border-b border-primary/10 sticky top-0 z-10">
+<button class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 ml-2">Admin Console</h2>
+<div class="size-10"></div> <!-- Spacer for balance -->
+</header>
+<main class="flex-1 flex flex-col pb-20">
+<!-- Search Section -->
+<div class="px-4 py-4">
+<label class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-xl h-12 bg-slate-200 dark:bg-primary/10 border border-transparent focus-within:border-primary transition-all">
+<div class="text-slate-500 dark:text-primary/60 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-primary/40 px-3 text-base font-normal" placeholder="Search by name or email"/>
+</div>
+</label>
+</div>
+<!-- Filter Pills -->
+<div class="flex gap-3 px-4 pb-4 overflow-x-auto no-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary text-slate-900 px-4 text-sm font-semibold whitespace-nowrap">
+                    All Users
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-200 dark:bg-primary/10 text-slate-700 dark:text-primary/80 border border-transparent hover:border-primary/30 px-4 text-sm font-medium whitespace-nowrap">
+                    Admin
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-200 dark:bg-primary/10 text-slate-700 dark:text-primary/80 border border-transparent hover:border-primary/30 px-4 text-sm font-medium whitespace-nowrap">
+                    Internal Parking
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-200 dark:bg-primary/10 text-slate-700 dark:text-primary/80 border border-transparent hover:border-primary/30 px-4 text-sm font-medium whitespace-nowrap">
+                    External
+                </button>
+</div>
+<!-- User List -->
+<div class="flex flex-col px-4 space-y-3">
+<h3 class="text-slate-900 dark:text-slate-100 text-sm font-bold uppercase tracking-widest opacity-60 px-1">Employees</h3>
+<!-- User Card 1 -->
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 active:scale-[0.98] transition-transform cursor-pointer">
+<img alt="" class="size-12 rounded-full object-cover border-2 border-primary/20" data-alt="Professional headshot of a male employee" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFl1rP77YMwzdk5WjiAdtd9p5gOrNyW4bjNjS5N5kAd-Q8BfXh3stTz2BAxjhtwu3kNwwhrzrnUlidxWQjs8e-JGnAWU-EiB6KxJhh_e_E_6I61yKYsmrUFMu0rDGk-_dZfzAnACJsMqPiJI0Hnghk1-0zLC6kOpVv47mcjfwvWOjp48yYlpfh1xZvbPvXRyM1EegOjG89v_XG5gBRuQyi1gd7smQCAsu1iQLILQmRs99LYNF6hsBPkYj76nK0mEn7unLTZeEatuo"/>
+<div class="flex-1 min-w-0">
+<p class="text-slate-900 dark:text-slate-100 font-bold truncate">Alex Sterling</p>
+<p class="text-slate-500 dark:text-primary/60 text-xs truncate">a.sterling@northhighland.com</p>
+<div class="mt-1 inline-flex items-center px-2 py-0.5 rounded bg-primary/20 text-primary text-[10px] font-bold uppercase">Admin</div>
+</div>
+<span class="material-symbols-outlined text-slate-400">chevron_right</span>
+</div>
+<!-- User Card 2 (Internal Parking) -->
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 active:scale-[0.98] transition-transform cursor-pointer">
+<img alt="" class="size-12 rounded-full object-cover border-2 border-primary/20" data-alt="Professional headshot of a female employee" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAasj3j9VPJ3gSz72fb2kF6IRaOnzKiX9vqShziLdPTpBIFZNZCi7xKOw29QEg1G6OdeJk51qhv_XWrJ0A_H7yb5hHX8WF57kGi15iiMftv8DA7PaiO8eBBtch5-rqC6tqFN8A6XEBjyZh3U4xchxKzp9x3GorOI_jQjmI_771bOlnIfVlpg_FZJb28xLm_Fj66C0k_PFTGc3iVuYV3WUL846iR5nuUejO_SpPyxNNoJqf73A34Tdq68rHLtW75ATnkpnSgur11ojE"/>
+<div class="flex-1 min-w-0">
+<p class="text-slate-900 dark:text-slate-100 font-bold truncate">Sarah Jenkins</p>
+<p class="text-slate-500 dark:text-primary/60 text-xs truncate">s.jenkins@northhighland.com</p>
+<div class="mt-1 flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase">Internal Parking</span>
+<span class="text-[10px] font-medium text-slate-400">Spot #42</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400">chevron_right</span>
+</div>
+<!-- User Card 3 -->
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 active:scale-[0.98] transition-transform cursor-pointer">
+<img alt="" class="size-12 rounded-full object-cover border-2 border-primary/20" data-alt="Professional headshot of a male employee" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCITH4jOzPxMBvwx4TcqjQfI4SycwDw-3F6cJdERtmBQPlHTZil0KyroLeVDAnUeyytyz8jz6f2NnyOd2rxYBt6-CbmbV7H5y7CK-FcytqYMEhBkbVOU8H9Ot3bjU1KdZPSqH8TfGFlGivXC8xHI49_rIJsqvRYoCnhKLKXtl_q62wGyBK01U4dZTJ26Ip_qb49_zJyh0Cq141_aC2X1XboKRmVqAhV8toFWPnXfJc5O_eQdWSJV7yuU-zFL-1OJeyCde4YsN4xzqc"/>
+<div class="flex-1 min-w-0">
+<p class="text-slate-900 dark:text-slate-100 font-bold truncate">Michael Chen</p>
+<p class="text-slate-500 dark:text-primary/60 text-xs truncate">m.chen@northhighland.com</p>
+<div class="mt-1 inline-flex items-center px-2 py-0.5 rounded bg-slate-500/20 text-slate-400 text-[10px] font-bold uppercase">No Parking</div>
+</div>
+<span class="material-symbols-outlined text-slate-400">chevron_right</span>
+</div>
+</div>
+<!-- Edit Modal Overlay (Demonstrating the 'Internal Parking' state) -->
+<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4">
+<div class="w-full max-w-md bg-background-light dark:bg-background-dark rounded-t-3xl sm:rounded-3xl border-t sm:border border-primary/20 p-6 shadow-2xl overflow-hidden">
+<div class="flex justify-between items-center mb-6">
+<h4 class="text-xl font-bold">Edit User Details</h4>
+<button class="size-8 flex items-center justify-center rounded-full bg-slate-200 dark:bg-primary/10">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<div class="flex items-center gap-4 mb-6">
+<img alt="" class="size-16 rounded-2xl border-2 border-primary" data-alt="Profile avatar for editing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD403gwS0fsbScZYwAdWIgn1l4E5A56fIcthXg9vX5kQyJhsPLE-jdhV_s9Ed3U30_yEnVNoBoTP7PyNHje6xpE6V166yWCOfBQmEi242qmUA-x8pBcQX9F3UzRUtmPQzquTyTNYvvm2CuV8cAoWhBMyWbJFc91qZeKVI3pPIdYBQYAp3XYzBWIPZhtUYhU3QJMFNPZEw6WcPkF0MO9xopO5UHD2SOKxh-86VWt-oyJJvAZaB-4iq1XM1KcEuZxQPeaP7ShipR5ss"/>
+<div>
+<p class="text-lg font-bold">Sarah Jenkins</p>
+<p class="text-sm text-slate-500 dark:text-primary/60">Senior Consultant</p>
+</div>
+</div>
+<form class="space-y-4">
+<div class="space-y-1.5">
+<label class="text-xs font-bold uppercase text-slate-500 dark:text-primary/60 ml-1">User Type</label>
+<div class="relative">
+<select class="form-select w-full rounded-xl h-12 bg-slate-200 dark:bg-primary/10 border-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary appearance-none pr-10">
+<option>Admin</option>
+<option selected="">Internal Parking</option>
+<option>External Parking</option>
+<option>No Parking</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 pointer-events-none opacity-50">expand_more</span>
+</div>
+</div>
+<!-- Special Logic: Field shown when Internal Parking is selected -->
+<div class="space-y-1.5 animate-in slide-in-from-top-2 duration-300">
+<label class="text-xs font-bold uppercase text-slate-500 dark:text-primary/60 ml-1">Spot Number</label>
+<input class="form-input w-full rounded-xl h-12 bg-slate-200 dark:bg-primary/10 border-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary" placeholder="Enter spot identifier" type="text" value="42"/>
+</div>
+<div class="pt-4 flex gap-3">
+<button class="flex-1 h-12 rounded-xl border border-slate-300 dark:border-primary/20 font-bold hover:bg-slate-100 dark:hover:bg-primary/5 transition-colors" type="button">Cancel</button>
+<button class="flex-1 h-12 rounded-xl bg-primary text-slate-900 font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform" type="submit">Save Changes</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-40 flex h-20 items-center justify-around border-t border-primary/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pb-2">
+<a class="flex flex-col items-center justify-center gap-1 group text-primary" href="#">
+<div class="flex h-8 w-12 items-center justify-center rounded-full bg-primary/20 group-hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">group</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Users</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 group text-slate-500 dark:text-primary/40" href="#">
+<div class="flex h-8 w-12 items-center justify-center rounded-full bg-transparent group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">bar_chart</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Reports</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 group text-slate-500 dark:text-primary/40" href="#">
+<div class="flex h-8 w-12 items-center justify-center rounded-full bg-transparent group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Settings</p>
+</a>
+</nav>
+</div>
+</body></html>

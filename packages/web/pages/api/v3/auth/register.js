@@ -31,7 +31,8 @@ async function handler(req, res) {
   // Check if a Firebase user already exists for this email
   try {
     await auth.getUserByEmail(email);
-    return res.status(409).json({ error: 'An account with this email already exists. Please log in.' });
+    // Return generic error to prevent account enumeration
+    return res.status(400).json({ error: 'Unable to complete registration. The invitation may have already been used.' });
   } catch (err) {
     if (err.code !== 'auth/user-not-found') {
       console.error('Firebase auth lookup error:', err);

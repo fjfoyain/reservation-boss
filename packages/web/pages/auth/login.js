@@ -151,7 +151,12 @@ export default function LoginPage() {
               className="mt-1 w-full h-12 rounded-lg text-white text-base font-semibold flex items-center justify-center gap-2 transition-colors shadow-md disabled:opacity-60"
               style={{ backgroundColor: loading ? '#5fa1d7' : '#1183d4' }}
             >
-              {loading ? 'Signing in…' : (
+              {loading ? (
+                <>
+                  <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                  Signing in…
+                </>
+              ) : (
                 <>
                   Sign In
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>

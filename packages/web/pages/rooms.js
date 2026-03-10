@@ -35,6 +35,7 @@ export default function RoomsPage() {
   const [confirmModal, setConfirmModal] = useState(null); // { room, slot }
   const [booking, setBooking] = useState(false);
   const [toast, setToast] = useState('');
+  const [cancelConfirm, setCancelConfirm] = useState(null); // reservation id to confirm cancel
 
   const weekdayDates = getWeekdayDates(14); // next 14 weekdays
   const today = toDateString(toGye());
@@ -104,14 +105,19 @@ export default function RoomsPage() {
   }
 
   async function handleCancel(reservationId) {
+    setCancelConfirm(null);
     try {
       const res = await fetch(`/api/v3/room-reservations/${reservationId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) { showToast('Booking cancelled'); fetchReservations(); return; }
       const data = await res.json();
-      showToast(data.error || 'Failed to cancel');
+      if (res.ok) { showToast('Booking cancelled'); fetchReservations(); return; }
+      if (data.lateCancellation) {
+        showToast('Cancellation deadline passed (8 AM). Use My Bookings to request a late cancellation.');
+      } else {
+        showToast(data.error || 'Failed to cancel');
+      }
     } catch { showToast('Failed to cancel'); }
   }
 
@@ -229,9 +235,10 @@ export default function RoomsPage() {
                           )}
                           {status === 'mine' && (
                             <button
-                              onClick={() => handleCancel(resId)}
+                              onClick={() => setCancelConfirm(resId)}
                               className="w-full text-left px-3 py-1.5 rounded-md text-xs font-medium border transition-colors"
                               style={{ backgroundColor: '#eaf4fd', borderColor: '#1183d4', color: '#1183d4' }}
+                              aria-label={`Cancel booking for ${room.name} at ${slot.start}`}
                             >
                               <span className="material-symbols-outlined text-xs mr-1 align-middle">person</span>
                               My Booking
@@ -285,6 +292,27 @@ export default function RoomsPage() {
                 style={{ backgroundColor: '#1183d4' }}
               >
                 {booking ? 'Booking…' : 'Confirm Booking'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel confirmation modal */}
+      {cancelConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm">
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Cancel Booking?</h2>
+            <p className="text-sm text-gray-600 mb-4">Are you sure you want to cancel this room reservation?</p>
+            <div className="flex gap-3 justify-end">
+              <button onClick={() => setCancelConfirm(null)} className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Keep Booking
+              </button>
+              <button
+                onClick={() => handleCancel(cancelConfirm)}
+                className="px-4 py-2 text-sm text-white rounded-lg bg-red-600 hover:bg-red-700"
+              >
+                Cancel Booking
               </button>
             </div>
           </div>

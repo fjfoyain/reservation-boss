@@ -69,7 +69,7 @@ export function getDefaultWeekMonday(config = {}) {
   let monday = getMondayOf(now);
 
   // After Fri [switchTime] or on Sat/Sun → next week
-  if ((dow === 5 && (hour > sh || (hour === sh && minute > sm))) || dow === 6 || dow === 0) {
+  if ((dow === 5 && (hour > sh || (hour === sh && minute >= sm))) || dow === 6 || dow === 0) {
     monday.setDate(monday.getDate() + 7);
   }
 
@@ -109,7 +109,7 @@ export function isWeekEditable(mondayStr, config = {}) {
   const [dh, dm] = deadlineTime.split(':').map(Number);
 
   const now = toGye();
-  const monday = new Date(`${mondayStr}T00:00:00`);
+  const monday = new Date(`${mondayStr}T12:00:00Z`);
 
   // Past weeks are never editable
   const currentMonday = getMondayOf(now);

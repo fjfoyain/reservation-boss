@@ -49,6 +49,10 @@ async function handler(req, res) {
       if (!Array.isArray(disabledSpots)) {
         return res.status(400).json({ error: 'disabledSpots must be an array' });
       }
+      const invalidSpots = disabledSpots.filter((s) => !PARKING_SPOTS.includes(s));
+      if (invalidSpots.length > 0) {
+        return res.status(400).json({ error: `Invalid spot names: ${invalidSpots.join(', ')}` });
+      }
       update.disabledSpots = disabledSpots;
     }
     if (spots !== undefined) {

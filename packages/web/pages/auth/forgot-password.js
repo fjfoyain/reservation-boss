@@ -103,7 +103,12 @@ export default function ForgotPasswordPage() {
                 className="w-full py-2.5 px-4 rounded-lg text-white text-sm font-medium transition-colors disabled:opacity-60"
                 style={{ backgroundColor: '#1183d4' }}
               >
-                {status === 'loading' ? 'Sending…' : 'Send Reset Link'}
+                {status === 'loading' ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                    Sending…
+                  </span>
+                ) : 'Send Reset Link'}
               </button>
             </form>
           </>

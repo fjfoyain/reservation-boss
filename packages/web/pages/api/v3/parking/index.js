@@ -65,37 +65,44 @@ async function handler(req, res) {
 
   const parkingRef = db.collection('v3_parking');
 
-  // Single-field queries only (auto-indexed — no composite index needed)
-  const [userParkingSnap, spotParkingSnap] = await Promise.all([
-    parkingRef.where('userId', '==', uid).get(),
-    parkingRef.where('spot', '==', spot).get(),
-  ]);
+  // Use a transaction to prevent race conditions (double-booking, exceeding weekly limit)
+  let newDocId;
+  try {
+    newDocId = await db.runTransaction(async (t) => {
+      const [userParkingSnap, spotParkingSnap] = await Promise.all([
+        t.get(parkingRef.where('userId', '==', uid)),
+        t.get(parkingRef.where('spot', '==', spot)),
+      ]);
 
-  const userParking = userParkingSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const userParking = userParkingSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
-  // Check weekly limit (filter in JS)
-  const weeklyCount = userParking.filter((p) => p.date >= weekStart && p.date <= weekEnd).length;
-  if (weeklyCount >= MAX_WEEKLY_RESERVATIONS) {
-    return res.status(409).json({ error: `Maximum ${MAX_WEEKLY_RESERVATIONS} reservations per week reached` });
+      // Check weekly limit
+      const weeklyCount = userParking.filter((p) => p.date >= weekStart && p.date <= weekEnd).length;
+      if (weeklyCount >= MAX_WEEKLY_RESERVATIONS) {
+        throw new Error(`Maximum ${MAX_WEEKLY_RESERVATIONS} reservations per week reached`);
+      }
+
+      // Check duplicate for this date
+      if (userParking.some((p) => p.date === date)) {
+        throw new Error('You already have a parking reservation for this date');
+      }
+
+      // Check if spot is already taken for this date
+      if (spotParkingSnap.docs.some((d) => d.data().date === date)) {
+        throw new Error(`${spot} is already reserved for this date`);
+      }
+
+      const newDocRef = parkingRef.doc();
+      t.set(newDocRef, { userId: uid, email, date, spot, createdAt: new Date() });
+      return newDocRef.id;
+    });
+  } catch (err) {
+    if (err.message.includes('Maximum') || err.message.includes('already') || err.message.includes('reserved')) {
+      return res.status(409).json({ error: err.message });
+    }
+    console.error('Parking transaction error:', err);
+    return res.status(500).json({ error: 'Failed to reserve parking spot. Please try again.' });
   }
-
-  // Check duplicate for this date
-  if (userParking.some((p) => p.date === date)) {
-    return res.status(409).json({ error: 'You already have a parking reservation for this date' });
-  }
-
-  // Check if spot is already taken for this date
-  if (spotParkingSnap.docs.some((d) => d.data().date === date)) {
-    return res.status(409).json({ error: `${spot} is already reserved for this date` });
-  }
-
-  const docRef = await parkingRef.add({
-    userId: uid,
-    email,
-    date,
-    spot,
-    createdAt: new Date(),
-  });
 
   // Send confirmation email (non-blocking)
   sendV3ParkingConfirmation({
@@ -103,9 +110,9 @@ async function handler(req, res) {
     name: req.userProfile.name || email,
     spot,
     date,
-  }).catch(() => {});
+  }).catch((err) => console.error('Parking email failed:', err));
 
-  return res.status(201).json({ success: true, id: docRef.id, date, spot });
+  return res.status(201).json({ success: true, id: newDocId, date, spot });
 }
 
 export default withCors(withAuthV3(handler));

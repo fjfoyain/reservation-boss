@@ -1,7 +1,8 @@
-// DELETE /api/v3/room-reservations/[id] — Cancel a room booking (no deadline restriction)
+// DELETE /api/v3/room-reservations/[id] — Cancel a room booking (8am deadline)
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { canModifyParking } from '@/lib/utils/weekHelpersV3';
 
 async function handler(req, res) {
   if (req.method !== 'DELETE') return res.status(405).json({ error: 'Method not allowed' });
@@ -13,6 +14,14 @@ async function handler(req, res) {
   const data = doc.data();
   if (data.userId !== req.user.uid) {
     return res.status(403).json({ error: 'Not authorized to cancel this reservation' });
+  }
+
+  // Enforce 8am same-day cancellation deadline
+  if (!canModifyParking(data.date)) {
+    return res.status(403).json({
+      error: 'Cancellation deadline has passed (8:00 AM)',
+      lateCancellation: true,
+    });
   }
 
   await doc.ref.delete();

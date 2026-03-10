@@ -15,9 +15,6 @@ function isSameDayOrFuture(dateStr) {
 }
 
 function isPastDeadlineForDate(dateStr, type) {
-  // Rooms have no cancellation deadline — always cancellable
-  if (type === 'room') return false;
-
   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guayaquil' });
   if (dateStr > today) return false;
   if (dateStr < today) return true;
@@ -26,7 +23,7 @@ function isPastDeadlineForDate(dateStr, type) {
     // Attendance cutoff is Mon 11pm of that week — same day is always past
     return true;
   }
-  // Parking: 8am GYE cutoff
+  // Parking + Room: 8am GYE cutoff
   const gyeNow = new Date().toLocaleString('en-US', { timeZone: 'America/Guayaquil' });
   const hour = new Date(gyeNow).getHours();
   return hour >= 8;
@@ -277,9 +274,8 @@ export default function MyBookingsPage() {
             </div>
           )}
           <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 text-xs text-gray-400">
-            Parking cancellations after 8:00 AM on the day require admin approval.
+            Parking and room cancellations after 8:00 AM on the day require admin approval.
             Attendance changes require admin approval after Monday 11:00 PM for that week.
-            Room reservations can be cancelled at any time.
           </div>
         </div>
       </main>

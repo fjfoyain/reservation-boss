@@ -411,6 +411,7 @@ export default function DashboardPage() {
                             <button
                               onClick={() => cancelParking(date)}
                               className="text-sm text-gray-500 hover:text-red-600 font-medium transition-colors px-3 py-1.5 rounded hover:bg-red-50"
+                              aria-label={`Cancel parking for ${date}`}
                             >
                               Cancel
                             </button>

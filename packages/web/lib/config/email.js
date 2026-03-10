@@ -52,6 +52,11 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+/** Strip CRLF characters to prevent email header injection */
+function sanitizeForSubject(str) {
+  return String(str ?? '').replace(/[\r\n]/g, ' ').trim();
+}
+
 const NH_HEADER = `
   <div style="background:#112A46;padding:28px 32px;border-radius:12px 12px 0 0;border-bottom:4px solid #00A3E0;text-align:center;">
     <h1 style="color:white;font-size:20px;font-weight:700;margin:0;letter-spacing:-0.5px;">NORTH HIGHLAND</h1>
@@ -138,7 +143,7 @@ export async function sendV3LateRequestNotification({ adminEmail, userName, user
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: adminEmail,
-      subject: `New late change request from ${userName}`,
+      subject: `New late change request from ${sanitizeForSubject(userName)}`,
       html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
         ${NH_HEADER}
         <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">

@@ -33,6 +33,7 @@ export async function validateInviteToken(token) {
   const data = doc.data();
 
   const now = new Date();
+  if (!data.expiresAt) throw new Error('Invalid invitation: missing expiration');
   const expiresAt = data.expiresAt?.toDate ? data.expiresAt.toDate() : new Date(data.expiresAt);
 
   if (now > expiresAt) {

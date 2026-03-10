@@ -51,6 +51,9 @@ async function handler(req, res) {
     if (!reason.trim()) {
       return res.status(400).json({ error: 'A reason is required' });
     }
+    if (reason.length > 2000) {
+      return res.status(400).json({ error: 'Reason must be 2000 characters or fewer' });
+    }
 
     const { uid } = req.user;
     const { email, name } = req.userProfile;
@@ -94,7 +97,7 @@ async function handler(req, res) {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: ADMIN_EMAIL,
-      subject: `Late Request from ${name} — ${dateFormatted}`,
+      subject: `Late Request from ${String(name ?? '').replace(/[\r\n]/g, ' ').trim()} — ${dateFormatted}`,
       html: `
         <div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: #112A46; padding: 24px; border-radius: 12px 12px 0 0; border-bottom: 4px solid #00A3E0;">

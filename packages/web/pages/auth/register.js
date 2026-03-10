@@ -203,7 +203,12 @@ export default function RegisterPage() {
                     className="w-full py-2.5 px-4 rounded-lg text-white text-sm font-medium transition-colors disabled:opacity-60"
                     style={{ backgroundColor: '#1183d4' }}
                   >
-                    {submitting ? 'Creating account…' : 'Create Account'}
+                    {submitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                        Creating account…
+                      </span>
+                    ) : 'Create Account'}
                   </button>
                 </div>
               </form>

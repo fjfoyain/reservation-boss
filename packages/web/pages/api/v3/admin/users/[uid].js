@@ -24,6 +24,9 @@ async function handler(req, res) {
   }
 
   if (peopleLeadEmail !== undefined) {
+    if (peopleLeadEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(peopleLeadEmail)) {
+      return res.status(400).json({ error: 'Invalid email format for peopleLeadEmail' });
+    }
     updates.peopleLeadEmail = peopleLeadEmail || null;
   }
 

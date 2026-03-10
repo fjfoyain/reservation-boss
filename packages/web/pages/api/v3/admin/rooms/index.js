@@ -22,11 +22,13 @@ async function handler(req, res) {
     const { name, type, capacity } = req.body;
     if (!name?.trim()) return res.status(400).json({ error: 'Room name is required' });
     if (!['meeting', 'calling', 'conference'].includes(type)) return res.status(400).json({ error: 'Type must be "meeting", "calling", or "conference"' });
+    const cap = Number(capacity) || 1;
+    if (cap < 1 || cap > 200) return res.status(400).json({ error: 'Capacity must be between 1 and 200' });
 
     const docRef = await db.collection('v3_rooms').add({
       name: name.trim(),
       type,
-      capacity: Number(capacity) || 1,
+      capacity: cap,
       active: true,
       createdAt: new Date(),
     });

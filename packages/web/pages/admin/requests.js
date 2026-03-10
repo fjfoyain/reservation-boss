@@ -143,6 +143,7 @@ export default function AdminRequestsPage() {
                                 onClick={() => handleAction(req.id, 'approve')}
                                 disabled={isProcessing}
                                 className="px-3 py-1.5 text-sm font-medium rounded-lg transition-colors bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+                                aria-label={`Approve request from ${req.userName || req.email}`}
                               >
                                 Approve
                               </button>
@@ -150,6 +151,7 @@ export default function AdminRequestsPage() {
                                 onClick={() => handleAction(req.id, 'deny')}
                                 disabled={isProcessing}
                                 className="px-3 py-1.5 text-sm font-medium rounded-lg transition-colors bg-red-50 text-red-700 hover:bg-red-100 disabled:opacity-50"
+                                aria-label={`Deny request from ${req.userName || req.email}`}
                               >
                                 Deny
                               </button>

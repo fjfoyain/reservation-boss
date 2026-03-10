@@ -348,7 +348,7 @@ export default function DashboardPage() {
                         <h3 className={`text-base font-medium ${isOffice ? 'text-gray-900' : 'text-gray-500'}`}>
                           {isOffice ? 'In Office' : 'Remote'}
                         </h3>
-                        <p className="text-sm text-gray-400">{isOffice ? 'Atlanta HQ' : 'Working from home'}</p>
+                        <p className="text-sm text-gray-400">{isOffice ? 'Quito Office' : 'Working from home'}</p>
                       </div>
                     </div>
 

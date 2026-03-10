@@ -43,7 +43,7 @@ async function handler(req, res) {
     }
 
     await docRef.update(updates);
-    return res.status(200).json({ id, ...doc.data(), ...updates });
+    return res.status(200).json({ success: true });
   }
 
   if (req.method === 'DELETE') {

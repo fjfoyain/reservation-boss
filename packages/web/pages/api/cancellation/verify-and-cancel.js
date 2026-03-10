@@ -15,6 +15,16 @@ async function handler(req, res) {
       return res.status(400).json({ error: 'Reservation ID and code are required' });
     }
 
+    // Validate code is exactly 6 digits — rejects arbitrary strings before any DB lookup
+    if (!/^\d{6}$/.test(String(code).trim())) {
+      return res.status(400).json({ error: 'Invalid cancellation code format' });
+    }
+
+    // Validate reservationId is a safe Firestore document ID (alphanumeric + hyphens only)
+    if (!/^[a-zA-Z0-9_-]{1,128}$/.test(String(reservationId))) {
+      return res.status(400).json({ error: 'Invalid reservation ID' });
+    }
+
     // Get cancellation code document
     const codeDoc = await db.collection('cancellationCodes').doc(reservationId).get();
     

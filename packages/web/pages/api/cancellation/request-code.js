@@ -48,6 +48,11 @@ async function handler(req, res) {
       return res.status(400).json({ error: 'Reservation ID and email are required' });
     }
 
+    // Validate reservationId is a safe Firestore document ID before any DB lookup
+    if (!/^[a-zA-Z0-9_-]{1,128}$/.test(String(reservationId))) {
+      return res.status(400).json({ error: 'Invalid reservation ID' });
+    }
+
     // Get reservation
     const reservationDoc = await db.collection('reservations').doc(reservationId).get();
     

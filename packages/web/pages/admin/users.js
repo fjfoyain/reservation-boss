@@ -20,8 +20,12 @@ function getParkingType(u) {
   return u.role || 'none';
 }
 
+// Always get a fresh Firebase token — avoids 401s after the 1-hour expiry
+function getToken() {
+  return auth.currentUser?.getIdToken();
+}
+
 export default function AdminUsersPage() {
-  const [token, setToken] = useState('');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterParking, setFilterParking] = useState('all');
@@ -45,11 +49,10 @@ export default function AdminUsersPage() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
       if (!firebaseUser) return;
-      const idToken = await firebaseUser.getIdToken();
-      setToken(idToken);
-      fetchUsers(idToken);
-      fetchAttendanceConfig(idToken);
-      fetch('/api/v3/admin/parking-config', { headers: { Authorization: `Bearer ${idToken}` } })
+      fetchUsers();
+      fetchAttendanceConfig();
+      const t = await getToken();
+      fetch('/api/v3/admin/parking-config', { headers: { Authorization: `Bearer ${t}` } })
         .then((r) => r.json())
         .then((d) => {
           const spots = (d.config?.spots || []).filter((s) => s.type === 'internal').map((s) => s.name);
@@ -60,8 +63,9 @@ export default function AdminUsersPage() {
     return () => unsubscribe();
   }, []);
 
-  async function fetchAttendanceConfig(t = token) {
+  async function fetchAttendanceConfig() {
     try {
+      const t = await getToken();
       const res = await fetch('/api/v3/admin/attendance-config', { headers: { Authorization: `Bearer ${t}` } });
       const data = await res.json();
       if (data.config) {
@@ -74,9 +78,10 @@ export default function AdminUsersPage() {
   async function saveAttRules() {
     setSavingAttRules(true);
     try {
+      const t = await getToken();
       const res = await fetch('/api/v3/admin/attendance-config', {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ scheduleDeadlineTime, weekSwitchTime }),
       });
       if (res.ok) showToast('Attendance rules updated');
@@ -85,9 +90,10 @@ export default function AdminUsersPage() {
     setSavingAttRules(false);
   }
 
-  async function fetchUsers(t = token) {
+  async function fetchUsers() {
     setLoading(true);
     try {
+      const t = await getToken();
       const res = await fetch('/api/v3/admin/users', { headers: { Authorization: `Bearer ${t}` } });
       const data = await res.json();
       setUsers(data.users || []);
@@ -104,9 +110,10 @@ export default function AdminUsersPage() {
     if (!inviteEmail.trim()) return;
     setInviting(true);
     try {
+      const t = await getToken();
       const res = await fetch('/api/v3/auth/invite', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: inviteEmail.trim() }),
       });
       const data = await res.json();
@@ -120,6 +127,7 @@ export default function AdminUsersPage() {
     if (!editUser) return;
     setSaving(true);
     try {
+      const t = await getToken();
       const body = {
         isAdmin: editUser.isAdmin,
         isPeopleLead: editUser.isPeopleLead,
@@ -132,7 +140,7 @@ export default function AdminUsersPage() {
 
       const res = await fetch(`/api/v3/admin/users/${editUser.uid}`, {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
       const data = await res.json();
@@ -145,9 +153,10 @@ export default function AdminUsersPage() {
   async function sendPasswordReset(uid) {
     setResettingPassword(true);
     try {
+      const t = await getToken();
       const res = await fetch('/api/v3/admin/users/reset-password', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid }),
       });
       if (res.ok) showToast('Password reset email sent');

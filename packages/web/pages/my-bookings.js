@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { isWeekEditable } from '@/lib/utils/weekHelpersV3';
 import AppHeader from '@/components/AppHeader';
 
 const TYPE_ICONS = { attendance: 'calendar_today', parking: 'local_parking', room: 'meeting_room' };
@@ -14,16 +15,30 @@ function isSameDayOrFuture(dateStr) {
   return dateStr >= today;
 }
 
+function getMondayOfDate(dateStr) {
+  const d = new Date(`${dateStr}T12:00:00Z`);
+  const dow = d.getUTCDay(); // 0=Sun ... 6=Sat
+  const diff = dow === 0 ? -6 : 1 - dow;
+  d.setUTCDate(d.getUTCDate() + diff);
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 function isPastDeadlineForDate(dateStr, type) {
   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guayaquil' });
+
+  if (type === 'attendance') {
+    // Attendance follows weekly lock: past deadline if the week is no longer editable
+    const mondayStr = getMondayOfDate(dateStr);
+    return !isWeekEditable(mondayStr);
+  }
+
+  // Parking + Room: past dates always past deadline
   if (dateStr > today) return false;
   if (dateStr < today) return true;
-  // Same day
-  if (type === 'attendance') {
-    // Attendance cutoff is Mon 11pm of that week — same day is always past
-    return true;
-  }
-  // Parking + Room: 8am GYE cutoff
+  // Same day: 8am GYE cutoff
   const gyeNow = new Date().toLocaleString('en-US', { timeZone: 'America/Guayaquil' });
   const hour = new Date(gyeNow).getHours();
   return hour >= 8;

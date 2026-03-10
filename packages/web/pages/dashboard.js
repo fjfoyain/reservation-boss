@@ -371,13 +371,20 @@ export default function DashboardPage() {
 
                     {/* Attendance toggle */}
                     <div className="flex items-center gap-4 ml-18 sm:ml-0">
-                      <label className={`relative inline-flex items-center ${!isPast ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
+                      <label className={`relative inline-flex items-center ${!isPast || (!editable && attendance[date]?.id) ? 'cursor-pointer' : isPast ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                         <input
                           type="checkbox"
                           className="sr-only peer"
                           checked={isOffice}
-                          onChange={() => !isPast && toggleAttendance(date)}
-                          disabled={isPast}
+                          onChange={() => {
+                            if (isPast && !editable && attendance[date]?.id) {
+                              // Past date in locked week — allow late request
+                              toggleAttendance(date);
+                            } else if (!isPast) {
+                              toggleAttendance(date);
+                            }
+                          }}
+                          disabled={isPast && (editable || !attendance[date]?.id)}
                         />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00A3E0]" />
                         <span className={`ml-3 text-sm font-medium min-w-[80px] ${isOffice ? 'text-gray-900' : 'text-gray-500'}`}>

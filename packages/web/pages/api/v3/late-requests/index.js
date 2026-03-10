@@ -4,7 +4,7 @@ import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 
-const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || process.env.EMAIL_USER;
+const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL;
 
 const COLLECTION_MAP = {
   attendance: 'v3_attendance',
@@ -93,9 +93,8 @@ async function handler(req, res) {
     const dateFormatted = new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
     });
-    const { transporter } = await import('@/lib/config/email');
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const { sendEmail } = await import('@/lib/config/email');
+    await sendEmail({
       to: ADMIN_EMAIL,
       subject: `Late Request from ${String(name ?? '').replace(/[\r\n]/g, ' ').trim()} — ${dateFormatted}`,
       html: `

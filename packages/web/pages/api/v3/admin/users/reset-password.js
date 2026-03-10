@@ -2,7 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { auth } from '@/lib/config/firebaseAdmin';
-import { transporter } from '@/lib/config/email';
+import { sendEmail } from '@/lib/config/email';
 
 async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -30,8 +30,7 @@ async function handler(req, res) {
   }
 
   // Send reset email
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+  await sendEmail({
     to: email,
     subject: 'Reset your North Highland Workspace password',
     html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">

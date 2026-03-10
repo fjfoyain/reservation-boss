@@ -2,11 +2,11 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
-import { transporter } from '@/lib/config/email';
+import { sendEmail } from '@/lib/config/email';
 
 async function sendUserEmail(to, subject, html) {
   try {
-    await transporter.sendMail({ from: process.env.EMAIL_USER, to, subject, html });
+    await sendEmail({ to, subject, html });
   } catch (err) {
     console.error('Email failed:', err.message);
   }

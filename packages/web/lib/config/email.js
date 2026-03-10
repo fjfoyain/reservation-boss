@@ -1,47 +1,25 @@
-// Email configuration using Nodemailer
-import nodemailer from 'nodemailer';
+// Email configuration using Resend
+import { Resend } from 'resend';
 
-// Create transporter for sending emails
-export const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Send reservation confirmation email
-export async function sendReservationEmail({ email, spot, date }) {
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Parking Reservation Confirmation - Reservation Boss',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">Parking Reservation Confirmed</h2>
-          <p>Your parking spot has been successfully reserved:</p>
-          <ul style="background: #f3f4f6; padding: 20px; border-radius: 8px;">
-            <li><strong>Parking Spot:</strong> ${spot}</li>
-            <li><strong>Date:</strong> ${date}</li>
-            <li><strong>Email:</strong> ${email}</li>
-          </ul>
-          <p>Please arrive on time and park only in your designated spot.</p>
-          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-          <p style="color: #6b7280; font-size: 12px;">
-            This is an automated message from Reservation Boss. Please do not reply to this email.
-          </p>
-        </div>
-      `,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error('Email sending failed:', error);
-    return { success: false, error: error.message };
-  }
+const FROM_EMAIL = process.env.FROM_EMAIL || 'North Highland Workspace <noreply@reservationboss.io>';
+
+/**
+ * Send an email via Resend.
+ * Drop-in replacement for transporter.sendMail — accepts { from, to, subject, html }.
+ * Callers can omit `from`; it defaults to FROM_EMAIL.
+ */
+export async function sendEmail({ from, to, subject, html }) {
+  return resend.emails.send({
+    from: from || FROM_EMAIL,
+    to,
+    subject,
+    html,
+  });
 }
 
-// ─── v3 Email Helpers ────────────────────────────────────────────────────────
+// ─── Shared helpers ─────────────────────────────────────────────────────────
 
 function escapeHtml(str) {
   return String(str ?? '')
@@ -67,14 +45,15 @@ const NH_FOOTER = `
   <hr style="border:none;border-top:1px solid #f3f4f6;margin:24px 0;">
   <p style="color:#9ca3af;font-size:12px;margin:0;">North Highland Internal Portal — automated message. Do not reply.</p>`;
 
+// ─── v3 Email Helpers ────────────────────────────────────────────────────────
+
 // v3: Parking spot reserved confirmation
 export async function sendV3ParkingConfirmation({ email, name, spot, date }) {
   try {
     const dateLabel = new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', {
       weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC',
     });
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: email,
       subject: `Parking spot confirmed: ${spot} on ${dateLabel}`,
       html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
@@ -106,8 +85,7 @@ export async function sendV3RoomConfirmation({ email, name, roomName, roomType, 
       weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC',
     });
     const typeLabel = roomType === 'calling' ? 'Calling Booth' : 'Meeting Room';
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: email,
       subject: `Room booked: ${roomName} on ${dateLabel} ${startTime}`,
       html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
@@ -140,8 +118,7 @@ export async function sendV3LateRequestNotification({ adminEmail, userName, user
       weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC',
     });
     const TYPE_LABELS = { attendance: 'Attendance', parking: 'Parking', room: 'Room' };
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: adminEmail,
       subject: `New late change request from ${sanitizeForSubject(userName)}`,
       html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
@@ -169,13 +146,42 @@ export async function sendV3LateRequestNotification({ adminEmail, userName, user
   }
 }
 
-// ─── End v3 Email Helpers ─────────────────────────────────────────────────────
+// ─── Legacy v2 Email Helpers (kept for backwards compatibility) ──────────────
 
-// Send approval request notification to people lead
+// Send reservation confirmation email (v2)
+export async function sendReservationEmail({ email, spot, date }) {
+  try {
+    await sendEmail({
+      to: email,
+      subject: 'Parking Reservation Confirmation - Reservation Boss',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #2563eb;">Parking Reservation Confirmed</h2>
+          <p>Your parking spot has been successfully reserved:</p>
+          <ul style="background: #f3f4f6; padding: 20px; border-radius: 8px;">
+            <li><strong>Parking Spot:</strong> ${spot}</li>
+            <li><strong>Date:</strong> ${date}</li>
+            <li><strong>Email:</strong> ${email}</li>
+          </ul>
+          <p>Please arrive on time and park only in your designated spot.</p>
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+          <p style="color: #6b7280; font-size: 12px;">
+            This is an automated message from Reservation Boss. Please do not reply to this email.
+          </p>
+        </div>
+      `,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Email sending failed:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Send approval request notification to people lead (v2)
 export async function sendApprovalRequestEmail({ peopleLeadEmail, email, spot, date }) {
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: peopleLeadEmail,
       subject: 'Parking Approval Request - Reservation Boss',
       html: `
@@ -202,11 +208,10 @@ export async function sendApprovalRequestEmail({ peopleLeadEmail, email, spot, d
   }
 }
 
-// Send approval decision (approved or rejected) to the employee
+// Send approval decision (v2)
 export async function sendApprovalDecisionEmail({ email, spot, date, approved, notes }) {
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: email,
       subject: `Parking Request ${approved ? 'Approved' : 'Rejected'} - Reservation Boss`,
       html: `
@@ -238,11 +243,10 @@ export async function sendApprovalDecisionEmail({ email, spot, date, approved, n
   }
 }
 
-// Send cancellation code email
+// Send cancellation code email (v2)
 export async function sendCancellationCodeEmail({ email, code, spot, date }) {
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: email,
       subject: 'Parking Cancellation Code - Reservation Boss',
       html: `

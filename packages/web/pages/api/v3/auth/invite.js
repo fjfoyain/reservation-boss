@@ -3,7 +3,7 @@ import { withCors } from '@/lib/middleware/cors';
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { createInvitation } from '@/lib/utils/inviteHelpers';
 import { ALLOWED_DOMAIN } from '@/lib/config/constants';
-import { transporter } from '@/lib/config/email';
+import { sendEmail } from '@/lib/config/email';
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -25,8 +25,7 @@ async function handler(req, res) {
     const baseUrl = process.env.APP_URL || `${proto}://${host}`;
     const registerLink = `${baseUrl}/auth/register?token=${token}`;
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: normalized,
       subject: "You're invited to North Highland Workspace",
       html: `

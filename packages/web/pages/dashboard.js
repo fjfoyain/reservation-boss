@@ -14,10 +14,14 @@ import {
   toGye,
 } from '@/lib/utils/weekHelpersV3';
 
+// Always fetch a fresh token to avoid 401s after the 1-hour Firebase expiry
+function getToken() {
+  return auth.currentUser?.getIdToken();
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState('');
   const [weekMonday, setWeekMonday] = useState(getDefaultWeekMonday());
   const [weekDates, setWeekDates] = useState([]);
   const [attendance, setAttendance] = useState({}); // { 'YYYY-MM-DD': 'office' | 'remote' }
@@ -40,7 +44,6 @@ export default function DashboardPage() {
         return;
       }
       const idToken = await firebaseUser.getIdToken();
-      setToken(idToken);
 
       const res = await fetch('/api/v3/profile', {
         headers: { Authorization: `Bearer ${idToken}` },
@@ -72,21 +75,23 @@ export default function DashboardPage() {
 
   // Fetch attendance + parking for the week
   const fetchWeekData = useCallback(async () => {
-    if (!token || !weekMonday) return;
+    if (!weekMonday) return;
     try {
+      const t = await getToken();
       const [attRes, parkRes] = await Promise.all([
         fetch(`/api/v3/attendance/week?start=${weekMonday}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${t}` },
         }),
         fetch(`/api/v3/parking/week?start=${weekMonday}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${t}` },
         }),
       ]);
       const attData = await attRes.json();
       const parkData = await parkRes.json();
 
+      // Store { status, id } per date — id is needed for late requests when week is locked
       const attMap = {};
-      (attData.attendance || []).forEach((a) => { attMap[a.date] = a.status; });
+      (attData.attendance || []).forEach((a) => { attMap[a.date] = { status: a.status, id: a.id }; });
       setAttendance(attMap);
 
       const parkMap = {};
@@ -95,7 +100,7 @@ export default function DashboardPage() {
     } catch (err) {
       console.error('Failed to fetch week data:', err);
     }
-  }, [token, weekMonday]);
+  }, [weekMonday]);
 
   useEffect(() => {
     fetchWeekData();
@@ -103,10 +108,18 @@ export default function DashboardPage() {
 
   // Toggle attendance for a day
   function toggleAttendance(date) {
-    if (!editable) return;
-    const current = attendance[date] || 'remote';
+    const existing = attendance[date];
+    if (!editable) {
+      // Week is locked — open late request modal if there is an existing attendance record
+      if (existing?.id) {
+        setLateModalData({ type: 'attendance', reservationId: existing.id, date });
+        setLateModalOpen(true);
+      }
+      return;
+    }
+    const current = existing?.status || 'remote';
     const next = current === 'office' ? 'remote' : 'office';
-    setAttendance((prev) => ({ ...prev, [date]: next }));
+    setAttendance((prev) => ({ ...prev, [date]: { ...prev[date], status: next } }));
   }
 
   // Reserve parking for a day
@@ -114,9 +127,10 @@ export default function DashboardPage() {
     const spot = spotSelections[date] || availableSpots[0];
     if (!spot) return;
     try {
+      const t = await getToken();
       const res = await fetch('/api/v3/parking', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ date, spot }),
       });
       const data = await res.json();
@@ -142,9 +156,10 @@ export default function DashboardPage() {
       return;
     }
     try {
+      const t = await getToken();
       const res = await fetch(`/api/v3/parking/${entry.id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${t}` },
       });
       if (res.ok) {
         const next = { ...parking };
@@ -170,11 +185,12 @@ export default function DashboardPage() {
     if (!editable) return;
     setSaving(true);
     try {
+      const t = await getToken();
       const updates = weekDates.map(({ date }) => {
-        const status = attendance[date] || 'remote';
+        const status = attendance[date]?.status || 'remote';
         return fetch('/api/v3/attendance', {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ date, status }),
         });
       });
@@ -193,9 +209,10 @@ export default function DashboardPage() {
     if (!lateModalData || !lateReason.trim()) return;
     setSubmittingLate(true);
     try {
+      const t = await getToken();
       const res = await fetch('/api/v3/late-requests', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...lateModalData, reason: lateReason.trim() }),
       });
       if (res.ok) {
@@ -224,7 +241,7 @@ export default function DashboardPage() {
     router.push('/auth/login');
   }
 
-  const officeDaysCount = weekDates.filter(({ date }) => attendance[date] === 'office').length;
+  const officeDaysCount = weekDates.filter(({ date }) => attendance[date]?.status === 'office').length;
   const weeklyLimitReached = officeDaysCount >= 4;
 
   const weekLabel = weekDates.length
@@ -330,7 +347,7 @@ export default function DashboardPage() {
           {/* Day rows */}
           <div className="divide-y divide-gray-200">
             {weekDates.map(({ date, label, dayNum }) => {
-              const isOffice = attendance[date] === 'office';
+              const isOffice = attendance[date]?.status === 'office';
               const parkingEntry = parking[date];
               const isPast = date < today;
               const isToday = date === today;
@@ -354,13 +371,13 @@ export default function DashboardPage() {
 
                     {/* Attendance toggle */}
                     <div className="flex items-center gap-4 ml-18 sm:ml-0">
-                      <label className={`relative inline-flex items-center ${editable && !isPast ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
+                      <label className={`relative inline-flex items-center ${!isPast ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
                         <input
                           type="checkbox"
                           className="sr-only peer"
                           checked={isOffice}
                           onChange={() => !isPast && toggleAttendance(date)}
-                          disabled={!editable || isPast}
+                          disabled={isPast}
                         />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00A3E0]" />
                         <span className={`ml-3 text-sm font-medium min-w-[80px] ${isOffice ? 'text-gray-900' : 'text-gray-500'}`}>

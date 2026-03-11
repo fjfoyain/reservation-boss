@@ -47,4 +47,4 @@ export const FontSize = {
   xxxl: 30,
 };
 
-export const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://reservationboss.io';
+export const API_URL = (process.env.EXPO_PUBLIC_API_URL ?? 'https://reservationboss.io').replace(/\/$/, '');

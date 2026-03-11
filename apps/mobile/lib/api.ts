@@ -2,6 +2,7 @@ import { auth } from './firebase';
 import { API_URL } from './constants';
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<any> {
+  await auth.authStateReady();
   const token = await auth.currentUser?.getIdToken();
 
   const res = await fetch(`${API_URL}${path}`, {

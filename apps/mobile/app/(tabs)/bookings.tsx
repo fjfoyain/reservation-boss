@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors, FontSize, Spacing } from '@/lib/constants';
 
-export default function DashboardScreen() {
+export default function BookingsScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>📅</Text>
-      <Text style={styles.title}>Dashboard</Text>
-      <Text style={styles.sub}>Weekly attendance coming soon</Text>
+      <Text style={styles.emoji}>🗓️</Text>
+      <Text style={styles.title}>My Bookings</Text>
+      <Text style={styles.sub}>Your reservations coming soon</Text>
     </View>
   );
 }

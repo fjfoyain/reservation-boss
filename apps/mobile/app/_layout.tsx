@@ -41,10 +41,15 @@ function RootLayoutNav() {
 
   if (loading) return null;
 
+  // If user is null and we're not yet on the auth screen, return null while the
+  // redirect effect fires. This prevents (tabs) from mounting and making API calls.
+  if (!user && segments[0] !== '(auth)') return null;
+
   return (
     <Stack>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="admin" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

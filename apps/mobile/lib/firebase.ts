@@ -1,6 +1,8 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { initializeAuth, getAuth } from 'firebase/auth';
-import { getReactNativePersistence } from '@firebase/auth';
+import { initializeAuth, getAuth, type Persistence } from 'firebase/auth';
+// getReactNativePersistence is exported from the RN build but absent from browser TS types
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { getReactNativePersistence } = require('firebase/auth') as { getReactNativePersistence: (s: unknown) => Persistence };
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
@@ -12,11 +14,16 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-const isFirstInit = getApps().length === 0;
-const app = isFirstInit ? initializeApp(firebaseConfig) : getApps()[0];
+// Capture existing apps BEFORE potentially calling initializeApp.
+// getApps().length > 1 after initializeApp is always 1 — never > 1.
+// We must snapshot the count first to know if this is a fresh init.
+const existingApps = getApps();
+const app = existingApps[0] ?? initializeApp(firebaseConfig);
 
-// initializeAuth (with persistence) must only be called once — on first init.
-// On hot reload, getAuth() returns the already-initialized instance.
-export const auth = isFirstInit
-  ? initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })
+// Only call initializeAuth on the very first initialization.
+// On hot reload the app already exists, so use getAuth to get the same instance.
+export const auth = existingApps.length === 0
+  ? initializeAuth(app, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    })
   : getAuth(app);

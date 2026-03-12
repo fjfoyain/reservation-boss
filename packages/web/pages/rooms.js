@@ -36,6 +36,7 @@ export default function RoomsPage() {
   const [booking, setBooking] = useState(false);
   const [toast, setToast] = useState('');
   const [cancelConfirm, setCancelConfirm] = useState(null); // reservation id to confirm cancel
+  const [expandedRoom, setExpandedRoom] = useState(null); // mobile accordion
 
   const weekdayDates = getWeekdayDates(14); // next 14 weekdays
   const today = toDateString(toGye());
@@ -143,7 +144,7 @@ export default function RoomsPage() {
       <main className="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-8 w-full">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Room Reservations</h1>
-          <p className="mt-2 text-sm text-gray-500">Book meeting rooms and calling booths in 30-minute slots.</p>
+          <p className="mt-2 text-sm text-gray-500">Please try to use the room or booth considering the capacity of them.</p>
         </div>
 
         {/* Filters */}
@@ -260,48 +261,72 @@ export default function RoomsPage() {
             </table>
           </div>
 
-          {/* Mobile: card per room with time slots */}
-          <div className="sm:hidden space-y-4">
-            {rooms.map((room) => (
-              <div key={room.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-900">{room.name}</h3>
-                  {room.capacity && <p className="text-xs text-gray-400">Capacity: {room.capacity}</p>}
-                </div>
-                <div className="divide-y divide-gray-100">
-                  {TIME_SLOTS.map((slot) => {
-                    const { status, id: resId } = getSlotStatus(room.id, slot);
-                    return (
-                      <div key={slot.start} className="flex items-center justify-between px-4 py-2.5">
-                        <span className="text-xs text-gray-500 font-medium w-20">{formatTimeSlot(slot.start, slot.end)}</span>
-                        {status === 'available' && (
-                          <button
-                            onClick={() => setConfirmModal({ room, slot })}
-                            className="px-3 py-1.5 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-200 active:bg-green-100 transition-colors"
-                          >
-                            Book
-                          </button>
-                        )}
-                        {status === 'mine' && (
-                          <button
-                            onClick={() => setCancelConfirm(resId)}
-                            className="px-3 py-1.5 rounded-md text-xs font-medium border transition-colors"
-                            style={{ backgroundColor: '#eaf4fd', borderColor: '#1183d4', color: '#1183d4' }}
-                          >
-                            My Booking
-                          </button>
-                        )}
-                        {status === 'taken' && (
-                          <span className="px-3 py-1.5 rounded-md text-xs bg-gray-100 text-gray-400 border border-gray-200">
-                            Booked
-                          </span>
+          {/* Mobile: accordion per room */}
+          <div className="sm:hidden space-y-3">
+            {rooms.map((room) => {
+              const isOpen = expandedRoom === room.id;
+              const myBookingsCount = TIME_SLOTS.filter((s) => getSlotStatus(room.id, s).status === 'mine').length;
+              const availableCount = TIME_SLOTS.filter((s) => getSlotStatus(room.id, s).status === 'available').length;
+              return (
+                <div key={room.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <button
+                    onClick={() => setExpandedRoom(isOpen ? null : room.id)}
+                    className="w-full flex items-center justify-between px-4 py-3.5 bg-white active:bg-gray-50 transition-colors"
+                  >
+                    <div className="text-left">
+                      <h3 className="text-sm font-semibold text-gray-900">{room.name}</h3>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        {room.capacity && <span className="text-xs text-gray-400">Cap: {room.capacity}</span>}
+                        <span className="text-xs text-green-600">{availableCount} available</span>
+                        {myBookingsCount > 0 && (
+                          <span className="text-xs font-medium" style={{ color: '#1183d4' }}>{myBookingsCount} booked</span>
                         )}
                       </div>
-                    );
-                  })}
+                    </div>
+                    <span
+                      className="material-symbols-outlined text-gray-400 transition-transform duration-200"
+                      style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                    >
+                      expand_more
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <div className="border-t border-gray-200 divide-y divide-gray-100">
+                      {TIME_SLOTS.map((slot) => {
+                        const { status, id: resId } = getSlotStatus(room.id, slot);
+                        return (
+                          <div key={slot.start} className="flex items-center justify-between px-4 py-2.5">
+                            <span className="text-xs text-gray-500 font-medium">{formatTimeSlot(slot.start, slot.end)}</span>
+                            {status === 'available' && (
+                              <button
+                                onClick={() => setConfirmModal({ room, slot })}
+                                className="px-3 py-1.5 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-200 active:bg-green-100 transition-colors"
+                              >
+                                Book
+                              </button>
+                            )}
+                            {status === 'mine' && (
+                              <button
+                                onClick={() => setCancelConfirm(resId)}
+                                className="px-3 py-1.5 rounded-md text-xs font-medium border transition-colors"
+                                style={{ backgroundColor: '#eaf4fd', borderColor: '#1183d4', color: '#1183d4' }}
+                              >
+                                My Booking
+                              </button>
+                            )}
+                            {status === 'taken' && (
+                              <span className="px-3 py-1.5 rounded-md text-xs bg-gray-100 text-gray-400 border border-gray-200">
+                                Booked
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           </>
         )}

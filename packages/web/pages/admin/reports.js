@@ -320,7 +320,7 @@ export default function AdminReportsPage() {
 
           {tableLoading ? (
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex justify-center py-16">
-              <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
+              <div className="css-spinner"></div>
             </div>
           ) : sections ? (
             /* Sectioned layout (e.g. parking tab with external + internal) */

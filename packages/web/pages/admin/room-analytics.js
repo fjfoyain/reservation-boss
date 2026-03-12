@@ -162,7 +162,7 @@ export default function RoomAnalyticsPage() {
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
+            <div className="css-spinner"></div>
           </div>
         ) : (
           <>

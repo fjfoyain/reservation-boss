@@ -153,7 +153,7 @@ export default function LoginPage() {
             >
               {loading ? (
                 <>
-                  <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                  <span className="css-spinner-sm"></span>
                   Signing in…
                 </>
               ) : (

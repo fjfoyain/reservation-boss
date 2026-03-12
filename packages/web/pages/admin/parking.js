@@ -272,7 +272,7 @@ export default function AdminParkingPage() {
     return (
       <AdminLayout title="Parking Config">
         <div className="flex justify-center py-20">
-          <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
+          <div className="css-spinner"></div>
         </div>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
       </AdminLayout>

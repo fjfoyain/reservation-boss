@@ -73,7 +73,7 @@ export default function RegisterPage() {
           {/* Loading state */}
           {status === 'loading' && (
             <div className="text-center py-8 text-gray-500">
-              <span className="material-symbols-outlined text-4xl animate-spin">progress_activity</span>
+              <div className="css-spinner"></div>
               <p className="mt-3">Validating your invitation…</p>
             </div>
           )}
@@ -205,7 +205,7 @@ export default function RegisterPage() {
                   >
                     {submitting ? (
                       <span className="flex items-center justify-center gap-2">
-                        <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                        <span className="css-spinner-sm"></span>
                         Creating account…
                       </span>
                     ) : 'Create Account'}

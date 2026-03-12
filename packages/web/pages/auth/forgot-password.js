@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
               >
                 {status === 'loading' ? (
                   <span className="flex items-center justify-center gap-2">
-                    <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                    <span className="css-spinner-sm"></span>
                     Sending…
                   </span>
                 ) : 'Send Reset Link'}

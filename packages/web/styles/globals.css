@@ -134,6 +134,28 @@ button {
   }
 }
 
+/* Pure CSS spinner (no icon font dependency) */
+.css-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #00A3E0;
+  border-radius: 50%;
+  animation: css-spin 0.7s linear infinite;
+}
+@keyframes css-spin {
+  to { transform: rotate(360deg); }
+}
+.css-spinner-sm {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: css-spin 0.7s linear infinite;
+  display: inline-block;
+}
+
 /* Safe-area insets for notched phones (iPhone X+) */
 body {
   padding-top: env(safe-area-inset-top);

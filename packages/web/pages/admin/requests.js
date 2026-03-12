@@ -85,7 +85,7 @@ export default function AdminRequestsPage() {
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           {loading ? (
-            <div className="flex justify-center py-20"><span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span></div>
+            <div className="flex justify-center py-20"><div className="css-spinner"></div></div>
           ) : requests.length === 0 ? (
             <div className="text-center py-20 text-gray-400">
               <span className="material-symbols-outlined text-5xl">inbox</span>

@@ -276,7 +276,7 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <span className="material-symbols-outlined text-5xl text-gray-300 animate-spin">progress_activity</span>
+        <div className="css-spinner"></div>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
       </div>
     );

@@ -297,7 +297,7 @@ export default function MyBookingsPage() {
         {/* Content */}
         {loading ? (
           <div className="flex justify-center py-20">
-            <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
+            <div className="css-spinner"></div>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-xl border border-gray-200 text-gray-400">

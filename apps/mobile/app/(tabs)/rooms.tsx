@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors, FontSize, Spacing, Radii } from '@/lib/constants';
 import { apiFetch } from '@/lib/api';
-import { todayEcuador, formatDateLabel, prevDay, nextDay } from '@/lib/weekHelpers';
+import { todayEcuador, formatDateLabel, prevDay, nextDay, currentTimeEcuador } from '@/lib/weekHelpers';
 
 interface Room { id: string; name: string; type: 'meeting' | 'calling' }
 interface Reservation {
@@ -63,8 +63,13 @@ export default function RoomsScreen() {
 
   function openBooking(room: Room) {
     setSelectedRoom(room);
-    setStartTime('09:00');
-    setEndTime('10:00');
+    // For today, default to the next available slot (not in the past)
+    const isToday = selectedDate === todayEcuador();
+    const nowSlot = isToday ? currentTimeEcuador() : '00:00';
+    const firstAvailable = TIME_SLOTS.find(t => t > nowSlot) ?? TIME_SLOTS[0];
+    const secondAvailable = TIME_SLOTS.find(t => t > firstAvailable) ?? TIME_SLOTS[1];
+    setStartTime(firstAvailable);
+    setEndTime(secondAvailable);
     setShowModal(true);
   }
 
@@ -111,6 +116,9 @@ export default function RoomsScreen() {
     ]);
   }
 
+  const isToday = selectedDate === todayEcuador();
+  const minSlot = isToday ? currentTimeEcuador() : '00:00';
+  const availableStartSlots = TIME_SLOTS.slice(0, -1).filter(t => t > minSlot);
   const endSlots = TIME_SLOTS.filter(t => t > startTime);
 
   return (
@@ -204,7 +212,7 @@ export default function RoomsScreen() {
 
             <Text style={styles.timeLabel}>Start time</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.timeScroll}>
-              {TIME_SLOTS.slice(0, -1).map(t => (
+              {availableStartSlots.map(t => (
                 <TouchableOpacity
                   key={t}
                   style={[styles.timeChip, startTime === t && styles.timeChipActive]}

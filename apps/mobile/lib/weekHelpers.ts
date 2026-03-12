@@ -105,6 +105,14 @@ export function formatDateLabel(dateStr: string): string {
   return `${DAYS[d.getUTCDay()]}, ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
 }
 
+/** Returns current Ecuador time as "HH:MM" (rounded down to the half-hour) */
+export function currentTimeEcuador(): string {
+  const now = toEcuador(new Date());
+  const h = String(now.getUTCHours()).padStart(2, '0');
+  const m = now.getUTCMinutes() >= 30 ? '30' : '00';
+  return `${h}:${m}`;
+}
+
 export function prevDay(dateStr: string): string {
   const d = new Date(`${dateStr}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() - 1);

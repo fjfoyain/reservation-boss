@@ -102,6 +102,22 @@ export default function AdminDashboard() {
           </View>
           <MaterialIcons name="chevron-right" size={20} color={Colors.textMuted} />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.actionRow, { marginTop: Spacing.sm }]}
+          onPress={() => router.push('/admin/users' as any)}
+        >
+          <View style={[styles.actionIcon, { backgroundColor: Colors.navy + '15' }]}>
+            <MaterialIcons name="people" size={20} color={Colors.navy} />
+          </View>
+          <View style={styles.actionInfo}>
+            <Text style={styles.actionTitle}>User management</Text>
+            <Text style={styles.actionSub}>
+              {stats?.totalUsers ? `${stats.totalUsers} users` : 'Manage roles & access'}
+            </Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={20} color={Colors.textMuted} />
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

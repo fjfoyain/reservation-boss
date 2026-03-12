@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, ActivityIndicator,
-  RefreshControl, Alert, TouchableOpacity,
+  RefreshControl, Alert, TouchableOpacity, Modal, TextInput,
+  KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -29,6 +30,9 @@ export default function BookingsScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [cancelling, setCancelling] = useState<string | null>(null);
+  const [lateTarget, setLateTarget] = useState<Booking | null>(null);
+  const [lateReason, setLateReason] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const today = todayEcuador();
 
   const load = useCallback(async () => {
@@ -74,6 +78,38 @@ export default function BookingsScreen() {
     ]);
   }
 
+  function openLateRequest(b: Booking) {
+    setLateTarget(b);
+    setLateReason('');
+  }
+
+  async function submitLateRequest() {
+    if (!lateTarget) return;
+    if (!lateReason.trim()) {
+      Alert.alert('Reason required', 'Please explain why you need this change.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await apiFetch('/api/v3/late-requests', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: lateTarget.type,
+          reservationId: lateTarget.id,
+          date: lateTarget.date,
+          reason: lateReason.trim(),
+        }),
+      });
+      setLateTarget(null);
+      Alert.alert('Request submitted', 'Your request has been sent to the admin for review.');
+      await load();
+    } catch (err: any) {
+      Alert.alert('Error', err.message ?? 'Could not submit request');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   const grouped = bookings.reduce<Record<string, Booking[]>>((acc, b) => {
     (acc[b.date] = acc[b.date] ?? []).push(b);
     return acc;
@@ -101,6 +137,7 @@ export default function BookingsScreen() {
             {grouped[date].map(b => {
               const meta = TYPE_META[b.type];
               const canCancel = !b.fixed && date >= today && !b.lateRequestId;
+              const canRequestLate = !b.fixed && !b.lateRequestId && !canCancel;
               return (
                 <View key={b.id} style={styles.bookingRow}>
                   <View style={[styles.typeBadge, { backgroundColor: meta.color + '18' }]}>
@@ -115,6 +152,16 @@ export default function BookingsScreen() {
                       <View style={styles.pendingBadge}>
                         <Text style={styles.pendingTxt}>Review pending</Text>
                       </View>
+                    )}
+                    {canRequestLate && (
+                      <TouchableOpacity
+                        style={styles.lateBtn}
+                        onPress={() => openLateRequest(b)}
+                        hitSlop={8}
+                      >
+                        <MaterialIcons name="edit-note" size={16} color={Colors.amber} />
+                        <Text style={styles.lateBtnTxt}>Request change</Text>
+                      </TouchableOpacity>
                     )}
                     {canCancel && (
                       <TouchableOpacity onPress={() => cancelBooking(b)} disabled={cancelling === b.id} hitSlop={8}>
@@ -153,6 +200,57 @@ export default function BookingsScreen() {
           </>
         )}
       </ScrollView>
+
+      {/* Late request modal */}
+      <Modal visible={!!lateTarget} animationType="slide" transparent>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalSheet}>
+              <View style={styles.modalHeader}>
+                <View>
+                  <Text style={styles.modalTitle}>Request late change</Text>
+                  {lateTarget && (
+                    <Text style={styles.modalSub}>
+                      {TYPE_META[lateTarget.type].label} · {formatDateLabel(lateTarget.date)}
+                    </Text>
+                  )}
+                </View>
+                <TouchableOpacity onPress={() => setLateTarget(null)} hitSlop={8}>
+                  <MaterialIcons name="close" size={24} color={Colors.textSecondary} />
+                </TouchableOpacity>
+              </View>
+
+              <Text style={styles.reasonLabel}>Reason for change</Text>
+              <TextInput
+                style={styles.reasonInput}
+                placeholder="Explain why you need this change…"
+                placeholderTextColor={Colors.textMuted}
+                value={lateReason}
+                onChangeText={setLateReason}
+                multiline
+                numberOfLines={4}
+                maxLength={2000}
+                textAlignVertical="top"
+              />
+              <Text style={styles.charCount}>{lateReason.length}/2000</Text>
+
+              <TouchableOpacity
+                style={[styles.submitBtn, submitting && { opacity: 0.6 }]}
+                onPress={submitLateRequest}
+                disabled={submitting}
+              >
+                {submitting
+                  ? <ActivityIndicator size="small" color={Colors.white} />
+                  : <Text style={styles.submitTxt}>Submit request</Text>
+                }
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -178,7 +276,27 @@ const styles = StyleSheet.create({
   bookingRight: { alignItems: 'flex-end', gap: 4 },
   pendingBadge: { backgroundColor: Colors.amber + '22', borderRadius: Radii.full, paddingHorizontal: 7, paddingVertical: 2 },
   pendingTxt: { fontSize: FontSize.xs, color: Colors.amber, fontWeight: '600' },
+  lateBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  lateBtnTxt: { fontSize: FontSize.xs, color: Colors.amber, fontWeight: '600' },
   emptyState: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.sm },
   emptyTitle: { fontSize: FontSize.lg, fontWeight: '700', color: Colors.textSecondary },
   emptyTxt: { fontSize: FontSize.sm, color: Colors.textMuted },
+  // Modal
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
+  modalSheet: {
+    backgroundColor: Colors.white, borderTopLeftRadius: Radii.xl, borderTopRightRadius: Radii.xl,
+    padding: Spacing.xl, paddingBottom: 40,
+  },
+  modalHeader: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: Spacing.lg },
+  modalTitle: { fontSize: FontSize.lg, fontWeight: '700', color: Colors.navy },
+  modalSub: { fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 2 },
+  reasonLabel: { fontSize: FontSize.sm, fontWeight: '600', color: Colors.textSecondary, marginBottom: Spacing.xs },
+  reasonInput: {
+    borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radii.md,
+    padding: Spacing.md, fontSize: FontSize.base, color: Colors.textPrimary,
+    minHeight: 110,
+  },
+  charCount: { fontSize: FontSize.xs, color: Colors.textMuted, textAlign: 'right', marginTop: 4, marginBottom: Spacing.md },
+  submitBtn: { backgroundColor: Colors.teal, borderRadius: Radii.md, paddingVertical: Spacing.md, alignItems: 'center' },
+  submitTxt: { color: Colors.white, fontSize: FontSize.base, fontWeight: '700' },
 });

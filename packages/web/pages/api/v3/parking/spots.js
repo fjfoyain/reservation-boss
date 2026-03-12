@@ -2,7 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
-import { PARKING_SPOTS } from '@/lib/config/constants';
+import { PARKING_SPOTS, CONFIG_COLLECTION } from '@/lib/config/constants';
 
 const DEFAULT_SPOTS = PARKING_SPOTS.map((name, i) => ({
   name,
@@ -13,7 +13,7 @@ async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const snap = await db.collection('v3_config').doc('parking_rules').get();
+    const snap = await db.collection(CONFIG_COLLECTION).doc('parking_rules').get();
     const spots = snap.exists && snap.data().spots ? snap.data().spots : DEFAULT_SPOTS;
     return res.status(200).json({ spots });
   } catch (err) {

@@ -1,5 +1,6 @@
-// v3 Authentication middleware — verifies Firebase token + checks v3_users role
+// v3 Authentication middleware — verifies Firebase token + checks users role
 import { auth, db } from '@/lib/config/firebaseAdmin';
+import { USERS_COLLECTION } from '@/lib/config/constants';
 
 /**
  * Verify Firebase ID token and return decoded user.
@@ -14,17 +15,17 @@ async function verifyToken(req) {
 }
 
 /**
- * Fetch the v3_users profile for a given uid.
+ * Fetch the users profile for a given uid.
  */
 async function getUserProfile(uid) {
-  const doc = await db.collection('v3_users').doc(uid).get();
+  const doc = await db.collection(USERS_COLLECTION).doc(uid).get();
   if (!doc.exists) throw new Error('Unauthorized: User profile not found');
   return { id: doc.id, ...doc.data() };
 }
 
 /**
  * Middleware: require authenticated user (any role).
- * Attaches req.user (decoded token) and req.userProfile (v3_users doc).
+ * Attaches req.user (decoded token) and req.userProfile (users doc).
  */
 export function withAuthV3(handler) {
   return async (req, res) => {

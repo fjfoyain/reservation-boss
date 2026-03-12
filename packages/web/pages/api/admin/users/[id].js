@@ -3,12 +3,13 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withFullAdmin } from '@/lib/middleware/auth';
 import { db } from '@/lib/config/firebaseAdmin';
+import { USERS_COLLECTION } from '@/lib/config/constants';
 import { validateEmail } from '@/lib/utils/validation';
 
 async function handler(req, res) {
   const { id } = req.query;
 
-  const docRef = db.collection('users').doc(id);
+  const docRef = db.collection(USERS_COLLECTION).doc(id);
   const doc = await docRef.get();
   if (!doc.exists) return res.status(404).json({ error: 'User not found' });
 
@@ -29,7 +30,7 @@ async function handler(req, res) {
           return res.status(400).json({ error: 'Invalid people lead email' });
         }
 
-        const leadSnap = await db.collection('users')
+        const leadSnap = await db.collection(USERS_COLLECTION)
           .where('email', '==', leadValidation.normalizedEmail)
           .where('isPeopleLead', '==', true)
           .limit(1)

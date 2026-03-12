@@ -3,11 +3,12 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withFullAdmin } from '@/lib/middleware/auth';
 import { db } from '@/lib/config/firebaseAdmin';
+import { USERS_COLLECTION } from '@/lib/config/constants';
 import { validateEmail } from '@/lib/utils/validation';
 
 async function handler(req, res) {
   if (req.method === 'GET') {
-    const snap = await db.collection('users').orderBy('email').get();
+    const snap = await db.collection(USERS_COLLECTION).orderBy('email').get();
     const users = snap.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -28,7 +29,7 @@ async function handler(req, res) {
     const normalizedEmail = emailValidation.normalizedEmail;
 
     // Check duplicate
-    const existing = await db.collection('users')
+    const existing = await db.collection(USERS_COLLECTION)
       .where('email', '==', normalizedEmail)
       .limit(1)
       .get();
@@ -41,7 +42,7 @@ async function handler(req, res) {
       if (!leadValidation.valid) return res.status(400).json({ error: 'Invalid people lead email' });
       normalizedLeadEmail = leadValidation.normalizedEmail;
 
-      const leadSnap = await db.collection('users')
+      const leadSnap = await db.collection(USERS_COLLECTION)
         .where('email', '==', normalizedLeadEmail)
         .where('isPeopleLead', '==', true)
         .limit(1)
@@ -52,7 +53,7 @@ async function handler(req, res) {
     }
 
     const now = new Date();
-    const newDoc = await db.collection('users').add({
+    const newDoc = await db.collection(USERS_COLLECTION).add({
       email: normalizedEmail,
       isPeopleLead: !!isPeopleLead,
       peopleLeadEmail: normalizedLeadEmail,

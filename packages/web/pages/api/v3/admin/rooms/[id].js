@@ -3,10 +3,11 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { ROOMS_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   const { id } = req.query;
-  const docRef = db.collection('v3_rooms').doc(id);
+  const docRef = db.collection(ROOMS_COLLECTION).doc(id);
   const doc = await docRef.get();
   if (!doc.exists) return res.status(404).json({ error: 'Room not found' });
 

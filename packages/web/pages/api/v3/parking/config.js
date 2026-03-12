@@ -2,12 +2,13 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { CONFIG_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const snap = await db.collection('v3_config').doc('parking_rules').get();
+    const snap = await db.collection(CONFIG_COLLECTION).doc('parking_rules').get();
     const data = snap.exists ? snap.data() : {};
     return res.status(200).json({
       config: {

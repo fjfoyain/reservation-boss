@@ -2,13 +2,14 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db, auth as firebaseAuth } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { USERS_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   const { uid } = req.query;
 
   if (req.method !== 'PUT') return res.status(405).json({ error: 'Method not allowed' });
 
-  const docRef = db.collection('v3_users').doc(uid);
+  const docRef = db.collection(USERS_COLLECTION).doc(uid);
   const doc = await docRef.get();
   if (!doc.exists) return res.status(404).json({ error: 'User not found' });
 
@@ -41,7 +42,7 @@ async function handler(req, res) {
   if (internalSpot !== undefined) {
     if (internalSpot !== null) {
       // Check spot is not already assigned to another active user (single-field query + JS filter)
-      const existingSnap = await db.collection('v3_users').where('internalSpot', '==', internalSpot).get();
+      const existingSnap = await db.collection(USERS_COLLECTION).where('internalSpot', '==', internalSpot).get();
       const conflict = existingSnap.docs.find((d) => d.id !== uid && d.data().active !== false);
       if (conflict) {
         return res.status(409).json({ error: `Spot "${internalSpot}" is already assigned to another user` });

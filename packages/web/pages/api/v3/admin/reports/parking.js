@@ -2,6 +2,7 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { PARKING_COLLECTION, USERS_COLLECTION, ATTENDANCE_COLLECTION } from '@/lib/config/constants';
 
 function getWeekRange(dateStr) {
   const d = new Date(`${dateStr}T12:00:00Z`);
@@ -46,13 +47,13 @@ async function handler(req, res) {
 
   // Fetch external parking reservations and internal users + attendance in parallel
   const [externalSnap, internalUsersSnap, attendanceSnap] = await Promise.all([
-    db.collection('v3_parking')
+    db.collection(PARKING_COLLECTION)
       .where('date', '>=', range.start)
       .where('date', '<=', range.end)
       .orderBy('date')
       .get(),
-    db.collection('v3_users').where('role', '==', 'internal').get(),
-    db.collection('v3_attendance')
+    db.collection(USERS_COLLECTION).where('role', '==', 'internal').get(),
+    db.collection(ATTENDANCE_COLLECTION)
       .where('date', '>=', range.start)
       .where('date', '<=', range.end)
       .get(),

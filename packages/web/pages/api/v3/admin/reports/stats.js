@@ -3,6 +3,7 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { USERS_COLLECTION, ATTENDANCE_COLLECTION, PARKING_COLLECTION, LATE_REQUESTS_COLLECTION } from '@/lib/config/constants';
 
 function getWeekRange(dateStr) {
   const d = new Date(`${dateStr}T12:00:00Z`);
@@ -66,10 +67,10 @@ async function handler(req, res) {
   const range = type === 'monthly' ? getMonthRange(date) : getWeekRange(date);
 
   const [usersSnap, attSnap, parkSnap, lateSnap] = await Promise.all([
-    db.collection('v3_users').where('active', '==', true).get(),
-    db.collection('v3_attendance').where('date', '>=', range.start).where('date', '<=', range.end).get(),
-    db.collection('v3_parking').where('date', '>=', range.start).where('date', '<=', range.end).get(),
-    db.collection('v3_late_requests').where('date', '>=', range.start).where('date', '<=', range.end).get(),
+    db.collection(USERS_COLLECTION).where('active', '==', true).get(),
+    db.collection(ATTENDANCE_COLLECTION).where('date', '>=', range.start).where('date', '<=', range.end).get(),
+    db.collection(PARKING_COLLECTION).where('date', '>=', range.start).where('date', '<=', range.end).get(),
+    db.collection(LATE_REQUESTS_COLLECTION).where('date', '>=', range.start).where('date', '<=', range.end).get(),
   ]);
 
   const nonAdminUsers = usersSnap.docs.filter((d) => !d.data().isAdmin && d.data().role !== 'admin');

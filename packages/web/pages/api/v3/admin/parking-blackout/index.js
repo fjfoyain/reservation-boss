@@ -3,10 +3,11 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { BLACKOUT_DATES_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method === 'GET') {
-    const snap = await db.collection('v3_blackout_dates').orderBy('date', 'asc').get();
+    const snap = await db.collection(BLACKOUT_DATES_COLLECTION).orderBy('date', 'asc').get();
     const dates = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     return res.status(200).json({ dates });
   }
@@ -22,12 +23,12 @@ async function handler(req, res) {
     }
 
     // Check for duplicate
-    const existing = await db.collection('v3_blackout_dates').where('date', '==', date).limit(1).get();
+    const existing = await db.collection(BLACKOUT_DATES_COLLECTION).where('date', '==', date).limit(1).get();
     if (!existing.empty) {
       return res.status(409).json({ error: 'A blackout date already exists for this date' });
     }
 
-    const ref = await db.collection('v3_blackout_dates').add({
+    const ref = await db.collection(BLACKOUT_DATES_COLLECTION).add({
       date,
       label: label.trim(),
       createdAt: new Date(),

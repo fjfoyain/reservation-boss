@@ -3,8 +3,9 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { CONFIG_COLLECTION } from '@/lib/config/constants';
 
-const CONFIG_DOC = db.collection('v3_config').doc('attendance_rules');
+const CONFIG_DOC = db.collection(CONFIG_COLLECTION).doc('attendance_rules');
 
 const DEFAULTS = {
   scheduleDeadlineTime: '23:00', // Monday lock time (HH:MM, Ecuador)

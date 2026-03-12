@@ -1,6 +1,7 @@
 // Invitation token utilities for v3 user onboarding
 import { randomUUID } from 'crypto';
 import { db } from '@/lib/config/firebaseAdmin';
+import { INVITATIONS_COLLECTION } from '@/lib/config/constants';
 
 const INVITE_EXPIRY_HOURS = 48;
 
@@ -19,7 +20,7 @@ export async function validateInviteToken(token) {
   if (!token) throw new Error('Token is required');
 
   const snapshot = await db
-    .collection('v3_invitations')
+    .collection(INVITATIONS_COLLECTION)
     .where('token', '==', token)
     .where('used', '==', false)
     .limit(1)
@@ -51,7 +52,7 @@ export async function createInvitation(email) {
   const now = new Date();
   const expiresAt = new Date(now.getTime() + INVITE_EXPIRY_HOURS * 60 * 60 * 1000);
 
-  await db.collection('v3_invitations').add({
+  await db.collection(INVITATIONS_COLLECTION).add({
     email: email.toLowerCase(),
     token,
     createdAt: now,
@@ -66,5 +67,5 @@ export async function createInvitation(email) {
  * Mark an invitation as used by its document ID.
  */
 export async function markInvitationUsed(invitationId) {
-  await db.collection('v3_invitations').doc(invitationId).update({ used: true });
+  await db.collection(INVITATIONS_COLLECTION).doc(invitationId).update({ used: true });
 }

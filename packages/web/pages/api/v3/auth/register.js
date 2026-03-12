@@ -1,6 +1,7 @@
 // POST /api/v3/auth/register — Complete registration from an invite token
 import { withCors } from '@/lib/middleware/cors';
 import { auth, db } from '@/lib/config/firebaseAdmin';
+import { USERS_COLLECTION } from '@/lib/config/constants';
 import { validateInviteToken, markInvitationUsed } from '@/lib/utils/inviteHelpers';
 
 async function handler(req, res) {
@@ -54,9 +55,9 @@ async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to create account. Please try again.' });
   }
 
-  // Create v3_users profile in Firestore
+  // Create users profile in Firestore
   try {
-    await db.collection('v3_users').doc(firebaseUser.uid).set({
+    await db.collection(USERS_COLLECTION).doc(firebaseUser.uid).set({
       uid: firebaseUser.uid,
       email,
       name: name.trim(),
@@ -68,7 +69,7 @@ async function handler(req, res) {
     });
   } catch (err) {
     // Rollback Firebase user if Firestore write fails
-    console.error('Firestore v3_users write error:', err);
+    console.error('Firestore users write error:', err);
     await auth.deleteUser(firebaseUser.uid).catch(() => {});
     return res.status(500).json({ error: 'Failed to create user profile. Please try again.' });
   }

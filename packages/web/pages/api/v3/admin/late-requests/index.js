@@ -3,6 +3,7 @@
 import { withPeopleLeadOrAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { LATE_REQUESTS_COLLECTION, USERS_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -13,7 +14,7 @@ async function handler(req, res) {
 
   // Single-field query + JS sort to avoid composite index requirement
   const snap = await db
-    .collection('v3_late_requests')
+    .collection(LATE_REQUESTS_COLLECTION)
     .where('status', '==', status)
     .get();
 
@@ -30,7 +31,7 @@ async function handler(req, res) {
     const leaderEmail = req.userProfile.email;
     // Get all users managed by this people lead
     const usersSnap = await db
-      .collection('v3_users')
+      .collection(USERS_COLLECTION)
       .where('peopleLeadEmail', '==', leaderEmail)
       .get();
     const managedUserIds = new Set(usersSnap.docs.map((doc) => doc.id));

@@ -2,6 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { ATTENDANCE_COLLECTION, CONFIG_COLLECTION, BLACKOUT_DATES_COLLECTION } from '@/lib/config/constants';
 import { isWeekEditable, toGye, toDateString } from '@/lib/utils/weekHelpersV3';
 
 function getMondayOfDate(dateStr) {
@@ -25,7 +26,7 @@ async function handler(req, res) {
   }
 
   // Fetch attendance config for deadline time
-  const attConfigSnap = await db.collection('v3_config').doc('attendance_rules').get();
+  const attConfigSnap = await db.collection(CONFIG_COLLECTION).doc('attendance_rules').get();
   const attConfig = attConfigSnap.exists ? attConfigSnap.data() : {};
 
   // Check week is editable
@@ -39,7 +40,7 @@ async function handler(req, res) {
 
   // Check if date is a blackout date
   if (status === 'office') {
-    const blackoutSnap = await db.collection('v3_blackout_dates').where('date', '==', date).limit(1).get();
+    const blackoutSnap = await db.collection(BLACKOUT_DATES_COLLECTION).where('date', '==', date).limit(1).get();
     if (!blackoutSnap.empty) {
       const blackout = blackoutSnap.docs[0].data();
       return res.status(409).json({ error: `Office is closed on this date: ${blackout.label}` });
@@ -52,14 +53,14 @@ async function handler(req, res) {
   try {
     // Upsert: query by userId only (auto-indexed), filter date in JS
     const snapshot = await db
-      .collection('v3_attendance')
+      .collection(ATTENDANCE_COLLECTION)
       .where('userId', '==', uid)
       .get();
 
     const existing = snapshot.docs.find((d) => d.data().date === date);
 
     if (!existing) {
-      await db.collection('v3_attendance').add({
+      await db.collection(ATTENDANCE_COLLECTION).add({
         userId: uid,
         email: req.userProfile.email,
         date,

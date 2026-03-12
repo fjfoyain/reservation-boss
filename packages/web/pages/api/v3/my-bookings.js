@@ -3,6 +3,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { ATTENDANCE_COLLECTION, PARKING_COLLECTION, ROOM_RESERVATIONS_COLLECTION, LATE_REQUESTS_COLLECTION, CONFIG_COLLECTION } from '@/lib/config/constants';
 import { canModifyParking } from '@/lib/utils/weekHelpersV3';
 
 async function handler(req, res) {
@@ -21,15 +22,15 @@ async function handler(req, res) {
   const futureStr = future.toISOString().split('T')[0];
 
   // Fetch parking config for cutoff time
-  const configSnap = await db.collection('v3_config').doc('parking_rules').get();
+  const configSnap = await db.collection(CONFIG_COLLECTION).doc('parking_rules').get();
   const cutoffTime = configSnap.exists ? (configSnap.data().cutoffTime || '08:00') : '08:00';
 
   // Single-field queries only — date filtering and sorting done in JS
   const [attSnap, parkSnap, roomSnap, lateSnap] = await Promise.all([
-    db.collection('v3_attendance').where('userId', '==', uid).get(),
-    db.collection('v3_parking').where('userId', '==', uid).get(),
-    db.collection('v3_room_reservations').where('userId', '==', uid).get(),
-    db.collection('v3_late_requests').where('userId', '==', uid).get(),
+    db.collection(ATTENDANCE_COLLECTION).where('userId', '==', uid).get(),
+    db.collection(PARKING_COLLECTION).where('userId', '==', uid).get(),
+    db.collection(ROOM_RESERVATIONS_COLLECTION).where('userId', '==', uid).get(),
+    db.collection(LATE_REQUESTS_COLLECTION).where('userId', '==', uid).get(),
   ]);
 
   // Build lookup of pending late requests by reservationId (filter in JS)

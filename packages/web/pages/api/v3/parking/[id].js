@@ -2,6 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { PARKING_COLLECTION, CONFIG_COLLECTION } from '@/lib/config/constants';
 import { canModifyParking } from '@/lib/utils/weekHelpersV3';
 
 async function handler(req, res) {
@@ -10,7 +11,7 @@ async function handler(req, res) {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Reservation ID is required' });
 
-  const doc = await db.collection('v3_parking').doc(id).get();
+  const doc = await db.collection(PARKING_COLLECTION).doc(id).get();
   if (!doc.exists) return res.status(404).json({ error: 'Reservation not found' });
 
   const data = doc.data();
@@ -19,7 +20,7 @@ async function handler(req, res) {
   }
 
   // Read configurable cutoff time
-  const configSnap = await db.collection('v3_config').doc('parking_rules').get();
+  const configSnap = await db.collection(CONFIG_COLLECTION).doc('parking_rules').get();
   const cutoffTime = configSnap.exists ? (configSnap.data().cutoffTime || '08:00') : '08:00';
 
   if (!canModifyParking(data.date, cutoffTime)) {

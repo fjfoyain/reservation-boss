@@ -3,13 +3,14 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { ATTENDANCE_COLLECTION, PARKING_COLLECTION, ROOM_RESERVATIONS_COLLECTION, LATE_REQUESTS_COLLECTION } from '@/lib/config/constants';
 
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL;
 
 const COLLECTION_MAP = {
-  attendance: 'v3_attendance',
-  parking: 'v3_parking',
-  room: 'v3_room_reservations',
+  attendance: ATTENDANCE_COLLECTION,
+  parking: PARKING_COLLECTION,
+  room: ROOM_RESERVATIONS_COLLECTION,
 };
 
 function escapeHtml(str) {
@@ -25,7 +26,7 @@ async function handler(req, res) {
   if (req.method === 'GET') {
     // Single-field query + JS sort to avoid composite index requirement
     const snapshot = await db
-      .collection('v3_late_requests')
+      .collection(LATE_REQUESTS_COLLECTION)
       .where('userId', '==', req.user.uid)
       .get();
     const requests = snapshot.docs
@@ -67,7 +68,7 @@ async function handler(req, res) {
 
     // Check if a pending request already exists for this reservation (JS filter to avoid composite index)
     const existing = await db
-      .collection('v3_late_requests')
+      .collection(LATE_REQUESTS_COLLECTION)
       .where('reservationId', '==', reservationId)
       .get();
     const hasPending = existing.docs.some((d) => d.data().status === 'pending');
@@ -75,7 +76,7 @@ async function handler(req, res) {
       return res.status(409).json({ error: 'A pending request already exists for this reservation' });
     }
 
-    const docRef = await db.collection('v3_late_requests').add({
+    const docRef = await db.collection(LATE_REQUESTS_COLLECTION).add({
       userId: uid,
       email,
       userName: name,

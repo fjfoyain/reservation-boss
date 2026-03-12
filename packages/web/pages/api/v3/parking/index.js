@@ -3,7 +3,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
-import { PARKING_SPOTS, MAX_WEEKLY_RESERVATIONS } from '@/lib/config/constants';
+import { PARKING_SPOTS, MAX_WEEKLY_RESERVATIONS, PARKING_COLLECTION, BLACKOUT_DATES_COLLECTION, CONFIG_COLLECTION, USERS_COLLECTION } from '@/lib/config/constants';
 import { canModifyParking } from '@/lib/utils/weekHelpersV3';
 import { sendV3ParkingConfirmation } from '@/lib/config/email';
 
@@ -27,8 +27,8 @@ async function handler(req, res) {
 
   // Check blackout dates and disabled spots in parallel
   const [blackoutSnap, configSnap] = await Promise.all([
-    db.collection('v3_blackout_dates').where('date', '==', date).limit(1).get(),
-    db.collection('v3_config').doc('parking_rules').get(),
+    db.collection(BLACKOUT_DATES_COLLECTION).where('date', '==', date).limit(1).get(),
+    db.collection(CONFIG_COLLECTION).doc('parking_rules').get(),
   ]);
 
   if (!blackoutSnap.empty) {
@@ -45,7 +45,7 @@ async function handler(req, res) {
 
   // Validate spot is not an internal spot (single-field query + JS filter)
   const internalSnapshot = await db
-    .collection('v3_users')
+    .collection(USERS_COLLECTION)
     .where('internalSpot', '==', spot)
     .get();
   if (internalSnapshot.docs.some((d) => d.data().role === 'internal')) {
@@ -63,7 +63,7 @@ async function handler(req, res) {
   const weekStart = monday.toISOString().split('T')[0];
   const weekEnd = friday.toISOString().split('T')[0];
 
-  const parkingRef = db.collection('v3_parking');
+  const parkingRef = db.collection(PARKING_COLLECTION);
 
   // Use a transaction to prevent race conditions (double-booking, exceeding weekly limit)
   let newDocId;

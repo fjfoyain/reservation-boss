@@ -2,6 +2,7 @@
 // PUT /api/v3/profile  — Update display name
 import { withCors } from '@/lib/middleware/cors';
 import { auth as firebaseAuth, db } from '@/lib/config/firebaseAdmin';
+import { USERS_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   // Verify token
@@ -17,7 +18,7 @@ async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    const doc = await db.collection('v3_users').doc(decoded.uid).get();
+    const doc = await db.collection(USERS_COLLECTION).doc(decoded.uid).get();
     if (!doc.exists) {
       return res.status(404).json({ error: 'User profile not found' });
     }
@@ -31,7 +32,7 @@ async function handler(req, res) {
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'Name is required' });
     }
-    const docRef = db.collection('v3_users').doc(decoded.uid);
+    const docRef = db.collection(USERS_COLLECTION).doc(decoded.uid);
     const doc = await docRef.get();
     if (!doc.exists) {
       return res.status(404).json({ error: 'User profile not found' });

@@ -2,12 +2,13 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { BLACKOUT_DATES_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method !== 'DELETE') return res.status(405).json({ error: 'Method not allowed' });
 
   const { id } = req.query;
-  const ref = db.collection('v3_blackout_dates').doc(id);
+  const ref = db.collection(BLACKOUT_DATES_COLLECTION).doc(id);
   const snap = await ref.get();
   if (!snap.exists) return res.status(404).json({ error: 'Blackout date not found' });
 

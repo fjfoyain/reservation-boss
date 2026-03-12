@@ -3,11 +3,12 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { ROOMS_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      const snap = await db.collection('v3_rooms').get();
+      const snap = await db.collection(ROOMS_COLLECTION).get();
       const rooms = snap.docs
         .map((doc) => ({ id: doc.id, ...doc.data() }))
         .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name));
@@ -25,7 +26,7 @@ async function handler(req, res) {
     const cap = Number(capacity) || 1;
     if (cap < 1 || cap > 200) return res.status(400).json({ error: 'Capacity must be between 1 and 200' });
 
-    const docRef = await db.collection('v3_rooms').add({
+    const docRef = await db.collection(ROOMS_COLLECTION).add({
       name: name.trim(),
       type,
       capacity: cap,

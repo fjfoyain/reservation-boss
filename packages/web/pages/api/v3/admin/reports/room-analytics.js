@@ -2,6 +2,7 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { ROOMS_COLLECTION, ROOM_RESERVATIONS_COLLECTION } from '@/lib/config/constants';
 
 function getWeekRange(dateStr) {
   const d = new Date(`${dateStr}T12:00:00Z`);
@@ -44,7 +45,7 @@ async function handler(req, res) {
   const range = period === 'month' ? getMonthRange(dateStr) : getWeekRange(dateStr);
 
   // Fetch rooms (single-field query, filter type in JS)
-  const roomsSnap = await db.collection('v3_rooms').where('active', '==', true).get();
+  const roomsSnap = await db.collection(ROOMS_COLLECTION).where('active', '==', true).get();
   const rooms = roomsSnap.docs
     .map((d) => ({ id: d.id, ...d.data() }))
     .filter((r) => r.type === roomType);
@@ -52,7 +53,7 @@ async function handler(req, res) {
 
   // Fetch reservations in date range
   const resSnap = await db
-    .collection('v3_room_reservations')
+    .collection(ROOM_RESERVATIONS_COLLECTION)
     .where('date', '>=', range.start)
     .where('date', '<=', range.end)
     .get();

@@ -3,9 +3,9 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
-import { PARKING_SPOTS } from '@/lib/config/constants';
+import { PARKING_SPOTS, CONFIG_COLLECTION } from '@/lib/config/constants';
 
-const CONFIG_DOC = db.collection('v3_config').doc('parking_rules');
+const CONFIG_DOC = db.collection(CONFIG_COLLECTION).doc('parking_rules');
 
 // Default spots derived from constants (first 5 = external, last 5 = internal)
 const DEFAULT_SPOTS = PARKING_SPOTS.map((name, i) => ({

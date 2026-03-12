@@ -1,6 +1,7 @@
 // GET /api/v3/admin/reports/late-requests?period=weekly|monthly&date=YYYY-MM-DD&format=csv
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { LATE_REQUESTS_COLLECTION } from '@/lib/config/constants';
 import { withCors } from '@/lib/middleware/cors';
 
 function getWeekRange(dateStr) {
@@ -39,7 +40,7 @@ async function handler(req, res) {
   const range = period === 'weekly' ? getWeekRange(date) : getMonthRange(date);
 
   const snap = await db
-    .collection('v3_late_requests')
+    .collection(LATE_REQUESTS_COLLECTION)
     .where('date', '>=', range.start)
     .where('date', '<=', range.end)
     .orderBy('date', 'desc')

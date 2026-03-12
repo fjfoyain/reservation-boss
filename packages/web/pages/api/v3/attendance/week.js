@@ -2,6 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { ATTENDANCE_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -19,7 +20,7 @@ async function handler(req, res) {
 
   try {
     const snapshot = await db
-      .collection('v3_attendance')
+      .collection(ATTENDANCE_COLLECTION)
       .where('userId', '==', req.user.uid)
       .get();
 

@@ -2,6 +2,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { ROOMS_COLLECTION } from '@/lib/config/constants';
 
 async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -9,7 +10,7 @@ async function handler(req, res) {
   const { type } = req.query; // optional filter: 'meeting' | 'calling'
 
   try {
-    const snapshot = await db.collection('v3_rooms').where('active', '==', true).get();
+    const snapshot = await db.collection(ROOMS_COLLECTION).where('active', '==', true).get();
     let rooms = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     if (type) rooms = rooms.filter((r) => r.type === type);
     rooms.sort((a, b) => a.name.localeCompare(b.name));

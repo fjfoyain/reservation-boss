@@ -2,6 +2,7 @@
 import { withAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
+import { USERS_COLLECTION, ATTENDANCE_COLLECTION } from '@/lib/config/constants';
 
 function getWeekRange(dateStr) {
   const d = new Date(`${dateStr}T12:00:00Z`);
@@ -52,8 +53,8 @@ async function handler(req, res) {
   const workdays = datesBetween(range.start, range.end);
 
   const [usersSnap, attendanceSnap] = await Promise.all([
-    db.collection('v3_users').where('active', '==', true).get(),
-    db.collection('v3_attendance').where('date', '>=', range.start).where('date', '<=', range.end).get(),
+    db.collection(USERS_COLLECTION).where('active', '==', true).get(),
+    db.collection(ATTENDANCE_COLLECTION).where('date', '>=', range.start).where('date', '<=', range.end).get(),
   ]);
 
   // Build lookup: userId → date → status

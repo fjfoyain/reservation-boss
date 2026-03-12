@@ -4,6 +4,7 @@ import { withPeopleLeadOrAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
 import { sendEmail } from '@/lib/config/email';
+import { LATE_REQUESTS_COLLECTION, USERS_COLLECTION, ATTENDANCE_COLLECTION, PARKING_COLLECTION, ROOM_RESERVATIONS_COLLECTION } from '@/lib/config/constants';
 
 async function sendUserEmail(to, subject, html) {
   try {
@@ -22,7 +23,7 @@ async function handler(req, res) {
     return res.status(400).json({ error: 'action must be "approve" or "deny"' });
   }
 
-  const requestRef = db.collection('v3_late_requests').doc(id);
+  const requestRef = db.collection(LATE_REQUESTS_COLLECTION).doc(id);
   const requestDoc = await requestRef.get();
   if (!requestDoc.exists) return res.status(404).json({ error: 'Request not found' });
 
@@ -33,7 +34,7 @@ async function handler(req, res) {
 
   // People leads can only approve/deny requests from their managed users
   if (req.isPeopleLead && !req.isAdmin) {
-    const userDoc = await db.collection('v3_users').doc(lateRequest.userId).get();
+    const userDoc = await db.collection(USERS_COLLECTION).doc(lateRequest.userId).get();
     if (!userDoc.exists || userDoc.data().peopleLeadEmail !== req.userProfile.email) {
       return res.status(403).json({ error: 'You can only manage requests from your direct reports' });
     }
@@ -46,9 +47,9 @@ async function handler(req, res) {
     // Cascade-delete the underlying reservation
     const { type, reservationId } = lateRequest;
     let deleteCollection;
-    if (type === 'attendance') deleteCollection = 'v3_attendance';
-    else if (type === 'parking') deleteCollection = 'v3_parking';
-    else if (type === 'room') deleteCollection = 'v3_room_reservations';
+    if (type === 'attendance') deleteCollection = ATTENDANCE_COLLECTION;
+    else if (type === 'parking') deleteCollection = PARKING_COLLECTION;
+    else if (type === 'room') deleteCollection = ROOM_RESERVATIONS_COLLECTION;
 
     if (deleteCollection && reservationId) {
       const resRef = db.collection(deleteCollection).doc(reservationId);

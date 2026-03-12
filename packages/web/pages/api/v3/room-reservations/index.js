@@ -3,6 +3,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { ROOMS_COLLECTION, ROOM_RESERVATIONS_COLLECTION } from '@/lib/config/constants';
 import { hasOverlap } from '@/lib/utils/roomHelpers';
 import { sendV3RoomConfirmation } from '@/lib/config/email';
 
@@ -12,7 +13,7 @@ async function handler(req, res) {
     if (!date) return res.status(400).json({ error: 'date is required' });
 
     try {
-      const snapshot = await db.collection('v3_room_reservations').where('date', '==', date).get();
+      const snapshot = await db.collection(ROOM_RESERVATIONS_COLLECTION).where('date', '==', date).get();
       let reservations = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       if (roomType) reservations = reservations.filter((r) => r.roomType === roomType);
       return res.status(200).json({ reservations });
@@ -45,14 +46,14 @@ async function handler(req, res) {
 
     try {
       // Fetch room to confirm it exists and is active
-      const roomDoc = await db.collection('v3_rooms').doc(roomId).get();
+      const roomDoc = await db.collection(ROOMS_COLLECTION).doc(roomId).get();
       if (!roomDoc.exists || !roomDoc.data().active) {
         return res.status(404).json({ error: 'Room not found or inactive' });
       }
       const room = roomDoc.data();
 
       // Use a transaction to prevent race conditions (double-booking same slot)
-      const resRef = db.collection('v3_room_reservations');
+      const resRef = db.collection(ROOM_RESERVATIONS_COLLECTION);
       let newDocId;
       try {
         newDocId = await db.runTransaction(async (t) => {

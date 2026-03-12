@@ -18,9 +18,13 @@ async function handler(req, res) {
     return res.status(403).json({ error: 'Not authorized to cancel this reservation' });
   }
 
-  if (!canModifyParking(data.date)) {
+  // Read configurable cutoff time
+  const configSnap = await db.collection('v3_config').doc('parking_rules').get();
+  const cutoffTime = configSnap.exists ? (configSnap.data().cutoffTime || '08:00') : '08:00';
+
+  if (!canModifyParking(data.date, cutoffTime)) {
     return res.status(403).json({
-      error: 'Cancellation deadline has passed (8:00 AM). Please submit a late request.',
+      error: `Cancellation deadline has passed (${cutoffTime}). Please submit a late request.`,
       lateCancellation: true,
     });
   }

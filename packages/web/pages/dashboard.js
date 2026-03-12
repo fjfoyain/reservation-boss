@@ -27,6 +27,8 @@ export default function DashboardPage() {
   const [attendance, setAttendance] = useState({}); // { 'YYYY-MM-DD': 'office' | 'remote' }
   const [parking, setParking] = useState({}); // { 'YYYY-MM-DD': { id, spot } }
   const [availableSpots, setAvailableSpots] = useState([]);
+  const [takenSpotsByDate, setTakenSpotsByDate] = useState({}); // { 'YYYY-MM-DD': ['Parking 1', ...] }
+  const [parkingCutoff, setParkingCutoff] = useState('08:00');
   const [spotSelections, setSpotSelections] = useState({}); // { date: spot }
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
@@ -56,14 +58,15 @@ export default function DashboardPage() {
       // Admins can use the dashboard too (treated as internal parking)
       setUser(profile);
 
-      // Load parking spots (names may be customized by admin)
-      fetch('/api/v3/parking/spots', { headers: { Authorization: `Bearer ${idToken}` } })
-        .then((r) => r.json())
-        .then((d) => {
-          const external = (d.spots || []).filter((s) => s.type === 'external').map((s) => s.name);
-          setAvailableSpots(external);
-        })
-        .catch(() => {});
+      // Load parking spots and config in parallel
+      Promise.all([
+        fetch('/api/v3/parking/spots', { headers: { Authorization: `Bearer ${idToken}` } }).then((r) => r.json()),
+        fetch('/api/v3/parking/config', { headers: { Authorization: `Bearer ${idToken}` } }).then((r) => r.json()).catch(() => null),
+      ]).then(([spotsData, configData]) => {
+        const external = (spotsData.spots || []).filter((s) => s.type === 'external').map((s) => s.name);
+        setAvailableSpots(external);
+        if (configData?.config?.cutoffTime) setParkingCutoff(configData.config.cutoffTime);
+      }).catch(() => {});
     });
     return () => unsubscribe();
   }, [router]);
@@ -97,6 +100,19 @@ export default function DashboardPage() {
       const parkMap = {};
       (parkData.parking || []).forEach((p) => { parkMap[p.date] = { id: p.id, spot: p.spot }; });
       setParking(parkMap);
+
+      // Fetch taken spots for each day of the week
+      const dates = getWeekDates(weekMonday);
+      const takenResults = await Promise.all(
+        dates.map(({ date }) =>
+          fetch(`/api/v3/parking/availability?date=${date}`, {
+            headers: { Authorization: `Bearer ${t}` },
+          }).then((r) => r.json()).catch(() => ({ takenSpots: [] }))
+        )
+      );
+      const takenMap = {};
+      dates.forEach(({ date }, i) => { takenMap[date] = takenResults[i].takenSpots || []; });
+      setTakenSpotsByDate(takenMap);
     } catch (err) {
       console.error('Failed to fetch week data:', err);
     }
@@ -149,8 +165,8 @@ export default function DashboardPage() {
   async function cancelParking(date) {
     const entry = parking[date];
     if (!entry) return;
-    if (!canModifyParking(date)) {
-      // Past 8am — open late request modal
+    if (!editable || !canModifyParking(date, parkingCutoff)) {
+      // Week locked OR past day-level cutoff — open late request modal
       setLateModalData({ type: 'parking', reservationId: entry.id, date });
       setLateModalOpen(true);
       return;
@@ -243,6 +259,8 @@ export default function DashboardPage() {
 
   const officeDaysCount = weekDates.filter(({ date }) => attendance[date]?.status === 'office').length;
   const weeklyLimitReached = officeDaysCount >= 4;
+  const MIN_OFFICE_DAYS = 3;
+  const noShowDays = Math.max(0, MIN_OFFICE_DAYS - officeDaysCount);
 
   const weekLabel = weekDates.length
     ? `Week of ${weekDates[0]?.date ? new Date(`${weekDates[0].date}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' }) : ''} – ${weekDates[4]?.date ? new Date(`${weekDates[4].date}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' }) : ''}`
@@ -286,6 +304,20 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-semibold text-amber-800">Weekly Limit Reached</h3>
                 <p className="text-xs text-amber-700 mt-1">
                   You&apos;ve scheduled <strong>4 office days</strong> this week — the maximum for parking reservations.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* No-show warning */}
+          {noShowDays > 0 && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-3 max-w-md">
+              <span className="material-symbols-outlined text-red-500 mt-0.5 text-xl">event_busy</span>
+              <div>
+                <h3 className="text-sm font-semibold text-red-800">Below Minimum Attendance</h3>
+                <p className="text-xs text-red-700 mt-1">
+                  You have <strong>{officeDaysCount}</strong> office day{officeDaysCount !== 1 ? 's' : ''} scheduled.
+                  Minimum is {MIN_OFFICE_DAYS} — <strong>{noShowDays} no-show day{noShowDays !== 1 ? 's' : ''}</strong> will be recorded.
                 </p>
               </div>
             </div>
@@ -395,16 +427,22 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Parking sub-row for external users */}
-                  {isOffice && user.role === 'external' && !isPast && (
-                    <div className={`mt-4 rounded-lg p-4 border ${parkingEntry ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-100'}`}>
+                  {isOffice && user.role === 'external' && canModifyParking(date, parkingCutoff) && (() => {
+                    const taken = takenSpotsByDate[date] || [];
+                    const freeSpots = availableSpots.filter((s) => !taken.includes(s));
+                    const allTaken = freeSpots.length === 0 && !parkingEntry;
+                    return (
+                    <div className={`mt-4 rounded-lg p-4 border ${parkingEntry ? 'bg-green-50 border-green-200' : allTaken ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-100'}`}>
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-start gap-3">
-                          <span className="material-symbols-outlined mt-0.5 text-xl" style={{ color: '#00A3E0' }}>local_parking</span>
+                          <span className="material-symbols-outlined mt-0.5 text-xl" style={{ color: allTaken ? '#DC2626' : '#00A3E0' }}>local_parking</span>
                           <div>
                             <h4 className="text-sm font-medium text-gray-900">Parking Required?</h4>
                             <p className="text-xs text-gray-500 mt-1">
                               {parkingEntry
                                 ? `Reserved: ${parkingEntry.spot}`
+                                : allTaken
+                                ? 'No more parking spots available for this day.'
                                 : 'Reserve an external spot for this day.'}
                             </p>
                           </div>
@@ -423,6 +461,11 @@ export default function DashboardPage() {
                               Cancel
                             </button>
                           </div>
+                        ) : allTaken ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700 border border-red-200">
+                            <span className="material-symbols-outlined text-sm mr-1">block</span>
+                            Full
+                          </span>
                         ) : (
                           <div className="flex items-center gap-3 w-full sm:w-auto">
                             <select
@@ -431,7 +474,7 @@ export default function DashboardPage() {
                               className="block w-full sm:w-44 rounded-md border-gray-300 bg-white text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             >
                               <option value="">Select spot…</option>
-                              {availableSpots.map((s) => (
+                              {freeSpots.map((s) => (
                                 <option key={s} value={s}>{s}</option>
                               ))}
                             </select>
@@ -446,7 +489,8 @@ export default function DashboardPage() {
                         )}
                       </div>
                     </div>
-                  )}
+                    );
+                  })()}
 
                   {/* Internal parking label */}
                   {isOffice && user.role === 'internal' && (

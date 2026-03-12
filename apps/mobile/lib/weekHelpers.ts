@@ -63,6 +63,15 @@ export function getNextMonday(mondayStr: string): string {
   return toDateStr(d);
 }
 
+/** Returns the ISO Monday string for the week containing dateStr */
+export function getWeekMonday(dateStr: string): string {
+  const d = new Date(`${dateStr}T00:00:00Z`);
+  const dow = d.getUTCDay(); // 0=Sun, 1=Mon ... 6=Sat
+  const offset = dow === 0 ? -6 : 1 - dow;
+  d.setUTCDate(d.getUTCDate() + offset);
+  return toDateStr(d);
+}
+
 export function isWeekEditable(mondayStr: string): boolean {
   const now = toEcuador(new Date());
   const dow = now.getUTCDay();
@@ -103,6 +112,22 @@ export function formatDateLabel(dateStr: string): string {
   const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return `${DAYS[d.getUTCDay()]}, ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
+}
+
+/**
+ * Whether a parking slot can still be directly modified for a given date.
+ * Future dates: always yes. Past dates: never. Today: only before cutoff Ecuador.
+ * @param cutoffTime - HH:MM cutoff from admin parking config. Defaults to '08:00'.
+ */
+export function canModifyParking(dateStr: string, cutoffTime: string = '08:00'): boolean {
+  const now = toEcuador(new Date());
+  const today = toDateStr(now);
+  if (dateStr > today) return true;
+  if (dateStr < today) return false;
+  const [ch, cm] = cutoffTime.split(':').map(Number);
+  const hour = now.getUTCHours();
+  const minute = now.getUTCMinutes();
+  return hour < ch || (hour === ch && minute < cm);
 }
 
 /** Returns current Ecuador time as "HH:MM" (rounded down to the half-hour) */

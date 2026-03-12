@@ -1,5 +1,6 @@
 // PUT /api/v3/admin/late-requests/[id] — Approve or deny a late request
-import { withAdminAuth } from '@/lib/middleware/authV3';
+// Admins can approve any request; people leads can approve only their managed users' requests
+import { withPeopleLeadOrAdminAuth } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
 import { withCors } from '@/lib/middleware/cors';
 import { sendEmail } from '@/lib/config/email';
@@ -28,6 +29,14 @@ async function handler(req, res) {
   const lateRequest = { id: requestDoc.id, ...requestDoc.data() };
   if (lateRequest.status !== 'pending') {
     return res.status(409).json({ error: 'Request has already been resolved' });
+  }
+
+  // People leads can only approve/deny requests from their managed users
+  if (req.isPeopleLead && !req.isAdmin) {
+    const userDoc = await db.collection('v3_users').doc(lateRequest.userId).get();
+    if (!userDoc.exists || userDoc.data().peopleLeadEmail !== req.userProfile.email) {
+      return res.status(403).json({ error: 'You can only manage requests from your direct reports' });
+    }
   }
 
   const resolvedAt = new Date();
@@ -89,4 +98,4 @@ async function handler(req, res) {
   return res.status(200).json({ success: true });
 }
 
-export default withCors(withAdminAuth(handler));
+export default withCors(withPeopleLeadOrAdminAuth(handler));

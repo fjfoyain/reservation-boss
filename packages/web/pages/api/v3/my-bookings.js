@@ -3,6 +3,7 @@
 import { withCors } from '@/lib/middleware/cors';
 import { withAuthV3 } from '@/lib/middleware/authV3';
 import { db } from '@/lib/config/firebaseAdmin';
+import { canModifyParking } from '@/lib/utils/weekHelpersV3';
 
 async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -18,6 +19,10 @@ async function handler(req, res) {
   future.setDate(future.getDate() + 60);
   const pastStr = past.toISOString().split('T')[0];
   const futureStr = future.toISOString().split('T')[0];
+
+  // Fetch parking config for cutoff time
+  const configSnap = await db.collection('v3_config').doc('parking_rules').get();
+  const cutoffTime = configSnap.exists ? (configSnap.data().cutoffTime || '08:00') : '08:00';
 
   // Single-field queries only — date filtering and sorting done in JS
   const [attSnap, parkSnap, roomSnap, lateSnap] = await Promise.all([
@@ -74,6 +79,7 @@ async function handler(req, res) {
       roomName: d.roomName,
       startTime: d.startTime,
       endTime: d.endTime,
+      fixed: !canModifyParking(d.date, cutoffTime),
       lateRequestId: pendingByReservation[doc.id] || null,
     });
   });

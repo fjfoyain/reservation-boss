@@ -132,20 +132,26 @@ export function isWeekEditable(mondayStr, config = {}) {
 }
 
 /**
- * Check if same-day parking can still be modified (before 8:00 AM Ecuador).
+ * Check if same-day parking can still be modified (before cutoff time Ecuador).
+ * @param {string} [cutoffTime='08:00'] - HH:MM cutoff from admin parking config.
  */
-export function canModifyParkingToday() {
+export function canModifyParkingToday(cutoffTime = '08:00') {
   const now = toGye();
-  return now.getHours() < 8;
+  const [ch, cm] = cutoffTime.split(':').map(Number);
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  return hour < ch || (hour === ch && minute < cm);
 }
 
 /**
  * Check if same-day parking can be modified for a specific date.
+ * @param {string} dateStr - YYYY-MM-DD date to check.
+ * @param {string} [cutoffTime='08:00'] - HH:MM cutoff from admin parking config.
  */
-export function canModifyParking(dateStr) {
+export function canModifyParking(dateStr, cutoffTime = '08:00') {
   const now = toGye();
   const today = toDateString(now);
   if (dateStr > today) return true; // future dates always OK
   if (dateStr < today) return false; // past dates never
-  return now.getHours() < 8; // today: only before 8am
+  return canModifyParkingToday(cutoffTime); // today: only before cutoff
 }

@@ -68,7 +68,8 @@ async function handler(req, res) {
     new Date(`${d}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }),
   );
 
-  const columns = ['Employee', 'Email', ...dateLabels, 'Days In Office'];
+  const MIN_OFFICE_DAYS = 3;
+  const columns = ['Employee', 'Email', ...dateLabels, 'Days In Office', 'No-Show Days'];
   const rows = usersSnap.docs
     .filter((doc) => !doc.data().isAdmin && doc.data().role !== 'admin')
     .map((doc) => {
@@ -78,11 +79,13 @@ async function handler(req, res) {
         return s === 'office' ? 'Office' : s === 'remote' ? 'Remote' : '—';
       });
       const inOffice = dayCells.filter((c) => c === 'Office').length;
-      return [u.name || u.email, u.email, ...dayCells, inOffice];
+      const noShow = Math.max(0, MIN_OFFICE_DAYS - inOffice);
+      return [u.name || u.email, u.email, ...dayCells, inOffice, noShow];
     });
 
-  const total = rows.reduce((sum, r) => sum + Number(r[r.length - 1]), 0);
-  const summary = `Total office attendances: ${total} across ${rows.length} employees`;
+  const total = rows.reduce((sum, r) => sum + Number(r[r.length - 2]), 0);
+  const totalNoShow = rows.reduce((sum, r) => sum + Number(r[r.length - 1]), 0);
+  const summary = `Total office attendances: ${total} across ${rows.length} employees. Total no-show days: ${totalNoShow}`;
 
   if (format === 'csv') {
     const csv = toCSV(columns, rows);

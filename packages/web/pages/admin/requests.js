@@ -60,7 +60,7 @@ export default function AdminRequestsPage() {
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 3500); }
 
   return (
-    <AdminLayout title="Pending Requests">
+    <AdminLayout title="Pending Requests" allowPeopleLead>
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-end mb-6">
           <div>

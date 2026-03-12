@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors, FontSize, Spacing, Radii } from '@/lib/constants';
 import { apiFetch } from '@/lib/api';
-import { formatDateLabel, todayEcuador } from '@/lib/weekHelpers';
+import { formatDateLabel, todayEcuador, isWeekEditable, getWeekMonday, canModifyParking } from '@/lib/weekHelpers';
 
 interface Booking {
   id: string;
@@ -34,11 +34,16 @@ export default function BookingsScreen() {
   const [lateReason, setLateReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const today = todayEcuador();
+  const [parkingCutoff, setParkingCutoff] = useState('08:00');
 
   const load = useCallback(async () => {
     try {
-      const data = await apiFetch('/api/v3/my-bookings');
-      setBookings(data.bookings ?? []);
+      const [bookingsData, configData] = await Promise.all([
+        apiFetch('/api/v3/my-bookings'),
+        apiFetch('/api/v3/parking/config').catch(() => null),
+      ]);
+      setBookings(bookingsData.bookings ?? []);
+      if (configData?.config?.cutoffTime) setParkingCutoff(configData.config.cutoffTime);
     } catch (err: any) {
       Alert.alert('Error', err.message ?? 'Failed to load bookings');
     }
@@ -136,8 +141,14 @@ export default function BookingsScreen() {
             <Text style={styles.dateHeader}>{formatDateLabel(date)}</Text>
             {grouped[date].map(b => {
               const meta = TYPE_META[b.type];
-              const canCancel = !b.fixed && date >= today && !b.lateRequestId;
-              const canRequestLate = !b.fixed && !b.lateRequestId && !canCancel;
+              const isPast = date < today;
+              const weekEditable = isWeekEditable(getWeekMonday(date));
+              // Parking uses the per-day 8am cutoff; attendance/room use week lock only
+              const modifiable = b.type === 'parking'
+                ? (weekEditable && canModifyParking(date, parkingCutoff))
+                : weekEditable;
+              const canCancel = !b.fixed && !isPast && !b.lateRequestId && modifiable;
+              const canRequestLate = !b.fixed && !isPast && !b.lateRequestId && !modifiable;
               return (
                 <View key={b.id} style={styles.bookingRow}>
                   <View style={[styles.typeBadge, { backgroundColor: meta.color + '18' }]}>

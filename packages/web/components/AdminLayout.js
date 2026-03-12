@@ -17,7 +17,7 @@ const NAV_ITEMS = [
   { href: '/my-requests', label: 'My Requests', icon: 'inbox' },
 ];
 
-export default function AdminLayout({ children, title = 'Admin' }) {
+export default function AdminLayout({ children, title = 'Admin', allowPeopleLead = false }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -29,7 +29,8 @@ export default function AdminLayout({ children, title = 'Admin' }) {
       const res = await fetch('/api/v3/profile', { headers: { Authorization: `Bearer ${idToken}` } });
       if (!res.ok) { router.replace('/auth/login'); return; }
       const profile = await res.json();
-      if (!profile.isAdmin && profile.role !== 'admin') { router.replace('/dashboard'); return; }
+      const isAdmin = profile.isAdmin || profile.role === 'admin';
+      if (!isAdmin && !(allowPeopleLead && profile.isPeopleLead)) { router.replace('/dashboard'); return; }
       setUser(profile);
     });
     return () => unsubscribe();

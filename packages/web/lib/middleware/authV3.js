@@ -66,3 +66,31 @@ export function withAdminAuth(handler) {
     }
   };
 }
+
+/**
+ * Middleware: require admin OR people lead role.
+ * Sets req.isAdmin and req.isPeopleLead flags.
+ */
+export function withPeopleLeadOrAdminAuth(handler) {
+  return async (req, res) => {
+    try {
+      const decoded = await verifyToken(req);
+      const profile = await getUserProfile(decoded.uid);
+      if (!profile.active) {
+        return res.status(403).json({ error: 'Account is inactive' });
+      }
+      const isAdmin = !!(profile.isAdmin || profile.role === 'admin');
+      const isPeopleLead = !!profile.isPeopleLead;
+      if (!isAdmin && !isPeopleLead) {
+        return res.status(403).json({ error: 'Forbidden: Admin or People Lead access required' });
+      }
+      req.user = decoded;
+      req.userProfile = profile;
+      req.isAdmin = isAdmin;
+      req.isPeopleLead = isPeopleLead;
+      return handler(req, res);
+    } catch (error) {
+      return res.status(401).json({ error: error.message });
+    }
+  };
+}

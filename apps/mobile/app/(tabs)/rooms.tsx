@@ -114,7 +114,7 @@ export default function RoomsScreen() {
   const endSlots = TIME_SLOTS.filter(t => t > startTime);
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={[]}>
       <View style={styles.dateNav}>
         <TouchableOpacity onPress={() => setSelectedDate(d => prevDay(d))} hitSlop={8}>
           <MaterialIcons name="chevron-left" size={28} color={Colors.navy} />

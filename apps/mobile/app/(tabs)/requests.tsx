@@ -70,7 +70,7 @@ export default function RequestsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={[]}>
       <FlatList
         data={requests}
         keyExtractor={r => r.id}

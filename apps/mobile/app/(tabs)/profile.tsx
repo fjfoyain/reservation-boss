@@ -13,6 +13,7 @@ import { apiFetch } from '@/lib/api';
 interface UserProfile {
   id: string; email: string; name: string;
   role: 'admin' | 'internal' | 'external' | 'none';
+  isAdmin?: boolean;
   internalSpot: string | null; active: boolean;
 }
 
@@ -76,7 +77,7 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={[]}>
       <ScrollView
         contentContainerStyle={styles.scroll}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.teal} />}
@@ -100,7 +101,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* Admin section */}
-        {profile?.role === 'admin' && (
+        {(profile?.role === 'admin' || profile?.isAdmin) && (
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>Administration</Text>
             <TouchableOpacity style={styles.menuRow} onPress={() => router.push('/admin' as any)}>

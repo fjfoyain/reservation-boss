@@ -87,7 +87,7 @@ export default function DashboardScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={[]}>
       <View style={styles.weekNav}>
         <TouchableOpacity onPress={() => setWeekMonday(getPrevMonday(weekMonday))} hitSlop={8}>
           <MaterialIcons name="chevron-left" size={28} color={Colors.navy} />

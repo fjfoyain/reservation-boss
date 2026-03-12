@@ -135,7 +135,7 @@ export default function BookingsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={[]}>
       <ScrollView
         contentContainerStyle={[styles.scroll, !bookings.length && styles.scrollEmpty]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.teal} />}

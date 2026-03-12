@@ -202,7 +202,9 @@ export default function RoomsPage() {
             <p className="text-xs mt-1">Ask your admin to add rooms in the admin panel.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden text-sm">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
@@ -257,6 +259,51 @@ export default function RoomsPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile: card per room with time slots */}
+          <div className="sm:hidden space-y-4">
+            {rooms.map((room) => (
+              <div key={room.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                  <h3 className="text-sm font-semibold text-gray-900">{room.name}</h3>
+                  {room.capacity && <p className="text-xs text-gray-400">Capacity: {room.capacity}</p>}
+                </div>
+                <div className="divide-y divide-gray-100">
+                  {TIME_SLOTS.map((slot) => {
+                    const { status, id: resId } = getSlotStatus(room.id, slot);
+                    return (
+                      <div key={slot.start} className="flex items-center justify-between px-4 py-2.5">
+                        <span className="text-xs text-gray-500 font-medium w-20">{formatTimeSlot(slot.start, slot.end)}</span>
+                        {status === 'available' && (
+                          <button
+                            onClick={() => setConfirmModal({ room, slot })}
+                            className="px-3 py-1.5 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-200 active:bg-green-100 transition-colors"
+                          >
+                            Book
+                          </button>
+                        )}
+                        {status === 'mine' && (
+                          <button
+                            onClick={() => setCancelConfirm(resId)}
+                            className="px-3 py-1.5 rounded-md text-xs font-medium border transition-colors"
+                            style={{ backgroundColor: '#eaf4fd', borderColor: '#1183d4', color: '#1183d4' }}
+                          >
+                            My Booking
+                          </button>
+                        )}
+                        {status === 'taken' && (
+                          <span className="px-3 py-1.5 rounded-md text-xs bg-gray-100 text-gray-400 border border-gray-200">
+                            Booked
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          </>
         )}
       </main>
 

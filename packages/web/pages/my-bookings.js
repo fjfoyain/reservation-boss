@@ -151,7 +151,7 @@ export default function MyBookingsPage() {
   const upcoming = filtered.filter((b) => isSameDayOrFuture(b.date));
   const past = filtered.filter((b) => !isSameDayOrFuture(b.date));
 
-  function BookingRow({ b }) {
+  function getBookingBadgeAndAction(b) {
     const isPast = !isSameDayOrFuture(b.date);
     const pastDeadline = isPastDeadlineForDate(b.date, b.type);
     const isFixed = b.fixed && b.type === 'parking';
@@ -191,7 +191,11 @@ export default function MyBookingsPage() {
         </button>
       );
     }
+    return { statusBadge, actionBtn };
+  }
 
+  function BookingRow({ b }) {
+    const { statusBadge, actionBtn } = getBookingBadgeAndAction(b);
     return (
       <tr className="hover:bg-gray-50 transition-colors">
         <td className="px-4 py-3 text-sm font-medium text-gray-900 whitespace-nowrap">{formatDate(b.date)}</td>
@@ -208,6 +212,26 @@ export default function MyBookingsPage() {
     );
   }
 
+  function BookingCard({ b }) {
+    const { statusBadge, actionBtn } = getBookingBadgeAndAction(b);
+    return (
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-base text-gray-400">{TYPE_ICONS[b.type]}</span>
+            <span className="text-sm font-semibold text-gray-900">{formatDate(b.date)}</span>
+          </div>
+          {statusBadge}
+        </div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-sm text-gray-700">{TYPE_LABELS[b.type]}</span>
+          {b.detail && <span className="text-xs text-gray-400">· {b.detail}</span>}
+        </div>
+        {actionBtn && <div className="mt-3">{actionBtn}</div>}
+      </div>
+    );
+  }
+
   function Section({ title, rows }) {
     if (rows.length === 0) return null;
     return (
@@ -217,6 +241,18 @@ export default function MyBookingsPage() {
         </tr>
         {rows.map((b) => <BookingRow key={`${b.type}-${b.id}`} b={b} />)}
       </>
+    );
+  }
+
+  function MobileSection({ title, rows }) {
+    if (rows.length === 0) return null;
+    return (
+      <div>
+        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 px-1">{title}</h3>
+        <div className="space-y-3">
+          {rows.map((b) => <BookingCard key={`${b.type}-${b.id}`} b={b} />)}
+        </div>
+      </div>
     );
   }
 
@@ -258,41 +294,54 @@ export default function MyBookingsPage() {
           ))}
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="text-center py-20 text-gray-400">
-              <span className="material-symbols-outlined text-5xl">event_busy</span>
-              <p className="mt-3 text-sm">No bookings found.</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left min-w-[600px]">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Date</th>
-                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Type</th>
-                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Details</th>
-                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  <Section title="Upcoming" rows={upcoming} />
-                  <Section title="Past" rows={past} />
-                </tbody>
-              </table>
-            </div>
-          )}
-          <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 text-xs text-gray-400">
-            Parking and room cancellations after 8:00 AM on the day require admin approval.
-            Attendance changes require admin approval after Monday 11:00 PM for that week.
+        {/* Content */}
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin">progress_activity</span>
           </div>
-        </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-xl border border-gray-200 text-gray-400">
+            <span className="material-symbols-outlined text-5xl">event_busy</span>
+            <p className="mt-3 text-sm">No bookings found.</p>
+          </div>
+        ) : (
+          <>
+            {/* Desktop table */}
+            <div className="hidden sm:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left min-w-[600px]">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Date</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Type</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Details</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    <Section title="Upcoming" rows={upcoming} />
+                    <Section title="Past" rows={past} />
+                  </tbody>
+                </table>
+              </div>
+              <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 text-xs text-gray-400">
+                Parking and room cancellations after 8:00 AM on the day require admin approval.
+                Attendance changes require admin approval after Monday 11:00 PM for that week.
+              </div>
+            </div>
+
+            {/* Mobile card layout */}
+            <div className="sm:hidden space-y-5">
+              <MobileSection title="Upcoming" rows={upcoming} />
+              <MobileSection title="Past" rows={past} />
+              <div className="rounded-lg bg-gray-50 border border-gray-100 px-3 py-2 text-xs text-gray-400">
+                Parking and room cancellations after 8:00 AM on the day require admin approval.
+                Attendance changes require admin approval after Monday 11:00 PM for that week.
+              </div>
+            </div>
+          </>
+        )}
       </main>
 
       {/* Late cancellation modal */}

@@ -133,3 +133,47 @@ button {
     min-width: 150px;
   }
 }
+
+/* Safe-area insets for notched phones (iPhone X+) */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Fixed bottom elements respect safe area */
+.fixed.bottom-6 {
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+}
+
+/* Touch-friendly: minimum tap targets */
+@media (max-width: 768px) {
+  button, a, select, [role="button"] {
+    min-height: 44px;
+  }
+
+  /* Prevent 300ms tap delay */
+  html {
+    touch-action: manipulation;
+  }
+
+  /* Smoother scrolling on iOS */
+  .overflow-x-auto, .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Standalone PWA: hide browser chrome artifacts */
+@media (display-mode: standalone) {
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow text selection in inputs/textareas */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}

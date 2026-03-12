@@ -1,0 +1,18 @@
+{
+  "name": "Reservation Boss",
+  "short_name": "ResBoss",
+  "description": "Office attendance, parking & room reservations",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#112A46",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -76,45 +76,77 @@ export default function MyRequestsPage() {
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Reason</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Submitted</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {requests.map((req) => {
-                    const style = STATUS_STYLES[req.status] || STATUS_STYLES.pending;
-                    const dateLabel = new Date(`${req.date}T12:00:00Z`).toLocaleDateString('en-US', {
-                      weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC',
-                    });
-                    const submittedLabel = req.createdAt?.toDate
-                      ? req.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
-                      : '—';
-                    return (
-                      <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{dateLabel}</td>
-                        <td className="px-6 py-4 text-sm text-gray-600">{TYPE_LABELS[req.type] || req.type}</td>
-                        <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">{req.reason}</td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${style.bg} ${style.text} ${style.border}`}>
-                            {style.label}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-400">{submittedLabel}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+          <>
+            {/* Desktop table */}
+            <div className="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Reason</th>
+                      <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Submitted</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {requests.map((req) => {
+                      const style = STATUS_STYLES[req.status] || STATUS_STYLES.pending;
+                      const dateLabel = new Date(`${req.date}T12:00:00Z`).toLocaleDateString('en-US', {
+                        weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC',
+                      });
+                      const submittedLabel = req.createdAt?.toDate
+                        ? req.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+                        : '—';
+                      return (
+                        <tr key={req.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 text-sm font-medium text-gray-900">{dateLabel}</td>
+                          <td className="px-6 py-4 text-sm text-gray-600">{TYPE_LABELS[req.type] || req.type}</td>
+                          <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">{req.reason}</td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${style.bg} ${style.text} ${style.border}`}>
+                              {style.label}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-400">{submittedLabel}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+
+            {/* Mobile card layout */}
+            <div className="sm:hidden space-y-3">
+              {requests.map((req) => {
+                const style = STATUS_STYLES[req.status] || STATUS_STYLES.pending;
+                const dateLabel = new Date(`${req.date}T12:00:00Z`).toLocaleDateString('en-US', {
+                  weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC',
+                });
+                const submittedLabel = req.createdAt?.toDate
+                  ? req.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+                  : '—';
+                return (
+                  <div key={req.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-gray-900">{dateLabel}</span>
+                        <span className="text-xs text-gray-400">·</span>
+                        <span className="text-sm text-gray-600">{TYPE_LABELS[req.type] || req.type}</span>
+                      </div>
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${style.bg} ${style.text} ${style.border}`}>
+                        {style.label}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{req.reason}</p>
+                    <p className="text-xs text-gray-400">Submitted: {submittedLabel}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </main>
 
